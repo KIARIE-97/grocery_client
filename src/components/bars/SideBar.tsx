@@ -100,14 +100,14 @@ const menuItems: MenuItem[] = [
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="relative min-h-screen w-full md:w-64">
+    <div className="relative min-h-screen w-full md:w-64 bg-blue-950">
       {/* Desktop Sidebar */}
-      <div className="hidden border-r bg-gray-100/40 md:block dark:bg-gray-800/40">
+      <div className="hidden border-r bg-blue-950/40 md:block dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-[60px] items-center border-b px-6">
             <Link to="/" className="flex items-center gap-2 font-semibold">
               <Package2 className="h-6 w-6" />
-              <span>GrocerJet</span>
+              <span className='text-gray-100'>GrocerJet</span>
             </Link>
           </div>
           <div className="flex-1 overflow-auto py-2">
@@ -143,9 +143,9 @@ const Sidebar: React.FC = () => {
                   <Link
                     key={index}
                     to={item.url}
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-100 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 ${
                       item.label === 'Dashboard' &&
-                      'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50'
+                      'bg-gray-500 text-gray-900 dark:bg-gray-800 dark:text-gray-50'
                     }`}
                   >
                     <item.icon className="h-4 w-4" />
@@ -192,7 +192,7 @@ const Sidebar: React.FC = () => {
             </Link>
             {menuItems.map(
               (item, index) =>
-                !item.subItems && ( // Optionally hide collapsible items on mobile
+                !item.subItems && (
                   <Link
                     key={index}
                     to={item.url}

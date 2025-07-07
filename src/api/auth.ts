@@ -61,3 +61,6 @@ export const RegisterUser = async (email: string, password: string, full_name: s
       console.error('Registration failed:', e);
   }
 }
+export const LogOutUser = async() => {
+
+}
