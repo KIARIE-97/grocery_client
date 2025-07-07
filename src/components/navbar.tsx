@@ -1,35 +1,125 @@
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import { CarouselPlugin } from './carousel'
-import HomeHighlights from './homeItem'
+import { useLocation } from '@tanstack/react-router';
 
 
 function Navbar() {
+  const isSignedIn = true 
+  const user = { role: "admin" } 
+  const location = useLocation();
+
+  // Helper to format the current route
+  const getRouteLabel = () => {
+    // Remove leading slash and split by "/"
+    const parts = location.pathname.replace(/^\//, "").split("/");
+    return parts.join(" / ") || "dashboard";
+  };
+
+
   return (
     <div>
-      <div className=" items-center space-x-4">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <NavigationMenuItem>
-              <NavigationMenuLink href="/">Home</NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink href="/about">About</NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink href="/contact">Contact</NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+      {/* Top Bar */}
+      <div className="flex flex-col w-full bg-white border-b shadow-sm px-4 py-2">
+        {/* Top Row */}
+        <div className="flex items-center justify-between gap-4">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <img src="/images/logo.png" alt="Logo" className="h-10" />
+            <span className="text-green-600 font-bold text-lg">Grocer Jet</span>
+          </div>
+
+          {/* Search Bar */}
+          <div className="flex-1 max-w-lg">
+            <input
+              type="text"
+              placeholder="Search for products..."
+              className="w-full border rounded-md px-4 py-2 text-sm"
+            />
+          </div>
+
+          {/* Top Info */}
+          <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
+            <span>Offers</span>
+            <span>Help</span>
+
+            {isSignedIn &&  (
+              <>
+                <div className="relative">
+                  <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-xs font-bold text-orange-500">
+                    1
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/images/avatar.png"
+                    alt="User"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span>John Doe</span>
+                </div>
+                <div className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                  Cart 2
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Nav */}
+        <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
+          
+        <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
+        {isSignedIn ? (
+          <span className="font-semibold">
+            {user.role} / {getRouteLabel()}
+          </span>
+        ) : (
+          <>
+            <span className="font-semibold">Select Category</span>
+            <NavigationMenu>
+            <NavigationMenuList className="flex gap-4">
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/"
+                  className="text-orange-500 font-semibold"
+                >
+                  Home
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/new-products">
+                  New Products
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/featured-products">
+                  Featured Products
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/blog">Blog</NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/pages">Pages</NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink href="/contact">
+                  Contact Us
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+          </>
+        )}
+
+          
+        </div>
       </div>
-      <CarouselPlugin />
-      <HomeHighlights/>
+</div>
     </div>
   )
 }

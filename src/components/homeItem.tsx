@@ -81,6 +81,7 @@ const offers = [
 export default function HomeHighlights() {
   return (
     <>
+    
       <section className="space-y-10 px-4 lg:px-12 py-6">
         {/* Categories */}
         <div>
@@ -107,37 +108,6 @@ export default function HomeHighlights() {
               <ChevronRight />
             </Button>
           </div>
-        </div>
-
-        {/* Featured Products */}
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide">
-          {featuredProducts.map((product, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-lg shadow-sm p-3 text-center min-w-[180px]"
-            >
-              <div className="relative">
-                <span className="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded">
-                  {product.discount} OFF
-                </span>
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-24 h-24 mx-auto"
-                />
-              </div>
-              <h4 className="font-semibold mt-2">{product.title}</h4>
-              <p className="text-sm text-gray-500">Available (In Stock)</p>
-              <div className="flex justify-center gap-2 text-sm mt-1">
-                <span className="text-orange-600 font-bold">
-                  {product.price}
-                </span>
-                <span className="line-through text-gray-400">
-                  {product.oldPrice}
-                </span>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
       {/* offers */}
@@ -195,6 +165,7 @@ export default function HomeHighlights() {
         </div>
       </section>
 
+      {/* Featured Products */}
       <section className="bg-gray-50 py-8 px-4 lg:px-12">
         <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
