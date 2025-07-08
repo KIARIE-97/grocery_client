@@ -4,12 +4,16 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
+import { authStore } from '@/store/authStore';
 import { useLocation } from '@tanstack/react-router';
+import { useStore } from '@tanstack/react-store';
 
 
 function Navbar() {
-  const isSignedIn = true 
-  const user = { role: "admin" } 
+  const isSignedIn = useStore(authStore, (state) => state.isAuthenticated); 
+  const foundUser = useStore(authStore, (state) => state.user) 
+
+  console.log('Found User:', foundUser?.full_name);
   const location = useLocation();
 
   // Helper to format the current route
@@ -59,7 +63,7 @@ function Navbar() {
                     alt="User"
                     className="w-8 h-8 rounded-full"
                   />
-                  <span>John Doe</span>
+                  <span>{foundUser?.full_name}</span>
                 </div>
                 <div className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
                   Cart 2
@@ -75,7 +79,7 @@ function Navbar() {
         <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
         {isSignedIn ? (
           <span className="font-semibold">
-            {user.role} / {getRouteLabel()}
+           / {getRouteLabel()}
           </span>
         ) : (
           <>

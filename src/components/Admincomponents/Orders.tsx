@@ -1,102 +1,116 @@
-import { Badge } from '@/components/ui/badge'
-import type { ColumnDef } from '@tanstack/react-table'
-import { TableModal } from '../ui/TableModal'
+import { useOrders } from "@/hooks/useOrder"
+import { authStore } from "@/store/authStore"
+import type { TOrder } from "@/types/order.types"
+import { useStore } from "@tanstack/react-store"
+import type { ColumnDef } from "@tanstack/react-table"
+import { useMemo, useState } from "react"
+import { Badge } from "../ui/badge"
+import Error from "../error"
+import { TableModal } from "../ui/TableModal"
 
-type Order = {
-  orderId: string
-  productTitle: string
-  date: string
-  address: string
-  status: 'Pending' | 'Processing' | 'Completed' | 'Cancelled'
-  total: number
-}
+function OrdersTable() {
+  const [search, setSearch] = useState('')
+  const { data: orders, error } = useOrders()
+  const signedIn = useStore(authStore, (state) => state.isAuthenticated)
 
-const orderData: Order[] = [
+  const filteredData = useMemo(
+    () =>
+      Array.isArray(orders)
+        ? orders.filter(
+            (order) =>
+              order?.productTitle
+                ?.toLowerCase()
+                .includes(search.toLowerCase()) ||
+              order?.address?.toLowerCase().includes(search.toLowerCase()) ||
+              order?.status?.toLowerCase().includes(search.toLowerCase()),
+          )
+        : [],
+    [orders, search],
+  )
+
+  const columns: ColumnDef<TOrder>[] = [
     {
-            orderId: 'ORD0012345',
-            productTitle: 'Fresh Organic Apples',
-            date: '2023-07-04',
-            address: '123 Maple St, Springfield',
-            status: 'Pending',
-            total: 59.99,
-          },
-          {
-            orderId: 'ORD0012346',
-            productTitle: 'Whole Wheat Bread',
-            date: '2023-07-04',
-            address: '456 Oak Ave, Shelbyville',
-            status: 'Completed',
-            total: 31.0,
-          },
-          {
-            orderId: 'ORD0012347',
-            productTitle: 'Almond Milk',
-            date: '2023-07-03',
-            address: '789 Pine Ln, Capital City',
-            status: 'Processing',
-            total: 24.5,
-          },
-          {
-            orderId: 'ORD0012348',
-            productTitle: 'Cage-Free Eggs',
-            date: '2023-07-02',
-            address: '101 Elm Ct, Ogdenville',
-            status: 'Cancelled',
-            total: 51.0,
-          },
-]
-
-const orderColumns: ColumnDef<Order>[] = [
-  { accessorKey: 'orderId', header: 'Order ID' },
-  { accessorKey: 'productTitle', header: 'Product' },
-  { accessorKey: 'date', header: 'Date' },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => {
-      const status = row.getValue('status') as Order['status']
-      const variant =
-        status === 'Pending'
-          ? 'destructive'
-          : status === 'Processing'
-          ? 'default'
-          : status === 'Completed'
-          ? 'secondary'
-          : 'outline'
-      return <Badge variant={variant}>{status}</Badge>
+      header: 'Order ID',
+      accessorKey: 'order_id',
     },
-  },
-  {
-    accessorKey: 'total',
-    header: () => <div className="text-right">Total</div>,
-    cell: ({ row }) => {
-      const total = parseFloat(row.getValue('total'))
-      return (
-        <div className="text-right font-medium">
-          ${total.toFixed(2)}
-        </div>
-      )
+    {
+      header: 'Product',
+      accessorKey: 'products',
     },
-  },
-]
+    {
+      header: 'Date',
+      accessorKey: 'delivery_schedule_at',
+      cell: ({ getValue }) =>
+        new Date(getValue() as string).toLocaleDateString(),
+    },
+    {
+      header: 'Status',
+      accessorKey: 'status',
+      cell: ({ getValue }) => {
+        const value = getValue() as string
+        return (
+          <Badge
+            variant={
+              value === 'cancelled'
+                ? 'destructive'
+                : value === 'pending'
+                  ? 'default'
+                  : value === 'delivered'
+                    ? 'secondary'
+                    : 'outline'
+            }
+          >
+            {value}
+          </Badge>
+        )
+      },
+    },
+    {
+      header: 'Total',
+      accessorKey: 'total_amount',
+      cell: ({ getValue }) => `$${(getValue() as number).toFixed(2)}`,
+    },
+  ]
 
-export default function OrdersPage() {
+  if (error) return <Error error={error} />
+
   return (
-    <TableModal
-      data={orderData}
-      columns={orderColumns}
-      title="Recent Orders"
-      modalContent={(order) => (
-        <>
-          <div>Order ID: {order.orderId}</div>
-          <div>Product: {order.productTitle}</div>
-          <div>Date: {order.date}</div>
-          <div>Address: {order.address}</div>
-          <div>Status: {order.status}</div>
-          <div>Total: ${order.total}</div>
-        </>
+    <div className="p-4 space-y-6">
+      <div>
+        <label htmlFor="search">Search Orders:</label>
+        <input
+          id="search"
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full border px-3 py-2 rounded"
+          placeholder="Search by product, address, or status..."
+        />
+      </div>
+
+      {signedIn && (
+        <TableModal<TOrder>
+          data={filteredData}
+          columns={columns}
+          title="Orders"
+          modalContent={(item) =>
+            item ? (
+              <div className="space-y-2">
+                <div>Order ID: {item.order_id}</div>
+                <div>Product: {item.products}</div>
+                <div>
+                  Date:{' '}
+                  {new Date(item.delivery_schedule_at).toLocaleDateString()}
+                </div>
+                <div>Tax: {item.tax_amount}</div>
+                <div>Status: {item.status}</div>
+                <div>Total: ${item.total_amount.toFixed(2)}</div>
+              </div>
+            ) : null
+          }
+        />
       )}
-    />
+    </div>
   )
 }
-
+export default OrdersTable

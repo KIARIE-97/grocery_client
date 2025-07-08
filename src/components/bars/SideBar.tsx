@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '@tanstack/react-router' // Or your preferred routing library
+import { Link, useNavigate } from '@tanstack/react-router' // Or your preferred routing library
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,6 +23,8 @@ import {
   ChevronDown,
   type LucideIcon,
 } from 'lucide-react'
+import { useLogoutUser } from '@/hooks/useLogin'
+import { toast } from 'sonner'
 
 // Define types for our menu items
 interface SubMenuItem {
@@ -99,6 +101,21 @@ const menuItems: MenuItem[] = [
 ]
 
 const Sidebar: React.FC = () => {
+     const logout = useLogoutUser()
+       const navigate = useNavigate()
+     
+
+     // logout
+       const handleLogout = async () => {
+         try {
+           await logout.mutateAsync()
+           toast.success('Logged out successfully!')
+           navigate({ to: '/' })
+         } catch (error) {
+           toast.error('Logout failed. Please try again.')
+         }
+       }
+  
   return (
     <div className="relative min-h-screen w-full md:w-64 bg-blue-950">
       {/* Desktop Sidebar */}
@@ -161,7 +178,7 @@ const Sidebar: React.FC = () => {
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Button size="sm" className="w-full">
+            <Button onClick={handleLogout} size="sm" className="w-full">
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>

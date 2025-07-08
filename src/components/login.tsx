@@ -22,7 +22,7 @@ const formSchema = z.object({
     .email('Please enter a valid email address')
     .min(1, 'Email is required'),
   password: z.string().min(4, 'Password must be at least 8 characters'),
-    code: z.string().min(8, 'Code is required'),
+    otp: z.string().min(2, 'Code is required'),
 })
 export type FormData = z.infer<typeof formSchema>
 
@@ -38,10 +38,11 @@ const validateField = <T,>(value: T, schema: z.ZodType<T>) => {
 function Login() {
   const navigate = useNavigate()
    const loginUser = useLoginUser()
+  //  const foundUser = useStore(authStore, (state) => state.user)
   const form = useForm({
     defaultValues: {
       email: '',
-      code: '',
+      otp: '',
       password: '',
     } as FormData,
     onSubmit: async ({ value }) => {
@@ -56,9 +57,21 @@ function Login() {
         const res = await loginUser.mutateAsync(result.data)
         toast.success('Login successful!')
         console.log('Login response:', res)
-        form.reset()
-
-        navigate({ to: '/' })
+        if (res?.founduser.role === 'admin') {
+          navigate({ to: '/admin' })
+          form.reset()
+        }
+        // } else if (foundUser?.role === 'customer') {
+        //   navigate({ to: '/customer' })
+        // }
+        // else if (foundUser?.role === 'store_owner') {
+        //   navigate({ to: '/store_owner' })
+        // }
+        // else if (foundUser?.role === 'driver') { 
+        //   navigate({ to: '/driver' })
+        // }else{
+        // navigate({ to: '/' })
+        // }
       } catch (error) {
         // Show specific error message from the server
         let errorMessage = 'Login failed. Please try again.'
@@ -95,6 +108,9 @@ function Login() {
       // console.log('Form submitted successfully:', value)
     },
   })
+
+
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-96 shadow-lg ">
@@ -176,16 +192,16 @@ function Login() {
                 )}
               />
 
-              {/* Code Input */}
+              {/* otp Input */}
               <form.Field
-              name="code"
+              name="otp"
               validators={{
                 onBlur: ({ value }) =>
-                  validateField(value, formSchema.shape.code),
+                  validateField(value, formSchema.shape.otp),
               }}
               children={(field) => (
                 <div>
-                  <Label>Enter Code</Label>
+                  <Label>Enter code</Label>
                   <div className="flex items-center gap-2 mt-1">
                     <Input
                       maxLength={8}
@@ -201,7 +217,7 @@ function Login() {
                       Send
                     </button>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Resend Code</p>
+                  <p className="text-xs text-gray-500 mt-1">Resend otp</p>
                   {field.state.meta.errors[0] && (
                     <p className="text-sm text-red-500 mt-1">
                       {field.state.meta.errors[0]}

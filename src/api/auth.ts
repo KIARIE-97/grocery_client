@@ -26,14 +26,14 @@ const handleApiResponse = async (res: Response) => {
   return res;
 }
 
-export const LoginUser = async (email: string, password: string) => {
+export const LoginUser = async (email: string, password: string, otp: string) => {
     try {
       const res = await fetch(`${url}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, otp }),
       })
       await handleApiResponse(res)
   
@@ -62,5 +62,18 @@ export const RegisterUser = async (email: string, password: string, full_name: s
   }
 }
 export const LogOutUser = async() => {
+  try {
+    const res = await fetch(`${url}/auth/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    await handleApiResponse(res)
 
+    return res.json();
+
+  } catch(e){
+      console.error('Logout failed:', e);
+  }
 }
