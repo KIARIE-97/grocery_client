@@ -1,5 +1,5 @@
 import { createProduct, deleteProduct, getProduct, getProducts, getProductsByStore, updateProduct } from "@/api/product";
-import type { TProduct } from "@/types/product.types";
+import type { TProduct, TProductForm } from "@/types/product.types";
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query";
 
 export const useProduct = (): UseQueryResult => {
@@ -22,14 +22,15 @@ export const useProductsByStore = (storeId: number): UseQueryResult<TProduct[], 
         enabled: !!storeId,
     })
 }
-export const useCreateProduct = (): UseMutationResult< TProduct, Error, TProduct> => {
+export const useCreateProduct = () => {
     const queryClient = useQueryClient()
-    return useMutation({
-        mutationKey: ['createproduct'],
-        mutationFn: (productData) => createProduct(productData),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['products'], exact: true })
-        },
+    return useMutation<TProductForm, Error, TProductForm>({
+      mutationKey: ['createproduct'],
+      mutationFn: (productData) => createProduct(productData),
+      onSuccess: (data) => {
+          console.log('Product created successfully', data)
+        queryClient.invalidateQueries({ queryKey: ['products'], exact: true })
+      },
     })
 }
 export const useUpdateProduct = (): UseMutationResult<TProduct, Error, { id: string; productData: TProduct }> => {

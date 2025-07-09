@@ -1,8 +1,7 @@
-import type { TProduct, TProductForm } from "@/types/product.types"
+import type { TStore, TStoreForm } from "@/types/store.types"
 
 const url = 'http://localhost:8000'
 
-// Helper function to handle API responses and errors
 const handleApiResponse = async (res: Response) => {
   let errorMessage = `Request failed with status ${res.status}: ${res.statusText}`
   if (!res.ok) {
@@ -38,10 +37,10 @@ const getToken = () => {
   }
   return parsedData.token
 }
-//fetch all orders
-export const getProducts = async () => {
+//fetch all stores
+export const getStore = async () => {
   const token = getToken()
-  const res = await fetch(`${url}/products`, {
+  const res = await fetch(`${url}/stores`, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -50,68 +49,60 @@ export const getProducts = async () => {
   await handleApiResponse(res)
   return res.json()
 }
-//fetch a single product
-export const getProduct = async (id: string) => {
+//fetch a single store by ID
+export const getStoreById = async (id: string) => {
+    const token = getToken()
+    const res = await fetch(`${url}/stores/${id}`, {
+        headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        },
+    })
+    await handleApiResponse(res)
+    return res.json()
+    }
+//create a new store
+export const createStore = async (storeData: TStoreForm): Promise<TStoreForm> => {
   const token = getToken()
-  const res = await fetch(`${url}/products/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
-  await handleApiResponse(res)
-  return res.json()
-}
-//fetch products by store
-export const getProductsByStore = async (storeId: number) => {
-  const token = getToken()
-  const res = await fetch(`${url}/products/store/${storeId}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
-  await handleApiResponse(res)
-  return res.json()
-}
-//create a product
-export const createProduct = async (productData: TProductForm): Promise<TProductForm> => {
-  const token = getToken()
-  const res = await fetch(`${url}/products`, {
+  const res = await fetch(`${url}/stores`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(productData),
+    body: JSON.stringify(storeData),
   })
   await handleApiResponse(res)
   return res.json()
 }
-//update a product
-export const updateProduct = async (id: string, productData: any) => {
+//update a store by ID
+export const updateStore = async (id: string, storeData:  any) => {
   const token = getToken()
-  const res = await fetch(`${url}/products/${id}`, {
-    method: 'PATCH',
+  const res = await fetch(`${url}/stores/${id}`, {
+    method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(productData),
+    body: JSON.stringify(storeData),
   })
   await handleApiResponse(res)
   return res.json()
 }
-//delete a product
-export const deleteProduct = async (id: string) => {
+//delete a store by ID
+export const deleteStore = async (id: string) => {
   const token = getToken()
-  const res = await fetch(`${url}/products/${id}`, {
+  const res = await fetch(`${url}/stores/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
-    },  
-  })
-  await handleApiResponse(res)
-  return res.json()
+    },
+    })
+    await handleApiResponse(res)
+    if (!res.ok) {
+      throw new Error(`Failed to delete store with ID ${id}`)
+    }
+    return res.json()
 }
+

@@ -25,6 +25,8 @@ import {
 } from 'lucide-react'
 import { useLogoutUser } from '@/hooks/useLogin'
 import { toast } from 'sonner'
+import { Wallet } from 'lucide-react'
+import { useAuth } from '@/hooks/UseAuth'
 
 // Define types for our menu items
 interface SubMenuItem {
@@ -39,6 +41,25 @@ interface MenuItem {
   badge?: string | null
   subItems?: SubMenuItem[]
 }
+
+const customerMenuItems: MenuItem[] = [
+  {
+    label: 'My Orders',
+    icon: ShoppingCart,
+    url: '/myOrders',
+  },
+  {
+    label: 'My Address',
+    icon: MapPin,
+    url: '/myAddress',
+  },
+  {
+    label: 'My Wallet',
+    icon: Wallet,
+    url: '/myWallet',
+  },
+]
+
 
 const menuItems: MenuItem[] = [
   {
@@ -69,6 +90,18 @@ const menuItems: MenuItem[] = [
     label: 'Drivers',
     icon: LineChart,
     url: '/admin/drivers',
+    badge: null,
+  },
+  {
+    label: 'Category',
+    icon: LineChart,
+    url: '/admin/category',
+    badge: null,
+  },
+  {
+    label: 'Store',
+    icon: LineChart,
+    url: '/admin/stores',
     badge: null,
   },
   {
@@ -103,7 +136,7 @@ const menuItems: MenuItem[] = [
 const Sidebar: React.FC = () => {
      const logout = useLogoutUser()
        const navigate = useNavigate()
-     
+       const { user } = useAuth()
 
      // logout
        const handleLogout = async () => {
@@ -115,6 +148,8 @@ const Sidebar: React.FC = () => {
            toast.error('Logout failed. Please try again.')
          }
        }
+       const isCustomer = user?.role === 'customer'
+       const itemsToShow = isCustomer ? customerMenuItems : menuItems   
   
   return (
     <div className="relative min-h-screen w-full md:w-64 bg-blue-950">
@@ -124,12 +159,12 @@ const Sidebar: React.FC = () => {
           <div className="flex h-[60px] items-center border-b px-6">
             <Link to="/" className="flex items-center gap-2 font-semibold">
               <Package2 className="h-6 w-6" />
-              <span className='text-gray-100'>GrocerJet</span>
+              <span className="text-gray-100">GrocerJet</span>
             </Link>
           </div>
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
-              {menuItems.map((item, index) =>
+              {itemsToShow.map((item, index) =>
                 item.subItems ? (
                   <Collapsible key={index} className="grid gap-2">
                     <CollapsibleTrigger asChild>

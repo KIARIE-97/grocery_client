@@ -1,4 +1,4 @@
-import { getCustomers, getDrivers, getStoreOwner } from "@/api/user";
+import { getCustomer, getCustomers, getDrivers, getStoreOwner } from "@/api/user";
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 
@@ -8,6 +8,12 @@ export const useCustomer = (): UseQueryResult => {
         queryFn: getCustomers,
     });
     }
+export const useSingleCustomer = (id: string): UseQueryResult => {
+    return useQuery({
+        queryKey: ['customer', id],
+        queryFn: () => getCustomer(id),
+    });
+}    
 export const useDrivers = (): UseQueryResult => {
     return useQuery({
         queryKey: ['drivers'],
