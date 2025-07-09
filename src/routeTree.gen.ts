@@ -18,8 +18,12 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AdminStoreownersRouteImport } from './routes/admin/storeowners'
 import { Route as AdminProfileRouteImport } from './routes/admin/profile'
+import { Route as AdminProductRouteImport } from './routes/admin/product'
 import { Route as AdminOrdersRouteImport } from './routes/admin/orders'
+import { Route as AdminDriversRouteImport } from './routes/admin/drivers'
+import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -66,14 +70,34 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminStoreownersRoute = AdminStoreownersRouteImport.update({
+  id: '/storeowners',
+  path: '/storeowners',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProfileRoute = AdminProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProductRoute = AdminProductRouteImport.update({
+  id: '/product',
+  path: '/product',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminOrdersRoute = AdminOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDriversRoute = AdminDriversRouteImport.update({
+  id: '/drivers',
+  path: '/drivers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCustomersRoute = AdminCustomersRouteImport.update({
+  id: '/customers',
+  path: '/customers',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -83,8 +107,12 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
+  '/admin/customers': typeof AdminCustomersRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/orders': typeof AdminOrdersRoute
+  '/admin/product': typeof AdminProductRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/storeowners': typeof AdminStoreownersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
@@ -95,8 +123,12 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
+  '/admin/customers': typeof AdminCustomersRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/orders': typeof AdminOrdersRoute
+  '/admin/product': typeof AdminProductRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/storeowners': typeof AdminStoreownersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
@@ -109,8 +141,12 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
+  '/admin/customers': typeof AdminCustomersRoute
+  '/admin/drivers': typeof AdminDriversRoute
   '/admin/orders': typeof AdminOrdersRoute
+  '/admin/product': typeof AdminProductRoute
   '/admin/profile': typeof AdminProfileRoute
+  '/admin/storeowners': typeof AdminStoreownersRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
@@ -124,8 +160,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/homepage'
     | '/login'
+    | '/admin/customers'
+    | '/admin/drivers'
     | '/admin/orders'
+    | '/admin/product'
     | '/admin/profile'
+    | '/admin/storeowners'
     | '/auth/login'
     | '/auth/register'
     | '/demo/tanstack-query'
@@ -136,8 +176,12 @@ export interface FileRouteTypes {
     | '/about'
     | '/homepage'
     | '/login'
+    | '/admin/customers'
+    | '/admin/drivers'
     | '/admin/orders'
+    | '/admin/product'
     | '/admin/profile'
+    | '/admin/storeowners'
     | '/auth/login'
     | '/auth/register'
     | '/demo/tanstack-query'
@@ -149,8 +193,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/homepage'
     | '/login'
+    | '/admin/customers'
+    | '/admin/drivers'
     | '/admin/orders'
+    | '/admin/product'
     | '/admin/profile'
+    | '/admin/storeowners'
     | '/auth/login'
     | '/auth/register'
     | '/demo/tanstack-query'
@@ -233,11 +281,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/storeowners': {
+      id: '/admin/storeowners'
+      path: '/storeowners'
+      fullPath: '/admin/storeowners'
+      preLoaderRoute: typeof AdminStoreownersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/profile': {
       id: '/admin/profile'
       path: '/profile'
       fullPath: '/admin/profile'
       preLoaderRoute: typeof AdminProfileRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/product': {
+      id: '/admin/product'
+      path: '/product'
+      fullPath: '/admin/product'
+      preLoaderRoute: typeof AdminProductRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/orders': {
@@ -247,18 +309,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOrdersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/drivers': {
+      id: '/admin/drivers'
+      path: '/drivers'
+      fullPath: '/admin/drivers'
+      preLoaderRoute: typeof AdminDriversRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/customers': {
+      id: '/admin/customers'
+      path: '/customers'
+      fullPath: '/admin/customers'
+      preLoaderRoute: typeof AdminCustomersRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminCustomersRoute: typeof AdminCustomersRoute
+  AdminDriversRoute: typeof AdminDriversRoute
   AdminOrdersRoute: typeof AdminOrdersRoute
+  AdminProductRoute: typeof AdminProductRoute
   AdminProfileRoute: typeof AdminProfileRoute
+  AdminStoreownersRoute: typeof AdminStoreownersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminCustomersRoute: AdminCustomersRoute,
+  AdminDriversRoute: AdminDriversRoute,
   AdminOrdersRoute: AdminOrdersRoute,
+  AdminProductRoute: AdminProductRoute,
   AdminProfileRoute: AdminProfileRoute,
+  AdminStoreownersRoute: AdminStoreownersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

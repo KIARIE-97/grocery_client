@@ -1,3 +1,5 @@
+import type { TProduct } from "./product.types"
+
 export type TOrder = {
   order_id: number
   total_amount: number
@@ -16,5 +18,5 @@ export type TOrder = {
   driver: string
   store: string
   customer: string
-  products: string
+  products: TProduct[]
 }

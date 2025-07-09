@@ -1,17 +1,17 @@
 import { useOrders } from "@/hooks/useOrder"
-import { authStore } from "@/store/authStore"
 import type { TOrder } from "@/types/order.types"
-import { useStore } from "@tanstack/react-store"
 import type { ColumnDef } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
 import { Badge } from "../ui/badge"
 import Error from "../error"
 import { TableModal } from "../ui/TableModal"
+import { useAuth } from "@/hooks/UseAuth"
 
 function OrdersTable() {
   const [search, setSearch] = useState('')
   const { data: orders, error } = useOrders()
-  const signedIn = useStore(authStore, (state) => state.isAuthenticated)
+  const { isAuthenticated } = useAuth()
+  // const signedIn = useStore(authStore, (state) => state.isAuthenticated)
 
   const filteredData = useMemo(
     () =>
@@ -36,6 +36,18 @@ function OrdersTable() {
     {
       header: 'Product',
       accessorKey: 'products',
+      cell: ({ getValue }) => {
+        const orders = getValue() as TOrder['products']
+        return (
+          <div>
+            {orders.map((order) => (
+              <div key={order.id} className="mb-1">
+                {order.product_name} 
+              </div>
+            ))}
+          </div>
+        )
+      }
     },
     {
       header: 'Date',
@@ -88,7 +100,7 @@ function OrdersTable() {
         />
       </div>
 
-      {signedIn && (
+      {isAuthenticated && (
         <TableModal<TOrder>
           data={filteredData}
           columns={columns}
@@ -97,7 +109,7 @@ function OrdersTable() {
             item ? (
               <div className="space-y-2">
                 <div>Order ID: {item.order_id}</div>
-                <div>Product: {item.products}</div>
+                <div>Product: {item.products[0].product_name}</div>
                 <div>
                   Date:{' '}
                   {new Date(item.delivery_schedule_at).toLocaleDateString()}

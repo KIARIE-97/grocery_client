@@ -56,7 +56,7 @@ const menuItems: MenuItem[] = [
   {
     label: 'Products',
     icon: Package,
-    url: '/admin/products',
+    url: '/admin/product',
     badge: null,
   },
   {
@@ -66,9 +66,9 @@ const menuItems: MenuItem[] = [
     badge: null,
   },
   {
-    label: 'Analytics',
+    label: 'Drivers',
     icon: LineChart,
-    url: '/admin/analytics',
+    url: '/admin/drivers',
     badge: null,
   },
   {
@@ -81,7 +81,7 @@ const menuItems: MenuItem[] = [
     ],
   },
   {
-    label: 'Ratings',
+    label: 'Feedback',
     icon: Star,
     url: '/admin/ratings',
     badge: null,
