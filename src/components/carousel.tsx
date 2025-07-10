@@ -25,14 +25,14 @@ const banners = [
     id: 2,
     title: 'Buy More & Save More',
     desc: 'Beverages',
-    img: 'https://tse1.mm.bing.net/th/id/OIP.UWpbm1k7IO68sWYm4GPEMwHaH7?rs=1&pid=ImgDetMain&o=7&rm=3',
+    img: 'https://i.pinimg.com/736x/6d/d4/99/6dd4992294ac166efdd45a102261b807.jpg',
     discount: '2% OFF',
   },
   {
     id: 3,
     title: 'Buy More & Save More',
-    desc: 'https://bakpac.co.uk/wp-content/uploads/2023/07/fruit-and-nut-small.png',
-    img: '/nuts.jpg',
+    desc: 'nuts & Dry Fruits',
+    img: 'https://tse1.explicit.bing.net/th/id/OIP.1SqDGNGXN_jWDK7tz_MshwE_DD?rs=1&pid=ImgDetMain&o=7&rm=3',
     discount: '3% OFF',
   },
 ]
@@ -45,7 +45,7 @@ export function CarouselPlugin() {
   return (
     <>
       {/* create account today and get 10% off on your first order */}
-      <div
+      {/* <div
         className=" bg-black/30 py-12 px-6 md:px-16 flex flex-col md:flex-row items-center justify-center gap-10"
         // style={{
         //   backgroundImage: `url(${fruits})`,
@@ -60,7 +60,7 @@ export function CarouselPlugin() {
         />
 
         {/* Text & Form */}
-        <div className="text-center md:text-left max-w-md ">
+        {/* <div className="text-center md:text-left max-w-md ">
           <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2">
             Get 20% Discount On Your First Purchase
           </h2>
@@ -76,8 +76,9 @@ export function CarouselPlugin() {
               </button>
             </Link>
           </div>
-        </div>
-      </div>
+        </div> */}
+      
+      {/* Carousel */}
       <Carousel
         plugins={[plugin.current]}
         className="w-full  mx-auto"
@@ -87,14 +88,14 @@ export function CarouselPlugin() {
         <CarouselContent>
           {banners.map((banner) => (
             <CarouselItem key={banner.id} className="md:basis-1/2 lg:basis-1/3">
-              <div className="p-1 h-64 md:h-80 lg:h-96 relative rounded-lg overflow-hidden">
+              <div className=" h-64 md:h-80 lg:h-94 relative rounded-lg overflow-hidden">
                 <Card className="h-full w-full relative">
                   <img
                     src={banner.img}
                     alt={banner.title}
                     className="w-full h-full object-cover rounded-lg"
                   />
-                  <CardContent className="absolute inset-0 bg-black/40 text-white flex flex-col justify-between p-6">
+                  <CardContent className="absolute inset-0  text-gray-700 flex flex-col justify-between p-6">
                     <div>
                       <span className="text-sm text-orange-400 font-bold">
                         {banner.discount}

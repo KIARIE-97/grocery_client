@@ -64,23 +64,27 @@ const OrderDetail = () => {
               Track Order
             </p>
             <div className="flex space-x-2">
-              {['Placed', 'Packed', 'On the way', 'Delivered'].map(
-                (stage, index) => (
-                  <div
-                    key={index}
-                    className={`px-3 py-1 rounded-full text-xs ${
-                      stage.toLowerCase() === order.status
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-gray-200 text-gray-600'
-                    }`}
-                  >
-                    {stage}
-                  </div>
-                ),
-              )}
+              {[
+                'pending',
+                'accepted',
+                'out_for_delivery',
+                'Delivered',
+                'cancelled',
+                'failed',
+              ].map((stage, index) => (
+                <div
+                  key={index}
+                  className={`px-3 py-1 rounded-full text-xs ${
+                    stage.toLowerCase() === order.status
+                      ? 'bg-orange-100 text-orange-700 font-semibold border border-orange-300'
+                      : 'bg-gray-200 text-gray-600'
+                  }`}
+                >
+                  {stage}
+                </div>
+              ))}
             </div>
           </div>
-
           <div className="mt-4 flex justify-between items-center text-sm text-gray-600">
             <p>
               Cashback of ksh.50 will be credited to GrocerJet wallet in 12

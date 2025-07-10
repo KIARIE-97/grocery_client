@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProductdetailsRouteImport } from './routes/productdetails'
+import { Route as ProductRouteImport } from './routes/product'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomepageRouteImport } from './routes/homepage'
 import { Route as CustomerRouteImport } from './routes/customer'
@@ -33,6 +35,16 @@ import { Route as AdminDriversRouteImport } from './routes/admin/drivers'
 import { Route as AdminCustomersRouteImport } from './routes/admin/customers'
 import { Route as AdminCategoryRouteImport } from './routes/admin/category'
 
+const ProductdetailsRoute = ProductdetailsRouteImport.update({
+  id: '/productdetails',
+  path: '/productdetails',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductRoute = ProductRouteImport.update({
+  id: '/product',
+  path: '/product',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -159,6 +171,8 @@ export interface FileRoutesByFullPath {
   '/customer': typeof CustomerRouteWithChildren
   '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
+  '/product': typeof ProductRoute
+  '/productdetails': typeof ProductdetailsRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/drivers': typeof AdminDriversRoute
@@ -182,6 +196,8 @@ export interface FileRoutesByTo {
   '/addstore': typeof AddstoreRoute
   '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
+  '/product': typeof ProductRoute
+  '/productdetails': typeof ProductdetailsRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/drivers': typeof AdminDriversRoute
@@ -208,6 +224,8 @@ export interface FileRoutesById {
   '/customer': typeof CustomerRouteWithChildren
   '/homepage': typeof HomepageRoute
   '/login': typeof LoginRoute
+  '/product': typeof ProductRoute
+  '/productdetails': typeof ProductdetailsRoute
   '/admin/category': typeof AdminCategoryRoute
   '/admin/customers': typeof AdminCustomersRoute
   '/admin/drivers': typeof AdminDriversRoute
@@ -235,6 +253,8 @@ export interface FileRouteTypes {
     | '/customer'
     | '/homepage'
     | '/login'
+    | '/product'
+    | '/productdetails'
     | '/admin/category'
     | '/admin/customers'
     | '/admin/drivers'
@@ -258,6 +278,8 @@ export interface FileRouteTypes {
     | '/addstore'
     | '/homepage'
     | '/login'
+    | '/product'
+    | '/productdetails'
     | '/admin/category'
     | '/admin/customers'
     | '/admin/drivers'
@@ -283,6 +305,8 @@ export interface FileRouteTypes {
     | '/customer'
     | '/homepage'
     | '/login'
+    | '/product'
+    | '/productdetails'
     | '/admin/category'
     | '/admin/customers'
     | '/admin/drivers'
@@ -309,6 +333,8 @@ export interface RootRouteChildren {
   CustomerRoute: typeof CustomerRouteWithChildren
   HomepageRoute: typeof HomepageRoute
   LoginRoute: typeof LoginRoute
+  ProductRoute: typeof ProductRoute
+  ProductdetailsRoute: typeof ProductdetailsRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
@@ -316,6 +342,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/productdetails': {
+      id: '/productdetails'
+      path: '/productdetails'
+      fullPath: '/productdetails'
+      preLoaderRoute: typeof ProductdetailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product': {
+      id: '/product'
+      path: '/product'
+      fullPath: '/product'
+      preLoaderRoute: typeof ProductRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -530,6 +570,8 @@ const rootRouteChildren: RootRouteChildren = {
   CustomerRoute: CustomerRouteWithChildren,
   HomepageRoute: HomepageRoute,
   LoginRoute: LoginRoute,
+  ProductRoute: ProductRoute,
+  ProductdetailsRoute: ProductdetailsRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,

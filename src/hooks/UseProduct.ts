@@ -1,5 +1,5 @@
 import { createProduct, deleteProduct, getProduct, getProducts, getProductsByStore, updateProduct } from "@/api/product";
-import type { TProduct, TProductForm } from "@/types/product.types";
+import type { SProduct, TProduct, TProductForm } from "@/types/product.types";
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query";
 
 export const useProduct = (): UseQueryResult => {
@@ -8,12 +8,12 @@ export const useProduct = (): UseQueryResult => {
         queryFn: getProducts,
     })
 }
-export const useSingleProduct = (id: string): UseQueryResult<TProduct, Error> => {
-    return useQuery({
-        queryKey: ['products', id],
-        queryFn: () => getProduct(id),
-        enabled: !!id,
-    })
+export const useSingleProduct = (id: string): UseQueryResult<SProduct, Error> => {
+  return useQuery({
+    queryKey: ['products', id],
+    queryFn: () => getProduct(id),
+    enabled: !!id,
+  })
 }
 export const useProductsByStore = (storeId: number): UseQueryResult<TProduct[], Error> => {
     return useQuery({

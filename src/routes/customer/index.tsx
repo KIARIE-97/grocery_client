@@ -37,7 +37,7 @@ console.log('Customer Data:', customerData)
       <header className="bg-orange-100 p-6 flex items-center gap-4">
         <img
           className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
-          src={customerData?.profile_url}
+          src="https://static.vecteezy.com/system/resources/previews/014/277/912/original/trendy-stylish-girl-vector.jpg"
           alt="Profile"
         />
         <div>
@@ -75,7 +75,9 @@ console.log('Customer Data:', customerData)
                   <h3 className="text-lg font-semibold text-gray-800">
                     Total Orders
                   </h3>
-                  <p className="text-2xl text-blue-700 font-bold">{customerData.orders.length}</p>
+                  <p className="text-2xl text-blue-700 font-bold">
+                    {customerData.orders.length}
+                  </p>
                 </div>
               </div>
               {/* Notifications */}
@@ -87,7 +89,7 @@ console.log('Customer Data:', customerData)
                   </h3>
                   <p className="text-2xl text-yellow-700 font-bold">5 New</p>
                 </div>
-            </div>
+              </div>
             </div>
           </section>
         </div>
