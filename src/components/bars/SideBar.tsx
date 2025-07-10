@@ -46,7 +46,7 @@ const customerMenuItems: MenuItem[] = [
   {
     label: 'My Orders',
     icon: ShoppingCart,
-    url: '/myOrders',
+    url: '/customer/orderdetail',
   },
   {
     label: 'My Address',

@@ -60,18 +60,16 @@ function Login() {
         if (res?.founduser.role === 'admin') {
           navigate({ to: '/admin' })
           form.reset()
+        } else if (res?.founduser.role === 'customer') {
+          navigate({ to: '/customer' })
+        } else if (res?.founduser.role  === 'store_owner') {
+          navigate({ to: '/store_owner' })
+        } else if (res?.founduser.role  === 'driver') {
+          navigate({ to: '/driver' })
+        } else {
+          navigate({ to: '/' })
         }
-        // } else if (foundUser?.role === 'customer') {
-        //   navigate({ to: '/customer' })
-        // }
-        // else if (foundUser?.role === 'store_owner') {
-        //   navigate({ to: '/store_owner' })
-        // }
-        // else if (foundUser?.role === 'driver') { 
-        //   navigate({ to: '/driver' })
-        // }else{
-        // navigate({ to: '/' })
-        // }
+        form.reset()
       } catch (error) {
         // Show specific error message from the server
         let errorMessage = 'Login failed. Please try again.'
