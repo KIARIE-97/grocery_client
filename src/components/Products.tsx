@@ -55,7 +55,7 @@ const Products: React.FC = () => {
                     'https://gardenfishcorner.pk/wp-content/uploads/2021/02/king-fish-2-768x979.jpg'
                   }
                   alt={product.product_name}
-                  className="w-full h-40 object-cover mb-3"
+                  className="w-60 h-60 object-cover mb-3"
                 />
                 <h4 className="font-semibold text-lg">
                   {product.product_name}

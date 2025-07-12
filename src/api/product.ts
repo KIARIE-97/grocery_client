@@ -1,4 +1,4 @@
-import type { TProduct, TProductForm } from "@/types/product.types"
+import type { TProductForm } from "@/types/product.types"
 
 const url = 'http://localhost:8000'
 

@@ -7,22 +7,25 @@ import {
 import { authStore } from '@/store/authStore';
 import { Link, useLocation } from '@tanstack/react-router';
 import { useStore } from '@tanstack/react-store';
+import { useState } from 'react';
+import CartSidebar from './CartSidebar';
 
 
-function Navbar() {
-  const isSignedIn = useStore(authStore, (state) => state.isAuthenticated); 
-  const foundUser = useStore(authStore, (state) => state.user) 
 
-  console.log('Found User:', foundUser?.full_name);
-  const location = useLocation();
+function Navbar({ onCartClick }: { onCartClick?: () => void }) {
+  const isSignedIn = useStore(authStore, (state) => state.isAuthenticated)
+  const foundUser = useStore(authStore, (state) => state.user)
+  const [showCartSidebar, setShowCartSidebar] = useState(false)
+
+  console.log('Found User:', foundUser?.full_name)
+  const location = useLocation()
 
   // Helper to format the current route
   const getRouteLabel = () => {
     // Remove leading slash and split by "/"
-    const parts = location.pathname.replace(/^\//, "").split("/");
-    return parts.join(" / ") || "dashboard";
-  };
-
+    const parts = location.pathname.replace(/^\//, '').split('/')
+    return parts.join(' / ') || 'dashboard'
+  }
 
   return (
     <div>
@@ -73,9 +76,18 @@ function Navbar() {
                   />
                   <span>{foundUser?.full_name}</span>
                 </div>
-                <div className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
-                  Cart 2
-                </div>
+
+                {showCartSidebar && (
+                  <div className="fixed top-0 right-0 z-50">
+                    <CartSidebar onClose={() => setShowCartSidebar(false)} />
+                  </div>
+                )}
+                <button
+                  className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
+                  onClick={() => setShowCartSidebar((prev) => !prev)}
+                >
+                  <span className="text-black font-semibold">Cart</span>
+                </button>
               </>
             ) : (
               <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -93,7 +105,7 @@ function Navbar() {
         {/* Bottom Nav */}
         <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
           <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
-            {isSignedIn ? (
+            {isSignedIn && location.pathname !== '/' ? (
               <span className="font-semibold">/ {getRouteLabel()}</span>
             ) : (
               <>

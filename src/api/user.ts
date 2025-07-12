@@ -1,3 +1,5 @@
+import type { TEditUser, TUserData } from "@/types/user.types"
+
 const url = 'http://localhost:8000'
 
 const getToken = () => {
@@ -91,6 +93,33 @@ export const getStoreOwner = async () => {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
+  })
+  await handleApiResponse(res)
+  return res.json()
+}
+//create user
+export const createUser = async (userData: TUserData) => {
+  const token = getToken()
+  const res = await fetch(`${url}/users`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  })
+  await handleApiResponse(res)
+  return res.json()
+}
+export const updateUser = async (id: string, userData: TEditUser) => {
+  const token = getToken()
+  const res = await fetch(`${url}/users/${id}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
   })
   await handleApiResponse(res)
   return res.json()

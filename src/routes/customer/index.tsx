@@ -34,10 +34,10 @@ console.log('Customer Data:', customerData)
 
   return (
     <div className="bg-gray-50 min-h-screen font-sans">
-      <header className="bg-orange-100 p-6 flex items-center gap-4">
+      <header className="bg-orange-200 p-6 flex flex-col items-center gap-4">
         <img
           className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
-          src="https://static.vecteezy.com/system/resources/previews/014/277/912/original/trendy-stylish-girl-vector.jpg"
+          src={customerData.profile_url || 'https://static.vecteezy.com/system/resources/previews/014/277/912/original/trendy-stylish-girl-vector.jpg'}
           alt="Profile"
         />
         <div>

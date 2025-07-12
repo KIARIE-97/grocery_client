@@ -1,5 +1,30 @@
 import { useSingleProduct } from "@/hooks/UseProduct"
+import { useCart } from "@/store/cartStore";
+import type { TProduct } from "@/types/product.types";
 
+const AddToCartButton = ({ product }: { product: any }) => {
+  const { dispatch } = useCart()
+
+  const handleAddToCart = () => {
+    dispatch({
+      type: 'ADD_TO_CART',
+      payload: {
+        ...product,
+        quantity: 1,
+      },
+    })
+    
+    console.log('Added to cart:', product.product_name)
+  }
+  return (
+    <button
+      onClick={handleAddToCart}
+      className="bg-orange-500 text-white px-4 py-2 rounded"
+    >
+      Add to Cart
+    </button>
+  )
+}
 
 const ProductDetails: React.FC<{ productId: string }> = ({ productId }) => {
     console.log('productId:', productId)
@@ -40,9 +65,14 @@ const ProductDetails: React.FC<{ productId: string }> = ({ productId }) => {
           </p>
 
           <div className="flex gap-4 mb-6">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Add to Cart
-            </button>
+            <AddToCartButton
+              product={{
+                ...product,
+                // Remove 'id' if it does not exist on SProduct
+                quantity: product.quantity ?? 1,
+                store: Number(product.store?.id) ?? 0,
+              }}
+            />
             <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
               Buy Now
             </button>
@@ -50,7 +80,7 @@ const ProductDetails: React.FC<{ productId: string }> = ({ productId }) => {
 
           <ul className="text-sm text-gray-600 space-y-1 mb-6">
             <li>
-              <strong>Quantity:</strong> {product.quatity}
+              <strong>Quantity:</strong> {product.quantity}
             </li>
             <li>
               <strong>Stock:</strong> {product.stock}
@@ -83,11 +113,11 @@ const ProductDetails: React.FC<{ productId: string }> = ({ productId }) => {
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-white shadow rounded-lg p-4">
               <img
-                src={`https://gardenfishcorner.pk/wp-content/uploads/2021/02/king-fish-2-768x979.jpg+${i}`}
+                src={`https://static.vecteezy.com/system/resources/previews/012/876/409/non_2x/raw-chicken-on-wooden-board-and-wooden-background-free-photo.jpg`}
                 alt={`Similar Product ${i}`}
-                className="w-full h-40 object-cover mb-3"
+                className="w-60 h-60 object-cover mb-3"
               />
-              <h4 className="font-semibold text-lg mb-1">Sample Product {i}</h4>
+              <h4 className="font-semibold text-lg mb-1">turkey {i}</h4>
               <span className="text-red-600 font-bold">
                 Ksh {Math.floor(Math.random() * 200) + 50}
               </span>

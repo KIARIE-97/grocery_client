@@ -51,12 +51,12 @@ const customerMenuItems: MenuItem[] = [
   {
     label: 'My Address',
     icon: MapPin,
-    url: '/myAddress',
+    url: '/customer/address',
   },
   {
     label: 'My Wallet',
     icon: Wallet,
-    url: '/myWallet',
+    url: '/customer/mywallet',
   },
 ]
 
@@ -126,9 +126,9 @@ const menuItems: MenuItem[] = [
     badge: null,
   },
   {
-    label: 'Offers',
+    label: 'Profile',
     icon: BadgePercent,
-    url: '/admin/offers',
+    url: '/admin/profile',
     badge: null,
   },
 ]

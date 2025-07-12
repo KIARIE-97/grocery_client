@@ -10,7 +10,6 @@ export const Route = createFileRoute('/')({
 function App() {
   return (
     <div>
-      <Navbar />
       {/* Homepage Sections */}
       <CarouselPlugin/>
       <HomeHighlights />

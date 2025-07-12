@@ -6,6 +6,8 @@ import { Badge } from '../ui/badge'
 import Error from '../error'
 import { TableModal } from '../ui/TableModal'
 import { useAuth } from '@/hooks/UseAuth'
+import { Link } from '@tanstack/react-router'
+
 
 function ProductsTable() {
   const [search, setSearch] = useState('')
@@ -45,6 +47,7 @@ function ProductsTable() {
         const categories = getValue() as TProduct['categorys'] | TProduct['categorys'][];
         return (
           <div>
+           
             {Array.isArray(categories)
               ? categories.map((category) => (
                   <div key={category.id} className="mb-1">
@@ -86,6 +89,11 @@ function ProductsTable() {
 
   return (
     <div className="p-4 space-y-6">
+      <Link to="/addproduct">
+        <button className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
+          <h1 className=" font-bold">Add product</h1>
+        </button>
+      </Link>
       <div>
         <label htmlFor="search">Search Products:</label>
         <input

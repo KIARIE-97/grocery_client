@@ -8,7 +8,19 @@ export type TUserData = {
   is_active: boolean;
   role: 'customer' | 'store_owner' | 'driver' | 'admin'
 }
-
+export type TupdateUserData = {
+  full_name: string
+  email: string
+  password: string
+  phone_number: string
+ 
+}
+export type TEditUser = {
+  full_name: string
+  email: string
+  phone_number: string
+  profile_url: string
+}
 export interface IAuth {
   email: string
   password: string

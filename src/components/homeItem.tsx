@@ -1,26 +1,33 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import Products from './Products'
+import { Link } from '@tanstack/react-router'
 
 // Sample data for demonstration
 const categories = [
   {
     title: 'Vegetables & Fruits',
+    url: '/Product',
     icon: 'https://tse2.mm.bing.net/th/id/OIP.cl0dUecT8JR9xMK9jqtTqgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',
   },
   {
     title: 'Grocery & Staples',
+    url: '/Products',
     icon: 'https://cdn3.iconfinder.com/data/icons/unigrid-flat-food/90/006_142_grocery_food_gastronomy_bag-512.png',
   },
   {
     title: 'Dairy & Eggs',
+    url: '/Products',
     icon: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/dairy-product-2226475-1854570.png',
   },
   {
     title: 'Beverages',
+    url: '/Products',
     icon: 'https://cdn4.vectorstock.com/i/1000x1000/83/88/beverages-icons-set-vector-31748388.jpg',
   },
   {
     title: 'Snacks',
+    url: '/Products',
     icon: 'https://cdn-icons-png.flaticon.com/512/10368/10368881.png',
   },
 ]
@@ -113,7 +120,8 @@ export default function HomeHighlights() {
               <ChevronLeft />
             </Button>
             {categories.map((cat, i) => (
-              <div
+              <Link
+                to={cat.url}
                 key={i}
                 className="flex flex-col items-center justify-center px-4 py-3 bg-white rounded-lg shadow-sm min-w-[120px]"
               >
@@ -123,7 +131,7 @@ export default function HomeHighlights() {
                   className="w-10 h-10 mx-auto"
                 />
                 <p className="text-sm mt-2 text-center">{cat.title}</p>
-              </div>
+              </Link>
             ))}
             <Button variant="outline" size="icon">
               <ChevronRight />

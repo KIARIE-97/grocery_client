@@ -95,7 +95,7 @@ export function CarouselPlugin() {
                     alt={banner.title}
                     className="w-full h-full object-cover rounded-lg"
                   />
-                  <CardContent className="absolute inset-0  text-gray-700 flex flex-col justify-between p-6">
+                  <CardContent className="absolute inset-0  text-gray-200 flex flex-col justify-between p-6  bg-black/50">
                     <div>
                       <span className="text-sm text-orange-400 font-bold">
                         {banner.discount}

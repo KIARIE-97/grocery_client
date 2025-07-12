@@ -24,6 +24,8 @@ import { Route as CustomerIndexRouteImport } from './routes/customer/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
 import { Route as CustomerOrderdetailRouteImport } from './routes/customer/orderdetail'
+import { Route as CustomerMywalletRouteImport } from './routes/customer/mywallet'
+import { Route as CustomerAddressRouteImport } from './routes/customer/address'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AdminStoresRouteImport } from './routes/admin/stores'
@@ -110,6 +112,16 @@ const CustomerOrderdetailRoute = CustomerOrderdetailRouteImport.update({
   path: '/orderdetail',
   getParentRoute: () => CustomerRoute,
 } as any)
+const CustomerMywalletRoute = CustomerMywalletRouteImport.update({
+  id: '/mywallet',
+  path: '/mywallet',
+  getParentRoute: () => CustomerRoute,
+} as any)
+const CustomerAddressRoute = CustomerAddressRouteImport.update({
+  id: '/address',
+  path: '/address',
+  getParentRoute: () => CustomerRoute,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -183,6 +195,8 @@ export interface FileRoutesByFullPath {
   '/admin/stores': typeof AdminStoresRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/customer/address': typeof CustomerAddressRoute
+  '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/admin/': typeof AdminIndexRoute
@@ -208,6 +222,8 @@ export interface FileRoutesByTo {
   '/admin/stores': typeof AdminStoresRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/customer/address': typeof CustomerAddressRoute
+  '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/admin': typeof AdminIndexRoute
@@ -236,6 +252,8 @@ export interface FileRoutesById {
   '/admin/stores': typeof AdminStoresRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/customer/address': typeof CustomerAddressRoute
+  '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/admin/': typeof AdminIndexRoute
@@ -265,6 +283,8 @@ export interface FileRouteTypes {
     | '/admin/stores'
     | '/auth/login'
     | '/auth/register'
+    | '/customer/address'
+    | '/customer/mywallet'
     | '/customer/orderdetail'
     | '/demo/tanstack-query'
     | '/admin/'
@@ -290,6 +310,8 @@ export interface FileRouteTypes {
     | '/admin/stores'
     | '/auth/login'
     | '/auth/register'
+    | '/customer/address'
+    | '/customer/mywallet'
     | '/customer/orderdetail'
     | '/demo/tanstack-query'
     | '/admin'
@@ -317,6 +339,8 @@ export interface FileRouteTypes {
     | '/admin/stores'
     | '/auth/login'
     | '/auth/register'
+    | '/customer/address'
+    | '/customer/mywallet'
     | '/customer/orderdetail'
     | '/demo/tanstack-query'
     | '/admin/'
@@ -447,6 +471,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomerOrderdetailRouteImport
       parentRoute: typeof CustomerRoute
     }
+    '/customer/mywallet': {
+      id: '/customer/mywallet'
+      path: '/mywallet'
+      fullPath: '/customer/mywallet'
+      preLoaderRoute: typeof CustomerMywalletRouteImport
+      parentRoute: typeof CustomerRoute
+    }
+    '/customer/address': {
+      id: '/customer/address'
+      path: '/address'
+      fullPath: '/customer/address'
+      preLoaderRoute: typeof CustomerAddressRouteImport
+      parentRoute: typeof CustomerRoute
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -547,11 +585,15 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface CustomerRouteChildren {
+  CustomerAddressRoute: typeof CustomerAddressRoute
+  CustomerMywalletRoute: typeof CustomerMywalletRoute
   CustomerOrderdetailRoute: typeof CustomerOrderdetailRoute
   CustomerIndexRoute: typeof CustomerIndexRoute
 }
 
 const CustomerRouteChildren: CustomerRouteChildren = {
+  CustomerAddressRoute: CustomerAddressRoute,
+  CustomerMywalletRoute: CustomerMywalletRoute,
   CustomerOrderdetailRoute: CustomerOrderdetailRoute,
   CustomerIndexRoute: CustomerIndexRoute,
 }

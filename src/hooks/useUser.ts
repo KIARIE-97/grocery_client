@@ -1,5 +1,6 @@
-import { getCustomer, getCustomers, getDrivers, getStoreOwner } from "@/api/user";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { createUser, getCustomer, getCustomers, getDrivers, getStoreOwner, updateUser } from "@/api/user";
+import type { TEditUser, TUserData } from "@/types/user.types";
+import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query";
 
 
 export const useCustomer = (): UseQueryResult => {
@@ -25,4 +26,26 @@ export const useStoreOwners = (): UseQueryResult => {
         queryKey: ['store_owners'],
         queryFn: () => getStoreOwner(),
     });
+}
+export const UseCreateUser = () => {
+    const queryClient = useQueryClient()
+    return useMutation<TUserData, Error, TUserData>({
+     mutationKey: ['createuser'],
+           mutationFn: (userData) => createUser(userData),
+           onSuccess: (data) => {
+               console.log('Product created successfully', data)
+             queryClient.invalidateQueries({ queryKey: ['products'], exact: true })
+           },
+    })
+}
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ['updateuser'],
+    mutationFn: ({ id, userData }: { id: string; userData: TEditUser }) => updateUser(id, userData),
+    onSuccess: (data) => {
+      console.log('User updated successfully', data)
+      queryClient.invalidateQueries({ queryKey: ['customers'], exact: true })
+    },
+  })
 }

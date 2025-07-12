@@ -61,7 +61,7 @@ function Login() {
           navigate({ to: '/admin' })
           form.reset()
         } else if (res?.founduser.role === 'customer') {
-          navigate({ to: '/customer' })
+          navigate({ to: '/' })
         } else if (res?.founduser.role  === 'store_owner') {
           navigate({ to: '/store_owner' })
         } else if (res?.founduser.role  === 'driver') {
