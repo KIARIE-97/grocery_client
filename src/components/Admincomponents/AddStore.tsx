@@ -32,6 +32,7 @@ export function AddShopForm() {
     defaultValues: {
       name: '',
       location: '',
+      image: ''
       // user: user?.id ?? undefined
     },
     onSubmit: async ({ value }) => {
@@ -40,12 +41,13 @@ export function AddShopForm() {
         return;
       }
       try {
-        const data =  createStore({
+        const data = createStore({
           store_name: value.name,
           location: value.location,
+          shop_image: value.image,
           is_verified: false,
           user: Number(user.id),
-        });
+        })
     
         console.log('Store created successfully:', data);
         toast.success('Store created successfully!');

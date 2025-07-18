@@ -15,7 +15,7 @@ const getToken = () => {
 }
 
 //helper function to handle api responses and errors
-const handleApiResponse = async (res: Response) => {
+export const handleApiResponse = async (res: Response) => {
   let errorMessage = `request failed wit status ${res.status}: ${res.statusText}`
   if (!res.ok) {
     try {

@@ -16,6 +16,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
   const isSignedIn = useStore(authStore, (state) => state.isAuthenticated)
   const foundUser = useStore(authStore, (state) => state.user)
   const [showCartSidebar, setShowCartSidebar] = useState(false)
+  const [showUserDropdown, setShowUserDropdown] = useState(false)
 
   console.log('Found User:', foundUser?.full_name)
   const location = useLocation()
@@ -34,7 +35,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
         {/* Top Row */}
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <div className=" items-center gap-2">
             <Link to="/customer">
               <img
                 src="https://tse2.mm.bing.net/th/id/OIP.HUhGmeR3uzqXwLg1d3nqnAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
@@ -64,8 +65,10 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
             {isSignedIn ? (
               <>
                 <div className="relative">
-                  <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-xs font-bold text-orange-500">
-                    1
+                  <div className="w-6 h-6 p-6  flex items-center justify-center text-xs font-bold text-orange-500">
+                    <Link to='/customer'>
+                    dashboard
+                    </Link>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -91,10 +94,15 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
               </>
             ) : (
               <div className="flex flex-col sm:flex-row items-center gap-3">
-                <div className="flex items-center w-full sm:w-auto border border-gray-300 rounded overflow-hidden bg-white"></div>
                 <Link to="/auth/register">
                   <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-800 text-sm font-semibold w-full sm:w-auto">
-                    SUBSCRIBE NOW
+                    SIGN UP
+                  </button>
+                </Link>
+                <div className="flex items-center w-full sm:w-auto border border-gray-300 rounded overflow-hidden bg-white"></div>
+                <Link to="/auth/login">
+                  <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-800 text-sm font-semibold w-full sm:w-auto">
+                    SIGN IN
                   </button>
                 </Link>
               </div>
@@ -121,23 +129,19 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuLink href="/new-products">
-                        New Products
+                      <NavigationMenuLink href="/allstores">
+                        our stores
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuLink href="/featured-products">
+                      <NavigationMenuLink href="/featuredproducts">
                         Featured Products
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                       <NavigationMenuLink href="/blog">Blog</NavigationMenuLink>
                     </NavigationMenuItem>
-                    <NavigationMenuItem>
-                      <NavigationMenuLink href="/pages">
-                        Pages
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
+                    
                     <NavigationMenuItem>
                       <NavigationMenuLink href="/contact">
                         Contact Us

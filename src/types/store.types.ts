@@ -8,17 +8,22 @@ export enum SStatus {
 }
 
 export type TStore = {
-  id:string
+  id: string
   store_name: string
   location: string
   is_verified: boolean
   status: SStatus
- user: TUserData
- products: TProduct[]
- orders: TOrder[]
+  opening_time: string
+  user: TUserData
+  closing_time: string
+  description: string
+  shop_image: string
+  products: TProduct[]
+  orders: TOrder[]
 }
 export type TStoreForm = {
   store_name: string
+  shop_image: string
   location: string
   is_verified: boolean
   user: number

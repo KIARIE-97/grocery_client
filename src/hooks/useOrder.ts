@@ -1,5 +1,5 @@
-import { createOrder, deleteOrder, getOrder, getOrders, updateOrder } from "@/api/order"
-import type { TOrder } from "@/types/order.types"
+import { createOrder, deleteOrder, getOrder, getOrders, updateOrder, updateOrderStatus } from "@/api/order"
+import type { TCartOrder, TOrder } from "@/types/order.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
 
 export const useOrders = (): UseQueryResult => {
@@ -15,11 +15,11 @@ export const useOrder = (id: string): UseQueryResult<TOrder, Error> => {
     enabled: !!id,
   })
 }
-export const useCreateOrder = (): UseMutationResult<TOrder, Error, TOrder> => {
+export const useCreateOrder = ()=> {
   const queryClient = useQueryClient()
-  return useMutation({
+  return useMutation<TCartOrder, Error, TCartOrder>({
     mutationKey: ['createorder'],
-    mutationFn: createOrder,
+    mutationFn: (orderData) => createOrder(orderData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
     },
@@ -46,6 +46,28 @@ export const useDeleteOrder = (): UseMutationResult<void, Error, string> => {
     mutationFn: deleteOrder,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
+    },
+  })
+}
+
+export type OStatus = 'PREPARING' | 'READY' | 'DELIVERED' | 'COMPLETED'
+
+interface UpdateOrderStatusInput {
+  orderId: string
+  status: OStatus
+}
+
+export const useUpdateOrderStatus = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ['update-order-status'],
+    mutationFn: ({ orderId, status }: UpdateOrderStatusInput) =>
+      updateOrderStatus(orderId, status),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
+      // Optionally: Show a toast or notification to the user
+      console.log('Order status updated:', data)
     },
   })
 }

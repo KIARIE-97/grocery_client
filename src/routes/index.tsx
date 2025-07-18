@@ -1,4 +1,5 @@
 import { CarouselPlugin } from '@/components/carousel'
+import { GrocerChat } from '@/components/Gemini'
 import HomeHighlights from '@/components/homeItem'
 import Navbar from '@/components/navbar'
 import { createFileRoute } from '@tanstack/react-router'
@@ -9,10 +10,12 @@ export const Route = createFileRoute('/')({
 
 function App() {
   return (
-    <div>
+    <div className="relative">
       {/* Homepage Sections */}
-      <CarouselPlugin/>
+      <Navbar />
+      <CarouselPlugin />
       <HomeHighlights />
+      <GrocerChat />
     </div>
   )
 }

@@ -31,6 +31,8 @@ function main () {
   }, [])
   const [showCart, setShowCart] = useState(false)
   const showNavbar = !isSignedIn || (isSignedIn && location === '/')
+    const isDashboard = location.startsWith('/dashboard')
+
   return (
     <>
       <Toaster
@@ -39,9 +41,10 @@ function main () {
         richColors={true}
         className="!rounded-lg !shadow-lg !bg-white !text-gray-900"
       />
-      <Header />
-      {showNavbar && <Navbar onCartClick={() => setShowCart((v) => !v)} />}
-    
+     
+      {/* {showNavbar && <Navbar onCartClick={() => setShowCart((v) => !v)} />} */}
+      {/* {isSignedIn &&
+        location === '/' &&(<Navbar onCartClick={() => setShowCart((v) => !v)} />)} */}
       {showCart && <CartSidebar onClose={() => setShowCart(false)} />}
       <Outlet />
       <TanStackRouterDevtools />

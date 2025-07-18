@@ -22,12 +22,14 @@ const OrderDetail = () => {
   if (isLoading) return <div className="p-4">Loading orders...</div>
   if (error || !customerData)
     return <div className="p-4">Could not load orders.</div>
+         console.log('Customer Data:', customerData.orders) // Debugging line to check customerData
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
 
       {customerData.orders.map((order) => (
+    
         <div
           key={order.id}
           className="bg-white rounded shadow p-4 mb-6 border border-gray-200"
@@ -37,7 +39,9 @@ const OrderDetail = () => {
               <p className="font-semibold">{order.delivery_schedule_at}</p>
               <p className="text-gray-500 text-sm">GrocerJet - kutus</p>
               <p className="text-gray-500 text-sm">Delivered - GrocerJet</p>
-              <p className="text-gray-500 text-sm">2 Items</p>
+              <p className="text-gray-500 text-sm">
+                {order.products?.length ?? 0} items
+              </p>
             </div>
             <div className="text-lg font-bold text-orange-500">
               KES {order.total_amount}

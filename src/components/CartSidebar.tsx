@@ -1,7 +1,22 @@
-import { useCart } from "@/store/cartStore"
+import { useAuth } from '@/hooks/UseAuth'
+import { useCreateOrder, useOrder } from '@/hooks/useOrder'
+import { useCreatePayment } from '@/hooks/usePayment' // Your payment hook
+import { useCart } from '@/store/cartStore'
+import { useState } from 'react'
+import { PaymentForm } from './customer/Checkout'
 
 const CartSidebar = ({ onClose }: { onClose?: () => void }) => {
   const { state, dispatch } = useCart()
+  const createOrder = useCreateOrder()
+  const { user } = useAuth()
+  const [id, setid] = useState<string | null>(null)
+
+  // Fetch order details once id is set
+  const {
+    data: order,
+    isLoading: orderLoading,
+    error: orderError,
+  } = useOrder(id || '')
 
   const total = state.items.reduce(
     (acc, item) => acc + item.product_price * item.quantity,
@@ -9,19 +24,92 @@ const CartSidebar = ({ onClose }: { onClose?: () => void }) => {
   )
 
   const handleCancelOrder = () => {
-    // Remove all items from cart
     state.items.forEach((item: any) => {
       dispatch({ type: 'REMOVE_FROM_CART', payload: item.id })
     })
+    setid(null) // reset id on cancel
     if (onClose) onClose()
   }
 
-  const handleCheckout = () => {
-    // Placeholder for checkout logic
-    alert('Proceeding to checkout...')
-    if (onClose) onClose()
+  const handleCheckout = async () => {
+    const cartData = {
+      id: 0, 
+      customer_id: user?.id ? Number(user.id) : 0,
+      product_ids: state.items.map((item) => item.id),
+      total_amount: total,
+      tax_amount: 0,
+      payment_method: "mpesa" as "mpesa", 
+      payment_status: 'pending' as 'pending',
+      status: 'pending' as 'pending',
+      delivery_schedule_at: new Date().toISOString(),
+    }
+
+    try {
+      createOrder.mutate(cartData, {
+        onSuccess: (data) => {
+          console.log('Order created successfully:', data)
+          setid(String(data.id))
+          dispatch({ type: 'CLEAR_CART' })
+          // if (onClose) onClose()
+        },
+        onError: (error: any) => {
+          console.error('Order creation failed:', error)
+        },
+      })
+    } catch (error) {
+      console.error('Order creation failed:', error)
+    }
   }
 
+
+  console.log( 'Order ID:', id)
+  if (id) {
+    // Show order summary and payment UI
+    if (orderLoading) return <div>Loading order summary...</div>
+    if (orderError)
+      return (
+        <div className="text-red-600">
+          Error loading order: {orderError.message}
+        </div>
+      )
+
+    return (
+      <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+        <div className="mb-4">
+          <div className="flex justify-between">
+            <span>Order ID:</span>
+            <span>{order?.order_id ?? 'N/A'}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Total:</span>
+            <span>Ksh {order?.total_amount.toFixed(2)}</span>
+          </div>
+          {/* Add more order details if needed */}
+        </div>
+
+        {/* PaymentForm integration */}
+        <PaymentForm
+          orderId={id}
+          onPaymentSuccess={() => {
+            alert('Payment successful!')
+            // Optionally clear order id to reset UI or redirect user
+            setid(null)
+            // Optionally clear cart again or update UI accordingly
+          }}
+        />
+
+        <button
+          className="mt-4 text-gray-500 underline"
+          onClick={() => setid(null)}
+        >
+          Back to Cart
+        </button>
+      </div>
+    )
+  }
+
+  // Default: show cart items and checkout button
   return (
     <div className="fixed top-16 right-4 w-96 bg-white shadow-lg rounded-lg p-4 z-40">
       <h2 className="text-lg font-bold mb-4">My Cart</h2>
@@ -74,8 +162,11 @@ const CartSidebar = ({ onClose }: { onClose?: () => void }) => {
             <button
               className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
               onClick={handleCheckout}
+              disabled={createOrder.isPending}
             >
-              Proceed to Checkout
+              {createOrder.isPending
+                ? 'Creating Order...'
+                : 'Proceed to Checkout'}
             </button>
           </div>
         </>
@@ -91,4 +182,5 @@ const CartSidebar = ({ onClose }: { onClose?: () => void }) => {
     </div>
   )
 }
+
 export default CartSidebar

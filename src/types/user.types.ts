@@ -1,3 +1,5 @@
+import type { TProduct } from "./product.types"
+
 export type TUserData = {
   id: string
   full_name: string
@@ -38,6 +40,7 @@ export interface IOrder {
   payment_method: string
   payment_status: string
   status: string
+  products: TProduct[]
   total_amount: number
   created_at: string
   updated_at: string

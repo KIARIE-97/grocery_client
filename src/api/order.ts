@@ -1,4 +1,4 @@
-import type { TOrder } from "@/types/order.types"
+import type { TCartOrder, TOrder } from "@/types/order.types"
 
 const url = 'http://localhost:8000'
 
@@ -61,7 +61,7 @@ return res.json();
  
 }
 //create order
-export const createOrder = async (orderData: TOrder): Promise<TOrder> => {
+export const createOrder = async (orderData: TCartOrder): Promise<TCartOrder> => {
     const res = await fetch(`${url}/orders`, {
       method: 'POST',
       headers: {
@@ -72,6 +72,27 @@ export const createOrder = async (orderData: TOrder): Promise<TOrder> => {
     await handleApiResponse(res)
     return res.json();
 }
+
+export async function updateOrderStatus(orderId: string, status: string) {
+ console.log(`Updating order ${orderId} status to ${status}`)
+  const token = getToken()
+  const response = await fetch(`${url}/orders/${orderId}/status`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status: status.toLocaleLowerCase() }),
+  })
+
+  // if (!response.ok) {
+  //   throw new Error('Failed to update status')
+  // }
+  const newStatus = await response.json()
+  console.log('new status:', newStatus)
+  return newStatus
+}
+
 //update order
 export const updateOrder = async ({id , orderData}: any): Promise<TOrder> => {
     const numberId = parseInt(id)

@@ -17,6 +17,7 @@ import IncomeSummary from '@/components/Admincomponents/Summary';
 import { useAuth } from '@/hooks/UseAuth';
 import { useOrders } from '@/hooks/useOrder';
 import Error from '@/components/error';
+import Navbar from '@/components/navbar';
 
 export const Route = createFileRoute('/admin/')({
   component: RouteComponent,
@@ -38,6 +39,7 @@ function RouteComponent() {
     if (error) return <Error error={error} />
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
+    <Navbar/>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">

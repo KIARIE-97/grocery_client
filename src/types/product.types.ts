@@ -1,4 +1,5 @@
 import type { TCategory } from './category.types'
+import type { TOrder } from './order.types'
 import type { TStore } from './store.types'
 
 export type TProduct = {
@@ -12,7 +13,9 @@ export type TProduct = {
   size: string
   is_available: boolean
   product_image: string
-  categorys: TCategory[]
+  created_at: string
+  orders: TOrder []
+  categories: TCategory[]
 }
 export type TCartItem = {
     id: number;

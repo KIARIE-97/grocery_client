@@ -63,7 +63,7 @@ function Login() {
         } else if (res?.founduser.role === 'customer') {
           navigate({ to: '/' })
         } else if (res?.founduser.role  === 'store_owner') {
-          navigate({ to: '/store_owner' })
+          navigate({ to: '/store' })
         } else if (res?.founduser.role  === 'driver') {
           navigate({ to: '/driver' })
         } else {

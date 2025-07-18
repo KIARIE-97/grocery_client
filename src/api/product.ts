@@ -40,13 +40,7 @@ const getToken = () => {
 }
 //fetch all orders
 export const getProducts = async () => {
-  const token = getToken()
-  const res = await fetch(`${url}/products`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
+  const res = await fetch(`${url}/products`)
   await handleApiResponse(res)
   return res.json()
 }
