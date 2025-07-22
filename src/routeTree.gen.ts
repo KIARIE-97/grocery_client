@@ -10,7 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StoredetailsRouteImport } from './routes/storedetails'
-import { Route as StoreRouteImport } from './routes/store'
+import { Route as Store_ownerRouteImport } from './routes/store_owner'
 import { Route as SinglestoreRouteImport } from './routes/singlestore'
 import { Route as ProductdetailsRouteImport } from './routes/productdetails'
 import { Route as ProductRouteImport } from './routes/product'
@@ -23,17 +23,19 @@ import { Route as AllstoresRouteImport } from './routes/allstores'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as StoreIndexRouteImport } from './routes/store/index'
+import { Route as Store_ownerIndexRouteImport } from './routes/store_owner/index'
 import { Route as DriverIndexRouteImport } from './routes/driver/index'
 import { Route as CustomerIndexRouteImport } from './routes/customer/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as StoreProductRouteImport } from './routes/store/product'
-import { Route as StoreOrderRouteImport } from './routes/store/order'
+import { Route as Store_ownerProductRouteImport } from './routes/store_owner/product'
+import { Route as Store_ownerOrderRouteImport } from './routes/store_owner/order'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
+import { Route as CustomerOrderplacedRouteImport } from './routes/customer/orderplaced'
 import { Route as CustomerOrderdetailRouteImport } from './routes/customer/orderdetail'
 import { Route as CustomerMywalletRouteImport } from './routes/customer/mywallet'
 import { Route as CustomerCheckoutRouteImport } from './routes/customer/checkout'
 import { Route as CustomerAddressRouteImport } from './routes/customer/address'
+import { Route as CustomerAddlocationRouteImport } from './routes/customer/addlocation'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AdminStoresRouteImport } from './routes/admin/stores'
@@ -53,9 +55,9 @@ const StoredetailsRoute = StoredetailsRouteImport.update({
   path: '/storedetails',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StoreRoute = StoreRouteImport.update({
-  id: '/store',
-  path: '/store',
+const Store_ownerRoute = Store_ownerRouteImport.update({
+  id: '/store_owner',
+  path: '/store_owner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SinglestoreRoute = SinglestoreRouteImport.update({
@@ -118,10 +120,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const StoreIndexRoute = StoreIndexRouteImport.update({
+const Store_ownerIndexRoute = Store_ownerIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => StoreRoute,
+  getParentRoute: () => Store_ownerRoute,
 } as any)
 const DriverIndexRoute = DriverIndexRouteImport.update({
   id: '/',
@@ -138,20 +140,25 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const StoreProductRoute = StoreProductRouteImport.update({
+const Store_ownerProductRoute = Store_ownerProductRouteImport.update({
   id: '/product',
   path: '/product',
-  getParentRoute: () => StoreRoute,
+  getParentRoute: () => Store_ownerRoute,
 } as any)
-const StoreOrderRoute = StoreOrderRouteImport.update({
+const Store_ownerOrderRoute = Store_ownerOrderRouteImport.update({
   id: '/order',
   path: '/order',
-  getParentRoute: () => StoreRoute,
+  getParentRoute: () => Store_ownerRoute,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CustomerOrderplacedRoute = CustomerOrderplacedRouteImport.update({
+  id: '/orderplaced',
+  path: '/orderplaced',
+  getParentRoute: () => CustomerRoute,
 } as any)
 const CustomerOrderdetailRoute = CustomerOrderdetailRouteImport.update({
   id: '/orderdetail',
@@ -171,6 +178,11 @@ const CustomerCheckoutRoute = CustomerCheckoutRouteImport.update({
 const CustomerAddressRoute = CustomerAddressRouteImport.update({
   id: '/address',
   path: '/address',
+  getParentRoute: () => CustomerRoute,
+} as any)
+const CustomerAddlocationRoute = CustomerAddlocationRouteImport.update({
+  id: '/addlocation',
+  path: '/addlocation',
   getParentRoute: () => CustomerRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
@@ -252,7 +264,7 @@ export interface FileRoutesByFullPath {
   '/product': typeof ProductRoute
   '/productdetails': typeof ProductdetailsRoute
   '/singlestore': typeof SinglestoreRoute
-  '/store': typeof StoreRouteWithChildren
+  '/store_owner': typeof Store_ownerRouteWithChildren
   '/storedetails': typeof StoredetailsRoute
   '/admin/addcategory': typeof AdminAddcategoryRoute
   '/admin/addproduct': typeof AdminAddproductRoute
@@ -267,17 +279,19 @@ export interface FileRoutesByFullPath {
   '/admin/stores': typeof AdminStoresRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/customer/addlocation': typeof CustomerAddlocationRoute
   '/customer/address': typeof CustomerAddressRoute
   '/customer/checkout': typeof CustomerCheckoutRoute
   '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
+  '/customer/orderplaced': typeof CustomerOrderplacedRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/store/order': typeof StoreOrderRoute
-  '/store/product': typeof StoreProductRoute
+  '/store_owner/order': typeof Store_ownerOrderRoute
+  '/store_owner/product': typeof Store_ownerProductRoute
   '/admin/': typeof AdminIndexRoute
   '/customer/': typeof CustomerIndexRoute
   '/driver/': typeof DriverIndexRoute
-  '/store/': typeof StoreIndexRoute
+  '/store_owner/': typeof Store_ownerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -303,17 +317,19 @@ export interface FileRoutesByTo {
   '/admin/stores': typeof AdminStoresRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/customer/addlocation': typeof CustomerAddlocationRoute
   '/customer/address': typeof CustomerAddressRoute
   '/customer/checkout': typeof CustomerCheckoutRoute
   '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
+  '/customer/orderplaced': typeof CustomerOrderplacedRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/store/order': typeof StoreOrderRoute
-  '/store/product': typeof StoreProductRoute
+  '/store_owner/order': typeof Store_ownerOrderRoute
+  '/store_owner/product': typeof Store_ownerProductRoute
   '/admin': typeof AdminIndexRoute
   '/customer': typeof CustomerIndexRoute
   '/driver': typeof DriverIndexRoute
-  '/store': typeof StoreIndexRoute
+  '/store_owner': typeof Store_ownerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -329,7 +345,7 @@ export interface FileRoutesById {
   '/product': typeof ProductRoute
   '/productdetails': typeof ProductdetailsRoute
   '/singlestore': typeof SinglestoreRoute
-  '/store': typeof StoreRouteWithChildren
+  '/store_owner': typeof Store_ownerRouteWithChildren
   '/storedetails': typeof StoredetailsRoute
   '/admin/addcategory': typeof AdminAddcategoryRoute
   '/admin/addproduct': typeof AdminAddproductRoute
@@ -344,17 +360,19 @@ export interface FileRoutesById {
   '/admin/stores': typeof AdminStoresRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/customer/addlocation': typeof CustomerAddlocationRoute
   '/customer/address': typeof CustomerAddressRoute
   '/customer/checkout': typeof CustomerCheckoutRoute
   '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
+  '/customer/orderplaced': typeof CustomerOrderplacedRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
-  '/store/order': typeof StoreOrderRoute
-  '/store/product': typeof StoreProductRoute
+  '/store_owner/order': typeof Store_ownerOrderRoute
+  '/store_owner/product': typeof Store_ownerProductRoute
   '/admin/': typeof AdminIndexRoute
   '/customer/': typeof CustomerIndexRoute
   '/driver/': typeof DriverIndexRoute
-  '/store/': typeof StoreIndexRoute
+  '/store_owner/': typeof Store_ownerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -371,7 +389,7 @@ export interface FileRouteTypes {
     | '/product'
     | '/productdetails'
     | '/singlestore'
-    | '/store'
+    | '/store_owner'
     | '/storedetails'
     | '/admin/addcategory'
     | '/admin/addproduct'
@@ -386,17 +404,19 @@ export interface FileRouteTypes {
     | '/admin/stores'
     | '/auth/login'
     | '/auth/register'
+    | '/customer/addlocation'
     | '/customer/address'
     | '/customer/checkout'
     | '/customer/mywallet'
     | '/customer/orderdetail'
+    | '/customer/orderplaced'
     | '/demo/tanstack-query'
-    | '/store/order'
-    | '/store/product'
+    | '/store_owner/order'
+    | '/store_owner/product'
     | '/admin/'
     | '/customer/'
     | '/driver/'
-    | '/store/'
+    | '/store_owner/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -422,17 +442,19 @@ export interface FileRouteTypes {
     | '/admin/stores'
     | '/auth/login'
     | '/auth/register'
+    | '/customer/addlocation'
     | '/customer/address'
     | '/customer/checkout'
     | '/customer/mywallet'
     | '/customer/orderdetail'
+    | '/customer/orderplaced'
     | '/demo/tanstack-query'
-    | '/store/order'
-    | '/store/product'
+    | '/store_owner/order'
+    | '/store_owner/product'
     | '/admin'
     | '/customer'
     | '/driver'
-    | '/store'
+    | '/store_owner'
   id:
     | '__root__'
     | '/'
@@ -447,7 +469,7 @@ export interface FileRouteTypes {
     | '/product'
     | '/productdetails'
     | '/singlestore'
-    | '/store'
+    | '/store_owner'
     | '/storedetails'
     | '/admin/addcategory'
     | '/admin/addproduct'
@@ -462,17 +484,19 @@ export interface FileRouteTypes {
     | '/admin/stores'
     | '/auth/login'
     | '/auth/register'
+    | '/customer/addlocation'
     | '/customer/address'
     | '/customer/checkout'
     | '/customer/mywallet'
     | '/customer/orderdetail'
+    | '/customer/orderplaced'
     | '/demo/tanstack-query'
-    | '/store/order'
-    | '/store/product'
+    | '/store_owner/order'
+    | '/store_owner/product'
     | '/admin/'
     | '/customer/'
     | '/driver/'
-    | '/store/'
+    | '/store_owner/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -488,7 +512,7 @@ export interface RootRouteChildren {
   ProductRoute: typeof ProductRoute
   ProductdetailsRoute: typeof ProductdetailsRoute
   SinglestoreRoute: typeof SinglestoreRoute
-  StoreRoute: typeof StoreRouteWithChildren
+  Store_ownerRoute: typeof Store_ownerRouteWithChildren
   StoredetailsRoute: typeof StoredetailsRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
@@ -504,11 +528,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StoredetailsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/store': {
-      id: '/store'
-      path: '/store'
-      fullPath: '/store'
-      preLoaderRoute: typeof StoreRouteImport
+    '/store_owner': {
+      id: '/store_owner'
+      path: '/store_owner'
+      fullPath: '/store_owner'
+      preLoaderRoute: typeof Store_ownerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/singlestore': {
@@ -595,12 +619,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/store/': {
-      id: '/store/'
+    '/store_owner/': {
+      id: '/store_owner/'
       path: '/'
-      fullPath: '/store/'
-      preLoaderRoute: typeof StoreIndexRouteImport
-      parentRoute: typeof StoreRoute
+      fullPath: '/store_owner/'
+      preLoaderRoute: typeof Store_ownerIndexRouteImport
+      parentRoute: typeof Store_ownerRoute
     }
     '/driver/': {
       id: '/driver/'
@@ -623,19 +647,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/store/product': {
-      id: '/store/product'
+    '/store_owner/product': {
+      id: '/store_owner/product'
       path: '/product'
-      fullPath: '/store/product'
-      preLoaderRoute: typeof StoreProductRouteImport
-      parentRoute: typeof StoreRoute
+      fullPath: '/store_owner/product'
+      preLoaderRoute: typeof Store_ownerProductRouteImport
+      parentRoute: typeof Store_ownerRoute
     }
-    '/store/order': {
-      id: '/store/order'
+    '/store_owner/order': {
+      id: '/store_owner/order'
       path: '/order'
-      fullPath: '/store/order'
-      preLoaderRoute: typeof StoreOrderRouteImport
-      parentRoute: typeof StoreRoute
+      fullPath: '/store_owner/order'
+      preLoaderRoute: typeof Store_ownerOrderRouteImport
+      parentRoute: typeof Store_ownerRoute
     }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
@@ -643,6 +667,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/demo/tanstack-query'
       preLoaderRoute: typeof DemoTanstackQueryRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/customer/orderplaced': {
+      id: '/customer/orderplaced'
+      path: '/orderplaced'
+      fullPath: '/customer/orderplaced'
+      preLoaderRoute: typeof CustomerOrderplacedRouteImport
+      parentRoute: typeof CustomerRoute
     }
     '/customer/orderdetail': {
       id: '/customer/orderdetail'
@@ -670,6 +701,13 @@ declare module '@tanstack/react-router' {
       path: '/address'
       fullPath: '/customer/address'
       preLoaderRoute: typeof CustomerAddressRouteImport
+      parentRoute: typeof CustomerRoute
+    }
+    '/customer/addlocation': {
+      id: '/customer/addlocation'
+      path: '/addlocation'
+      fullPath: '/customer/addlocation'
+      preLoaderRoute: typeof CustomerAddlocationRouteImport
       parentRoute: typeof CustomerRoute
     }
     '/auth/register': {
@@ -799,18 +837,22 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface CustomerRouteChildren {
+  CustomerAddlocationRoute: typeof CustomerAddlocationRoute
   CustomerAddressRoute: typeof CustomerAddressRoute
   CustomerCheckoutRoute: typeof CustomerCheckoutRoute
   CustomerMywalletRoute: typeof CustomerMywalletRoute
   CustomerOrderdetailRoute: typeof CustomerOrderdetailRoute
+  CustomerOrderplacedRoute: typeof CustomerOrderplacedRoute
   CustomerIndexRoute: typeof CustomerIndexRoute
 }
 
 const CustomerRouteChildren: CustomerRouteChildren = {
+  CustomerAddlocationRoute: CustomerAddlocationRoute,
   CustomerAddressRoute: CustomerAddressRoute,
   CustomerCheckoutRoute: CustomerCheckoutRoute,
   CustomerMywalletRoute: CustomerMywalletRoute,
   CustomerOrderdetailRoute: CustomerOrderdetailRoute,
+  CustomerOrderplacedRoute: CustomerOrderplacedRoute,
   CustomerIndexRoute: CustomerIndexRoute,
 }
 
@@ -829,19 +871,21 @@ const DriverRouteChildren: DriverRouteChildren = {
 const DriverRouteWithChildren =
   DriverRoute._addFileChildren(DriverRouteChildren)
 
-interface StoreRouteChildren {
-  StoreOrderRoute: typeof StoreOrderRoute
-  StoreProductRoute: typeof StoreProductRoute
-  StoreIndexRoute: typeof StoreIndexRoute
+interface Store_ownerRouteChildren {
+  Store_ownerOrderRoute: typeof Store_ownerOrderRoute
+  Store_ownerProductRoute: typeof Store_ownerProductRoute
+  Store_ownerIndexRoute: typeof Store_ownerIndexRoute
 }
 
-const StoreRouteChildren: StoreRouteChildren = {
-  StoreOrderRoute: StoreOrderRoute,
-  StoreProductRoute: StoreProductRoute,
-  StoreIndexRoute: StoreIndexRoute,
+const Store_ownerRouteChildren: Store_ownerRouteChildren = {
+  Store_ownerOrderRoute: Store_ownerOrderRoute,
+  Store_ownerProductRoute: Store_ownerProductRoute,
+  Store_ownerIndexRoute: Store_ownerIndexRoute,
 }
 
-const StoreRouteWithChildren = StoreRoute._addFileChildren(StoreRouteChildren)
+const Store_ownerRouteWithChildren = Store_ownerRoute._addFileChildren(
+  Store_ownerRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -856,7 +900,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProductRoute: ProductRoute,
   ProductdetailsRoute: ProductdetailsRoute,
   SinglestoreRoute: SinglestoreRoute,
-  StoreRoute: StoreRouteWithChildren,
+  Store_ownerRoute: Store_ownerRouteWithChildren,
   StoredetailsRoute: StoredetailsRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,

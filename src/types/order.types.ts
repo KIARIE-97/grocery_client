@@ -1,4 +1,6 @@
+import type { TLocation } from "./location.types"
 import type { TCartItem, TProduct } from "./product.types"
+import type { TUserData } from "./user.types"
 
 export type TOrder = {
   order_id: number
@@ -8,6 +10,7 @@ export type TOrder = {
     | 'pending'
     | 'accepted'
     | 'ready'
+    | 'preparing'
     | 'out_for_delivery'
     | 'ready_for_pickup'
     | 'delivered'
@@ -18,8 +21,28 @@ export type TOrder = {
   delivery_schedule_at: string
   driver: string
   store: string
-  customer: string
+  customer: TUserData
   products: TProduct[]
+  delivery_address: TLocation
+  created_at: string
+}
+export type UpdateOrderStatusInput = {
+  orderId: string
+status:
+    | 'pending'
+    | 'accepted'
+    | 'ready'
+    | 'preparing'
+    | 'out_for_delivery'
+    | 'ready_for_pickup'
+    | 'delivered'
+    | 'cancelled'
+    | 'failed'  
+    delivery_schedule_at?: string
+}
+export  type CheckoutProps = {
+  order_id: string
+  delivery_schedule_at: string | null
 }
 export type TCartOrder = {
   id: number

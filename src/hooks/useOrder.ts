@@ -1,5 +1,5 @@
 import { createOrder, deleteOrder, getOrder, getOrders, updateOrder, updateOrderStatus } from "@/api/order"
-import type { TCartOrder, TOrder } from "@/types/order.types"
+import type { CheckoutProps, TCartOrder, TOrder } from "@/types/order.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
 
 export const useOrders = (): UseQueryResult => {
@@ -25,15 +25,11 @@ export const useCreateOrder = ()=> {
     },
   })
 }
-export const useUpdateOrder = (): UseMutationResult<
-  TOrder,
-  Error,
-  TOrder
-> => {
+export const useUpdateOrder = () => {
   const queryClient = useQueryClient()
-  return useMutation({
+  return useMutation<TOrder, Error, CheckoutProps>({
     mutationKey: ['updateorder'],
-    mutationFn: updateOrder,
+    mutationFn: (orderData: CheckoutProps) => updateOrder(orderData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
     },

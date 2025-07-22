@@ -19,6 +19,16 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
   const [showUserDropdown, setShowUserDropdown] = useState(false)
 
   console.log('Found User:', foundUser?.full_name)
+  const dashboardRoutes: Record<string, string> = {
+    customer: '/customer',
+    driver: '/driver',
+    admin: '/admin',
+    store_owner: '/store_owner',
+  }
+  // Add this line:
+  const dashboardRoute = foundUser?.role
+    ? dashboardRoutes[foundUser.role] || '/customer'
+    : '/customer'
   const location = useLocation()
 
   // Helper to format the current route
@@ -66,9 +76,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
               <>
                 <div className="relative">
                   <div className="w-6 h-6 p-6  flex items-center justify-center text-xs font-bold text-orange-500">
-                    <Link to='/customer'>
-                    dashboard
-                    </Link>
+                    <Link to={dashboardRoute}>dashboard</Link>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -141,7 +149,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
                     <NavigationMenuItem>
                       <NavigationMenuLink href="/blog">Blog</NavigationMenuLink>
                     </NavigationMenuItem>
-                    
+
                     <NavigationMenuItem>
                       <NavigationMenuLink href="/contact">
                         Contact Us

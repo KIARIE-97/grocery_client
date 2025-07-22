@@ -6,7 +6,7 @@ import type { TProduct } from '@/types/product.types'
 import { useState } from 'react'
 import { ProductModal } from '@/components/ui/ProductModal'
 
-export const Route = createFileRoute('/store/product')({
+export const Route = createFileRoute('/store_owner/product')({
   component: RouteComponent,
 })
 

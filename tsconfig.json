@@ -6,7 +6,7 @@
     "prettier.config.js",
     "vite.config.js",
     "src/components/store_owner",
-    "src/routes/store"
+    "src/routes/store_owner"
   ],
 
   "compilerOptions": {

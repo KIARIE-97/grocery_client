@@ -106,3 +106,14 @@ export const deleteStore = async (id: string) => {
     return res.json()
 }
 
+export const getOrdersForStore = async (storeId: number) => {
+  const token = getToken()
+  const res = await fetch(`${url}/stores/${storeId}/orders`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  await handleApiResponse(res)
+  return res.json()
+}

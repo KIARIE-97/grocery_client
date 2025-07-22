@@ -142,15 +142,35 @@ const storeOwnerMenuItems: MenuItem[] = [
     {
     label: 'Products',
     icon: Package,
-    url: '/store/product',
+    url: '/store_owner/product',
     badge: null,
     },
     {
     label: 'Orders',
     icon: ShoppingCart,
-    url: '/store/order',
+    url: '/store_owner/order',
     badge: null,
     }
+]
+const DriversMenuItems: MenuItem[] = [
+  {
+    label: 'Dashboard',
+    icon: Home,
+    url: '/driver',
+    badge: null,
+  },
+  {
+    label: 'Orders',
+    icon: ShoppingCart,
+    url: '/driver/orders',
+    badge: null,
+  },
+  {
+    label: 'Profile',
+    icon: BadgePercent,
+    url: '/driver/profile',
+    badge: null,
+  },
 ]
 
 const Sidebar: React.FC = () => {
@@ -168,11 +188,14 @@ const Sidebar: React.FC = () => {
            toast.error('Logout failed. Please try again.')
          }
        }
-       const isCustomer = user?.role === 'customer'
-       const itemsToShow = isCustomer ? customerMenuItems : menuItems 
-       
-       const isStoreOwner = user?.role === 'store_owner'
-       const storeOwnerItems = isStoreOwner ? storeOwnerMenuItems : []
+      let itemsToShow: MenuItem[] = menuItems
+      if (user?.role === 'customer') {
+        itemsToShow = customerMenuItems
+      } else if (user?.role === 'store_owner') {
+        itemsToShow = storeOwnerMenuItems
+      } else if (user?.role === 'driver') {
+        itemsToShow = DriversMenuItems
+      }
   
   return (
     <div className="relative min-h-screen w-full md:w-64 bg-blue-950">
@@ -187,52 +210,51 @@ const Sidebar: React.FC = () => {
           </div>
           <div className="flex-1 overflow-auto py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
-              {(isStoreOwner ? storeOwnerItems : itemsToShow).map(
-                (item, index) =>
-                  item.subItems ? (
-                    <Collapsible key={index} className="grid gap-2">
-                      <CollapsibleTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="flex w-full items-center justify-between"
-                        >
-                          <span className="flex items-center gap-3">
-                            <item.icon className="h-4 w-4" />
-                            {item.label}
-                          </span>
-                          <ChevronDown className="h-4 w-4" />
-                        </Button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        {item.subItems.map((subItem, subIndex) => (
-                          <Link
-                            key={subIndex}
-                            to={subItem.url}
-                            className="ml-7 flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                          >
-                            {subItem.label}
-                          </Link>
-                        ))}
-                      </CollapsibleContent>
-                    </Collapsible>
-                  ) : (
-                    <Link
-                      key={index}
-                      to={item.url}
-                      className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-100 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 ${
-                        item.label === 'Dashboard' &&
-                        'bg-gray-500 text-gray-900 dark:bg-gray-800 dark:text-gray-50'
-                      }`}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      {item.label}
-                      {item.badge && (
-                        <span className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
-                          {item.badge}
+              {itemsToShow.map((item, index) =>
+                item.subItems ? (
+                  <Collapsible key={index} className="grid gap-2">
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="flex w-full items-center justify-between"
+                      >
+                        <span className="flex items-center gap-3">
+                          <item.icon className="h-4 w-4" />
+                          {item.label}
                         </span>
-                      )}
-                    </Link>
-                  ),
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      {item.subItems.map((subItem, subIndex) => (
+                        <Link
+                          key={subIndex}
+                          to={subItem.url}
+                          className="ml-7 flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                        >
+                          {subItem.label}
+                        </Link>
+                      ))}
+                    </CollapsibleContent>
+                  </Collapsible>
+                ) : (
+                  <Link
+                    key={index}
+                    to={item.url}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-100 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 ${
+                      item.label === 'Dashboard' &&
+                      'bg-gray-500 text-gray-900 dark:bg-gray-800 dark:text-gray-50'
+                    }`}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    {item.label}
+                    {item.badge && (
+                      <span className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                ),
               )}
             </nav>
           </div>

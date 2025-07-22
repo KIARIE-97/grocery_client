@@ -1,7 +1,7 @@
 import DashboardOverview from '@/components/store_owner/Dashboard'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/store/')({
+export const Route = createFileRoute('/store_owner/')({
   component: RouteComponent,
 })
 

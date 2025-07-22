@@ -1,8 +1,8 @@
 import type { TEditUser, TUserData } from "@/types/user.types"
 
-const url = 'http://localhost:8000'
+export const url = 'http://localhost:8000'
 
-const getToken = () => {
+export const getToken = () => {
   const Userdata = localStorage.getItem('auth')
   if (!Userdata) {
     throw new Error('No authentication data found')

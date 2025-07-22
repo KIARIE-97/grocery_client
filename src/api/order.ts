@@ -1,4 +1,4 @@
-import type { TCartOrder, TOrder } from "@/types/order.types"
+import type { TCartOrder, TOrder, UpdateOrderStatusInput } from "@/types/order.types"
 
 const url = 'http://localhost:8000'
 
@@ -55,9 +55,18 @@ export const getOrders = async () => {
 
 //fetch order by id
 export const getOrder = async (id: string) => {
-    const res = await fetch(`${url}/orders/${parseInt(id)}`)
+    const token = getToken()
+
+    const res = await fetch(`${url}/orders/${parseInt(id)}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
     await handleApiResponse(res)
-return res.json();
+    const savedOrder = await res.json()
+    console.log('Fetched order:', savedOrder)
+return savedOrder;
  
 }
 //create order
@@ -73,8 +82,11 @@ export const createOrder = async (orderData: TCartOrder): Promise<TCartOrder> =>
     return res.json();
 }
 
-export async function updateOrderStatus(orderId: string, status: string) {
- console.log(`Updating order ${orderId} status to ${status}`)
+export async function updateOrderStatus(
+  orderId: string,
+  status: string,
+): Promise<UpdateOrderStatusInput> {
+  console.log(`Updating order ${orderId} status to ${status}`)
   const token = getToken()
   const response = await fetch(`${url}/orders/${orderId}/status`, {
     method: 'PATCH',

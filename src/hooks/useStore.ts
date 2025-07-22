@@ -1,4 +1,4 @@
-import { createStore, getStore, getStoreById, updateStore } from "@/api/store"
+import { createStore, getOrdersForStore, getStore, getStoreById, updateStore } from "@/api/store"
 import type { TStore, TStoreForm } from "@/types/store.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
 
@@ -13,6 +13,13 @@ export const useStore = (id: string): UseQueryResult => {
     queryKey: ['stores', id],
     queryFn: () => getStoreById(id),
     enabled: !!id,
+  })
+}
+export const useStoreOrders = (storeId: number) => {
+  return useQuery({
+    queryKey: ['store-orders', storeId],
+    queryFn: () => getOrdersForStore(storeId),
+    enabled: !!storeId,
   })
 }
 export const useCreateStore = (): UseMutationResult<

@@ -3,7 +3,7 @@ import Navbar from '@/components/navbar'
 import Products from '@/components/store_owner/Products'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/store')({
+export const Route = createFileRoute('/store_owner')({
   component: RouteComponent,
 })
 

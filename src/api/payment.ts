@@ -40,6 +40,7 @@ const getToken = () => {
 export const createPayment = async (orderId: string, paymentData: any) => {
   const token = getToken()
   console.log(`Creating payment for order ${orderId} with token: ${token}`)
+   console.log('Creating payment with:', orderId, paymentData) 
   const res = await fetch(`${url}/payment/pay`, {
     method: 'POST',
     headers: {
@@ -55,6 +56,7 @@ export const createPayment = async (orderId: string, paymentData: any) => {
       return {}
     }
     try {
+      console.log('Payment response:', text)
       return JSON.parse(text)
     } catch (error) {
       console.error('Failed to parse JSON response:', error)
