@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import GroceryLoader from '../ui/GroceryLoader'
 
 type PaymentFormProps = {
   orderId: string
@@ -51,7 +52,11 @@ export const PaymentForm: React.FC<PaymentFormProps> = ({
     )
   }
 
-  if (orderLoading) return <div>Loading order...</div>
+  if (orderLoading) return (
+    <div className="center m-50">
+      <GroceryLoader />
+    </div>
+  )
 
   return (
     <div>

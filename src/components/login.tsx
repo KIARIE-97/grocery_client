@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label'
 import { useLoginUser } from '@/hooks/useLogin'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
+import Footer from './bars/Footer'
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -110,155 +111,167 @@ function Login() {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-96 shadow-lg ">
-        <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>Enter your credentials to sign in</CardDescription>
-          <CardAction />
-        </CardHeader>
+    <>
+      <div
+        className="flex items-center justify-center min-h-screen"
+        style={{
+          backgroundImage:
+            'https://img.freepik.com/free-vector/hand-drawn-pattern-background_23-2150822444.jpg',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
+        <Card className="w-96 shadow-lg ">
+          <CardHeader>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>Enter your credentials to sign in</CardDescription>
+            <CardAction />
+          </CardHeader>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            form.handleSubmit()
-          }}
-          className="flex flex-col gap-4"
-        >
-          <CardContent>
-            <div className="flex flex-col gap-6">
-              <label className="block mb-1 font-medium">Email</label>
-              <form.Field
-                name="email"
-                validators={{
-                  onChange: ({ value }) =>
-                    validateField(value, formSchema.shape.email),
-                  onBlur: ({ value }) =>
-                    validateField(value, formSchema.shape.email),
-                }}
-                children={(field) => (
-                  <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      type="email"
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="name@mail.com"
-                      required
-                    />
-                    {field.state.meta.errors.length > 0 && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {String(field.state.meta.errors[0])}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
-
-              <label className="block mb-1 font-medium"></label>
-              <form.Field
-                name="password"
-                validators={{
-                  onChange: ({ value }) =>
-                    validateField(value, formSchema.shape.password),
-                  onBlur: ({ value }) =>
-                    validateField(value, formSchema.shape.password),
-                }}
-                children={(field) => (
-                  <div className="grid gap-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      type="password"
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder="Enter your password"
-                      required
-                    />
-                    {field.state.meta.errors.length > 0 && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {String(field.state.meta.errors[0])}
-                      </p>
-                    )}
-                  </div>
-                )}
-              />
-
-              {/* otp Input */}
-              <form.Field
-              name="otp"
-              validators={{
-                onBlur: ({ value }) =>
-                  validateField(value, formSchema.shape.otp),
-              }}
-              children={(field) => (
-                <div>
-                  <Label>Enter code</Label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Input
-                      maxLength={8}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      onBlur={field.handleBlur}
-                      className="w-24"
-                    />
-                    <button
-                      type="button"
-                      className="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600"
-                    >
-                      Send
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">Resend otp</p>
-                  {field.state.meta.errors[0] && (
-                    <p className="text-sm text-red-500 mt-1">
-                      {field.state.meta.errors[0]}
-                    </p>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              form.handleSubmit()
+            }}
+            className="flex flex-col gap-4"
+          >
+            <CardContent>
+              <div className="flex flex-col gap-6">
+                <label className="block mb-1 font-medium">Email</label>
+                <form.Field
+                  name="email"
+                  validators={{
+                    onChange: ({ value }) =>
+                      validateField(value, formSchema.shape.email),
+                    onBlur: ({ value }) =>
+                      validateField(value, formSchema.shape.email),
+                  }}
+                  children={(field) => (
+                    <div className="grid gap-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        type="email"
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="name@mail.com"
+                        required
+                      />
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {String(field.state.meta.errors[0])}
+                        </p>
+                      )}
+                    </div>
                   )}
+                />
+
+                <label className="block mb-1 font-medium"></label>
+                <form.Field
+                  name="password"
+                  validators={{
+                    onChange: ({ value }) =>
+                      validateField(value, formSchema.shape.password),
+                    onBlur: ({ value }) =>
+                      validateField(value, formSchema.shape.password),
+                  }}
+                  children={(field) => (
+                    <div className="grid gap-2">
+                      <Label htmlFor="password">Password</Label>
+                      <Input
+                        type="password"
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="Enter your password"
+                        required
+                      />
+                      {field.state.meta.errors.length > 0 && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {String(field.state.meta.errors[0])}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
+
+                {/* otp Input */}
+                <form.Field
+                  name="otp"
+                  validators={{
+                    onBlur: ({ value }) =>
+                      validateField(value, formSchema.shape.otp),
+                  }}
+                  children={(field) => (
+                    <div>
+                      <Label>Enter code</Label>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Input
+                          maxLength={8}
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                          className="w-24"
+                        />
+                        <button
+                          type="button"
+                          className="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600"
+                        >
+                          Send
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">Resend otp</p>
+                      {field.state.meta.errors[0] && (
+                        <p className="text-sm text-red-500 mt-1">
+                          {field.state.meta.errors[0]}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                />
+              </div>
+
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
+                  <button
+                    type="submit"
+                    disabled={!canSubmit || loginUser.isPending}
+                    className="w-full bg-orange-300 rounded-lg mt-10 text-white hover:bg-orage-500 disabled:opacity-50"
+                  >
+                    {isSubmitting || loginUser.isPending
+                      ? 'Logging in...'
+                      : 'Login'}
+                  </button>
+                )}
+              />
+
+              {loginUser.isError && (
+                <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {loginUser.error?.message ||
+                      'Login failed. Please try again.'}
+                  </p>
                 </div>
               )}
-            />
-            </div>
-
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <button
-                  type="submit"
-                  disabled={!canSubmit || loginUser.isPending}
-                  className="w-full bg-orange-300 rounded-lg mt-10 text-white hover:bg-orage-500 disabled:opacity-50"
-                >
-                  {isSubmitting || loginUser.isPending
-                    ? 'Logging in...'
-                    : 'Login'}
-                </button>
-              )}
-            />
-
-            {loginUser.isError && (
-              <div className="mt-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
-                <p className="text-sm text-red-600 dark:text-red-400">
-                  {loginUser.error?.message ||
-                    'Login failed. Please try again.'}
-                </p>
+            </CardContent>
+            <CardFooter className="flex flex-col items-center">
+              <p>Don't have an account?</p>
+              <div className="text-blue-600 hover:underline">
+                <Link to="/auth/register"> Sign up now</Link>
               </div>
-            )}
-          </CardContent>
-          <CardFooter className="flex flex-col items-center">
-            <p>Don't have an account?</p>
-            <div className="text-blue-600 hover:underline">
-              <Link to="/auth/register"> Sign up now</Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
+      <Footer />
+    </>
   )
 }
 

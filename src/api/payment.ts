@@ -40,29 +40,29 @@ const getToken = () => {
 export const createPayment = async (orderId: string, paymentData: any) => {
   const token = getToken()
   console.log(`Creating payment for order ${orderId} with token: ${token}`)
-   console.log('Creating payment with:', orderId, paymentData) 
+  console.log('Creating payment with:', orderId, paymentData)
   const res = await fetch(`${url}/payment/pay`, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ orderId, ...paymentData }),
   })
   await handleApiResponse(res)
-    const text = await res.text()
-    if (!text) {
-      // No response body, assume success
-      return {}
-    }
-    try {
-      console.log('Payment response:', text)
-      return JSON.parse(text)
-    } catch (error) {
-      console.error('Failed to parse JSON response:', error)
-      // Optionally, return empty object or throw error
-      return {}
-    }
+  const text = await res.text()
+  if (!text) {
+    // No response body, assume success
+    return {}
+  }
+  try {
+    console.log('Payment response:', text)
+    return JSON.parse(text)
+  } catch (error) {
+    console.error('Failed to parse JSON response:', error)
+    // Optionally, return empty object or throw error
+    return {}
+  }
 }
 //fetch all payments
 export const getPayments = async () => {
@@ -74,5 +74,17 @@ export const getPayments = async () => {
     },
   })
   await handleApiResponse(res)
+  return res.json()
+}
+
+export const getPaymentsByUser = async (userId: number) => {
+  const token = getToken()
+  const res = await fetch(`${url}/payments/user/${userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  if (!res.ok) throw new Error('Failed to fetch payments')
   return res.json()
 }

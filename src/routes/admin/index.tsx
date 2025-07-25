@@ -17,6 +17,7 @@ import IncomeSummary from '@/components/Admincomponents/Summary';
 import { useAuth } from '@/hooks/UseAuth';
 import { useOrders } from '@/hooks/useOrder';
 import Error from '@/components/error';
+import GroceryLoader from '@/components/ui/GroceryLoader';
 
 export const Route = createFileRoute('/admin/')({
   component: RouteComponent,
@@ -24,7 +25,7 @@ export const Route = createFileRoute('/admin/')({
 
 function RouteComponent() {
   const { isAuthenticated } = useAuth()
-    const { data: orders, error } = useOrders()
+    const { data: orders, error, isLoading } = useOrders()
     const totalIncome = Array.isArray(orders)
       ? orders.reduce(
           (acc, order) =>
@@ -36,6 +37,11 @@ function RouteComponent() {
       : 0
   
     if (error) return <Error error={error} />
+    if (isLoading) return (
+      <div className="center m-50">
+        <GroceryLoader />
+      </div>
+    )
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
     {/* <Navbar/> */}

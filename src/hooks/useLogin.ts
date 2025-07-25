@@ -24,7 +24,7 @@ export const useLoginUser = (): UseMutationResult<
       otp: string
     }) => LoginUser(email, password, otp),
     onSuccess: (data) => {
-      authActions.setUser(data.founduser, data.accessToken)
+      authActions.setUser(data.founduser, data.accessToken, data.driver)
     },
     onError: (error) => {
       console.error(error)
@@ -56,7 +56,7 @@ export const useRegisterUser = (): UseMutationResult<any, Error, { email: string
       phone_number: string
     }) => RegisterUser(email, password, full_name, phone_number),
     onSuccess: (data) => {
-      authActions.setUser(data.founduser, data.accessToken)
+      authActions.setUser(data.founduser, data.accessToken, data.driver)
     },
     onError: (error) => {
       console.error(error)

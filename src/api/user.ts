@@ -1,4 +1,4 @@
-import type { TEditUser, TUserData } from "@/types/user.types"
+import type { TEditUser, TUserData } from '@/types/user.types'
 
 export const url = 'http://localhost:8000'
 
@@ -64,19 +64,21 @@ export const getCustomer = async (id: string) => {
 }
 export const getDrivers = async () => {
   const token = getToken()
-  console.log(`Fetching drivers with token: ${token}`)
-  const res = await fetch(`${url}/users/drivers`, {
+  const res = await fetch(`${url}/drivers`, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   })
   await handleApiResponse(res)
-  return res.json()
+ const data = await res.json()
+ console.log('response from getDrivers:', data)
+ return data;
 }
+
 export const getDriver = async (id: string) => {
   const token = getToken()
-  const res = await fetch(`${url}/users/drivers/${id}`, {
+  const res = await fetch(`${url}/drivers/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
@@ -121,6 +123,37 @@ export const updateUser = async (id: string, userData: TEditUser) => {
     },
     body: JSON.stringify(userData),
   })
+  await handleApiResponse(res)
+  return res.json()
+}
+//all users
+export const getUsers = async () => {
+  // const token = getToken()
+  const res = await fetch(`${url}/users`, {
+    headers: {
+      // Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  await handleApiResponse(res)
+  console.log('response from getUsers:', res)
+  if (!res.ok) {
+    throw new Error(`Failed to fetch users: ${res.status} ${res.statusText}`)
+  }
+  return res.json()
+}
+//driver
+export const assignOrderToDriver = async (
+  orderId: string,
+  driverId: number,
+) => {
+  const token = getToken()
+  const res = await fetch(`${url}/orders/${orderId}/assign-driver/${driverId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    }  })
   await handleApiResponse(res)
   return res.json()
 }

@@ -39,10 +39,10 @@ const getToken = () => {
 }
 //fetch all stores
 export const getStore = async () => {
-  const token = getToken()
+  // const token = getToken()
   const res = await fetch(`${url}/stores`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      // Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   })

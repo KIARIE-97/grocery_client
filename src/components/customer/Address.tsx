@@ -2,6 +2,7 @@ import React from 'react'
 import { Edit, Trash2 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { useUserLocations } from '@/hooks/useLocation'
+import GroceryLoader from '../ui/GroceryLoader'
 
 type Address = {
   label: string
@@ -14,7 +15,15 @@ type Address = {
 }
 
 const AddressComponent: React.FC = () => {
-  const { data: addressList = [] } = useUserLocations()
+  const { data: addressList = [] , isLoading} = useUserLocations()
+
+  if (isLoading) {
+    return (
+      <div className="center m-50">
+        <GroceryLoader />
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-md">

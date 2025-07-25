@@ -1,7 +1,7 @@
 
 export type TPayment = {
   amount: number
-  orderId: string
+  orderId: string | undefined
   paymentMethod: string
   phone_number: string
 }

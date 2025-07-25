@@ -44,6 +44,11 @@ interface MenuItem {
 
 const customerMenuItems: MenuItem[] = [
   {
+    label: 'Dashboard',
+    icon: Home,
+    url: '/customer',
+  },
+  {
     label: 'My Orders',
     icon: ShoppingCart,
     url: '/customer/orderdetail',
@@ -104,27 +109,27 @@ const menuItems: MenuItem[] = [
     url: '/admin/stores',
     badge: null,
   },
-  {
-    label: 'Locations',
-    icon: MapPin,
-    url: '/admin/locations',
-    subItems: [
-      { label: 'All Locations', url: '#' },
-      { label: 'Add New', url: '#' },
-    ],
-  },
-  {
-    label: 'Feedback',
-    icon: Star,
-    url: '/admin/ratings',
-    badge: null,
-  },
-  {
-    label: 'Pages',
-    icon: FileText,
-    url: '/admin/pages',
-    badge: null,
-  },
+  // {
+  //   label: 'Locations',
+  //   icon: MapPin,
+  //   url: '/admin/locations',
+  //   subItems: [
+  //     { label: 'All Locations', url: '#' },
+  //     { label: 'Add New', url: '#' },
+  //   ],
+  // },
+  // {
+  //   label: 'Feedback',
+  //   icon: Star,
+  //   url: '/admin/ratings',
+  //   badge: null,
+  // },
+  // {
+  //   label: 'Pages',
+  //   icon: FileText,
+  //   url: '/admin/pages',
+  //   badge: null,
+  // },
   {
     label: 'Profile',
     icon: BadgePercent,
@@ -137,7 +142,7 @@ const storeOwnerMenuItems: MenuItem[] = [
   {
     label: 'Dashboard',
     icon: Home,
-    url: '/store',
+    url: '/store_owner',
     badge: null,},
     {
     label: 'Products',

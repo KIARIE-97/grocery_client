@@ -1,6 +1,6 @@
 import type { TLocation } from "./location.types"
 import type { TCartItem, TProduct } from "./product.types"
-import type { TUserData } from "./user.types"
+import type { TDriver, TUserData } from "./user.types"
 
 export type TOrder = {
   order_id: number
@@ -17,9 +17,11 @@ export type TOrder = {
     | 'cancelled'
     | 'failed'
   payment_method: 'credit_card' | 'paypal' | 'cash' | 'wallet'
-  payment_status: 'pending' | 'completed' | 'failed' | 'refunded'
+  payment_status: 'pending' | 'success' | 'failed' | 'refunded'
   delivery_schedule_at: string
-  driver: string
+  driver: TDriver
+  delivery_fee: number
+  discount_amount: number
   store: string
   customer: TUserData
   products: TProduct[]

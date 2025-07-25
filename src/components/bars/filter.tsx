@@ -48,7 +48,6 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({ onFilterChange }) => {
     })
   }, [selectedCategory, priceRange, rating, selectedTags, onFilterChange])
                 
-                     console.log('category data', categoriesData) 
 
   return (
     <aside className="w-64 p-6 bg-primaryLightGreen rounded-lg shadow-md">
@@ -105,15 +104,15 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({ onFilterChange }) => {
           <span className="text-green-700 font-semibold">${priceRange[1]}</span>
         </div>
         <div className="flex justify-between text-sm text-green-700 mt-1">
-          <span>$0</span>
-          <span>$100</span>
+          <span>KES0</span>
+          <span>KES100</span>
         </div>
       </section>
 
       {/* Rating */}
-      <section className="mb-8">
+      {/* <section className="mb-8">
         <h3 className="text-orange-600 font-semibold mb-3 text-lg">Rating</h3>
-        <div className="flex space-x-2">
+        <div className="flex space-x-1">
           {[5, 4, 3, 2, 1].map((starCount) => (
             <button
               key={starCount}
@@ -132,7 +131,7 @@ const SidebarFilter: React.FC<SidebarFilterProps> = ({ onFilterChange }) => {
             </button>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Tags */}
       <section>

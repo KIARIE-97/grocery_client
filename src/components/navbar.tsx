@@ -18,7 +18,6 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
   const [showCartSidebar, setShowCartSidebar] = useState(false)
   const [showUserDropdown, setShowUserDropdown] = useState(false)
 
-  console.log('Found User:', foundUser?.full_name)
   const dashboardRoutes: Record<string, string> = {
     customer: '/customer',
     driver: '/driver',
@@ -45,8 +44,8 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
         {/* Top Row */}
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <div className=" items-center gap-2">
-            <Link to="/customer">
+          <div className="  flex flex-row gap-2">
+            <Link to="/" className='flex items-center gap-2'>
               <img
                 src="https://tse2.mm.bing.net/th/id/OIP.HUhGmeR3uzqXwLg1d3nqnAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
                 alt="Logo"
@@ -119,7 +118,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
         </div>
 
         {/* Bottom Nav */}
-        <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
+        <div className="mt-4 flex items-center justify-center gap-6 text-sm text-gray-700 overflow-x-auto">
           <div className="mt-4 flex items-center justify-start gap-6 text-sm text-gray-700 overflow-x-auto">
             {isSignedIn && location.pathname !== '/' ? (
               <span className="font-semibold">/ {getRouteLabel()}</span>
@@ -147,7 +146,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuLink href="/blog">Blog</NavigationMenuLink>
+                      <NavigationMenuLink href="/about">About Us</NavigationMenuLink>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>

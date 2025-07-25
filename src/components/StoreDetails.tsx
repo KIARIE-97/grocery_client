@@ -1,15 +1,31 @@
 import { useStore } from '@/hooks/useStore'
 import { useCart } from '@/store/cartStore'
 import type { TProduct } from '@/types/product.types'
-import { ShoppingCart, Heart, Star, StarOff } from 'lucide-react'
+import {
+  ShoppingCart,
+  Heart,
+  Star,
+  StarOff,
+  Plus,
+  Minus,
+  ChevronDown,
+} from 'lucide-react'
 import Navbar from './navbar'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import GroceryLoader from './ui/GroceryLoader'
 
 type StoreProductsProps = {
   storeId: string
   onClose?: () => void
 }
+
 function StoreDetails({ storeId, onClose }: StoreProductsProps) {
-   const { data: store, isLoading, isError } = useStore(storeId) as {
+  const {
+    data: store,
+    isLoading,
+    isError,
+  } = useStore(storeId) as {
     data: {
       store_name: string
       shop_image?: string
@@ -21,10 +37,15 @@ function StoreDetails({ storeId, onClose }: StoreProductsProps) {
     isLoading: boolean
     isError: boolean
   }
-  const { dispatch } = useCart()
+  const { dispatch, state: cartState } = useCart()
+  const [showAllProducts, setShowAllProducts] = useState(false)
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({})
 
-  
-  const getAverageRating = (product: TProduct) => 4
+  const getAverageRating = (product: TProduct) => {
+    if (!product.ratings || product.ratings.length === 0) return 0
+    const sum = product.ratings.reduce((acc, rating: { value: number }) => acc + rating.value, 0)
+    return Math.round(sum / product.ratings.length)
+  }
 
   const handleAddToCart = (product: TProduct) => {
     dispatch({
@@ -40,24 +61,75 @@ function StoreDetails({ storeId, onClose }: StoreProductsProps) {
     })
   }
 
+  const handleQuantityChange = (product: TProduct, change: number) => {
+    const cartItem = cartState.items.find((item) => item.id === product.id)
+    const newQuantity = (cartItem?.quantity || 0) + change
+
+    if (newQuantity <= 0) {
+      dispatch({
+        type: 'REMOVE_FROM_CART',
+        payload: product.id,
+      })
+    } else {
+      dispatch({
+        type: 'UPDATE_QUANTITY',
+        payload: {
+          id: product.id,
+          quantity: newQuantity,
+        },
+      })
+    }
+  }
+
+  const toggleFavorite = (productId: string) => {
+    setFavorites((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }))
+  }
+
   if (isLoading) {
-    return <div className="text-center py-12">Loading store...</div>
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="center py-12"
+      >
+        <GroceryLoader />
+      </motion.div>
+    )
   }
   if (isError || !store) {
     return (
-      <div className="text-center py-12 text-red-500">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-center py-12 text-red-500"
+      >
         Failed to load store or store not found.
-      </div>
+      </motion.div>
     )
   }
 
+  const displayedProducts = showAllProducts
+    ? store.products
+    : (store.products || []).slice(0, 6)
+
   return (
-    // <div className="w-full h-full max-w-4xl mx-auto bg-white rounded-lg shadow p-6">
-    <div className="w-full min-h-screen bg-white rounded-lg  p-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="w-full min-h-screen bg-white rounded-lg p-4"
+    >
       <Navbar />
       {/* Store info */}
-      <div className="mb-6">
-        {/* Store image as background with overlayed name */}
+      <motion.div
+        className="mb-6"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+      >
         <div
           className="relative w-full h-50 md:h-60 rounded-lg overflow-hidden flex items-center justify-center"
           style={{
@@ -66,35 +138,57 @@ function StoreDetails({ storeId, onClose }: StoreProductsProps) {
             backgroundPosition: 'center',
           }}
         >
-          <div className="absolute inset-0 bg-black/30  bg-opacity-40" />
+          <div className="absolute inset-0 bg-black/30 bg-opacity-40" />
           <h2 className="relative z-10 text-3xl md:text-4xl font-bold text-gray-300 text-center">
             {store?.store_name}
           </h2>
           <span className="text-gray-300">lets shop </span>
         </div>
-      </div>
+      </motion.div>
+
       {/* Products grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {store.products && store.products.length > 0 ? (
-          store.products.map((product: TProduct) => {
+      <motion.div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
+        {displayedProducts && displayedProducts.length > 0 ? (
+          displayedProducts.map((product: TProduct) => {
             const avgRating = getAverageRating(product)
+            const cartItem = cartState.items.find(
+              (item) => item.id === product.id,
+            )
+            const isFavorite = favorites[product.id] || false
+
             return (
-              <div
+              <motion.div
                 key={product.id}
                 className="bg-white rounded-xl shadow hover:shadow-lg transition border border-gray-100 group relative"
+                whileHover={{ y: -5 }}
+                layout
               >
                 {/* Favorite icon */}
-                <div className="absolute right-3 top-3 z-10">
-                  <button className="text-gray-400 hover:text-red-500 transition">
+                <motion.div
+                  className="absolute right-3 top-3 z-10"
+                  whileTap={{ scale: 1.2 }}
+                >
+                  <button
+                    onClick={() => toggleFavorite(String(product?.id))}
+                    className={`${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'} hover:text-red-500 transition`}
+                  >
                     <Heart size={20} />
                   </button>
-                </div>
+                </motion.div>
+
                 {/* Product image */}
-                <img
+                <motion.img
                   src={product.product_image}
                   alt={product.product_name}
                   className="w-full h-40 object-contain rounded-t-xl bg-green-50"
+                  whileHover={{ scale: 1.05 }}
                 />
+
                 {/* Product info */}
                 <div className="p-4">
                   <h2 className="font-semibold text-lg text-green-700 group-hover:text-orange-500 transition">
@@ -103,39 +197,83 @@ function StoreDetails({ storeId, onClose }: StoreProductsProps) {
                   <p className="text-sm text-gray-500 mb-2 truncate">
                     {product.product_description}
                   </p>
+
                   {/* Rating */}
-                  <div
-                    className="flex items-center mb-2 text-yellow-400 gap-0.5 overflow-hidden max-w-full"
-                    style={{ fontSize: 0 }}
-                  >
+                  <div className="flex items-center mb-2 text-yellow-400 gap-0.5 overflow-hidden max-w-full">
                     {Array.from({ length: 5 }).map((_, i) =>
                       i < avgRating ? (
-                        <Star key={i} size={14} strokeWidth={2} />
+                        <Star
+                          key={i}
+                          size={14}
+                          strokeWidth={2}
+                          className="fill-yellow-400"
+                        />
                       ) : (
                         <StarOff key={i} size={14} strokeWidth={2} />
                       ),
                     )}
+                    {/* <span className="text-xs text-gray-500 ml-1">
+                      ({product.ratings?.length || 0})
+                    </span> */}
                   </div>
+
                   {/* Price and cart button */}
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-green-700">
                       KES{product.product_price}
                     </span>
-                    <button
-                      onClick={() => handleAddToCart(product)}
-                      className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition"
-                    >
-                      <ShoppingCart size={18} />
-                    </button>
+
+                    <AnimatePresence mode="wait">
+                      {cartItem ? (
+                        <motion.div
+                          className="flex items-center gap-2 bg-green-500 text-white rounded-full"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          key={`controls-${product.id}`}
+                        >
+                          <button
+                            onClick={() => handleQuantityChange(product, -1)}
+                            className="p-1 hover:bg-green-600 rounded-l-full transition"
+                          >
+                            <Minus size={16} />
+                          </button>
+                          <span className="text-sm">{cartItem.quantity}</span>
+                          <button
+                            onClick={() => handleQuantityChange(product, 1)}
+                            className="p-1 hover:bg-green-600 rounded-r-full transition"
+                          >
+                            <Plus size={16} />
+                          </button>
+                        </motion.div>
+                      ) : (
+                        <motion.button
+                          onClick={() => handleAddToCart(product)}
+                          className="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full transition"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          key={`add-${product.id}`}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <ShoppingCart size={18} />
+                        </motion.button>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
+
                 {/* Out of stock badge */}
                 {!product.is_available && (
-                  <span className="absolute top-4 left-4 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                  <motion.span
+                    className="absolute top-4 left-4 bg-orange-500 text-white text-xs px-2 py-1 rounded"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                  >
                     Out of Stock
-                  </span>
+                  </motion.span>
                 )}
-              </div>
+              </motion.div>
             )
           })
         ) : (
@@ -143,8 +281,31 @@ function StoreDetails({ storeId, onClose }: StoreProductsProps) {
             No products found for this store.
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+
+      {/* Show All button */}
+      {store.products && store.products.length > 6 && (
+        <motion.div
+          className="flex justify-center mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <button
+            onClick={() => setShowAllProducts(!showAllProducts)}
+            className="flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition"
+          >
+            {showAllProducts ? 'Show Less' : 'Show All'}
+            <motion.span
+              animate={{ rotate: showAllProducts ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChevronDown size={18} />
+            </motion.span>
+          </button>
+        </motion.div>
+      )}
+    </motion.div>
   )
 }
 

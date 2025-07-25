@@ -90,7 +90,7 @@ const borderColor =
               &times;
             </button>
             <StoreDetails
-              storeId={store.id}
+              storeId={store.id ?? ''}
               onClose={() => setShowProducts(false)}
             />
           </div>

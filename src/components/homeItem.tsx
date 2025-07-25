@@ -1,34 +1,78 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import Products from './Products'
 import { Link } from '@tanstack/react-router'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useCategories } from '@/hooks/useCategory'
+import { useRef, useState } from 'react'
 
-// Sample data for demonstration
-const categories = [
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+    },
+  },
+}
+
+const hoverEffect = {
+  scale: 1.03,
+  transition: { duration: 0.3 },
+}
+
+const tapEffect = {
+  scale: 0.98,
+}
+
+const offers = [
   {
-    title: 'Vegetables & Fruits',
-    url: '/Product',
-    icon: 'https://tse2.mm.bing.net/th/id/OIP.cl0dUecT8JR9xMK9jqtTqgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3',
+    title: 'Super Saver',
+    subtitle: 'Save up to 30% on select items',
+    image:
+      'https://img.freepik.com/premium-photo/fresh-fruits-vegetables-dairy-products-spilling-out-shopping-basket-symbolizing-healthy-living-against-sunny-yellow-backdrop_1162141-27755.jpg',
+    bgColor: 'bg-orange-500',
+    button: {
+      text: 'Shop Now',
+      className: 'bg-white text-orange-500 px-4 py-2 rounded font-bold mt-2',
+    },
+    countdown: 'Ends in 2 days',
   },
   {
-    title: 'Grocery & Staples',
-    url: '/Products',
-    icon: 'https://cdn3.iconfinder.com/data/icons/unigrid-flat-food/90/006_142_grocery_food_gastronomy_bag-512.png',
+    title: 'Flash Sale',
+    subtitle: 'Limited time deals',
+    image:
+      'https://www.mlocal.be/oktThemes/ra161-s/images/accueil/image-bloc3.jpg',
+    bgColor: 'bg-blue-500',
+    button: {
+      text: 'Grab Deal',
+      className: 'bg-white text-blue-500 px-4 py-2 rounded font-bold mt-2',
+    },
+    countdown: 'Ends in 5 hours',
   },
   {
-    title: 'Dairy & Eggs',
-    url: '/Products',
-    icon: 'https://cdn.iconscout.com/icon/premium/png-256-thumb/dairy-product-2226475-1854570.png',
-  },
-  {
-    title: 'Beverages',
-    url: '/Products',
-    icon: 'https://cdn4.vectorstock.com/i/1000x1000/83/88/beverages-icons-set-vector-31748388.jpg',
-  },
-  {
-    title: 'Snacks',
-    url: '/Products',
-    icon: 'https://cdn-icons-png.flaticon.com/512/10368/10368881.png',
+    title: 'Buy 1 Get 1',
+    subtitle: 'On selected products',
+    image:
+      'https://tse1.mm.bing.net/th/id/OIP.NZjY08At7cyT7-6qBEPL2AHaFi?rs=1&pid=ImgDetMain&o=7&rm=3',
+    bgColor: 'bg-purple-500',
+    button: {
+      text: 'View Products',
+      className: 'bg-white text-purple-500 px-4 py-2 rounded font-bold mt-2',
+    },
+    countdown: 'Ends in 1 day',
   },
 ]
 
@@ -74,259 +118,306 @@ const featuredProducts = [
       'https://www.tastingtable.com/img/gallery/the-real-difference-between-bananas-and-baby-bananas/l-intro-1663622196.jpg',
   },
 ]
-const offers = [
-  {
-    title: 'Daily Essentials',
-    subtitle: 'MINIMUM 20% OFF EVERYDAY',
-    image:
-      'https://img.freepik.com/premium-photo/fresh-fruits-vegetables-dairy-products-spilling-out-shopping-basket-symbolizing-healthy-living-against-sunny-yellow-backdrop_1162141-27755.jpg',
-    bgColor: 'bg-orange-500',
-    button: null,
-  },
-  {
-    title: 'GET UP TO 30% OFF',
-    subtitle: '',
-    image:
-      'https://www.mlocal.be/oktThemes/ra161-s/images/accueil/image-bloc3.jpg',
-    bgColor: 'bg-lime-400',
-    button: {
-      text: 'SHOP NOW',
-      className: 'bg-black text-white px-3 py-1 text-sm rounded',
-    },
-  },
-  {
-    title: 'Special Discount for All Items',
-    subtitle: 'SHOP NOW',
-    image:
-      'https://tse1.mm.bing.net/th/id/OIP.NZjY08At7cyT7-6qBEPL2AHaFi?rs=1&pid=ImgDetMain&o=7&rm=3',
-    bgColor: 'bg-gray-300',
-    countdown: '00 days 00:00:00',
-    button: {
-      text: 'SHOP NOW',
-      className: 'bg-orange-500 text-white px-3 py-1 text-sm rounded',
-    },
-  },
-]
+
+
 export default function HomeHighlights() {
+  const { data: categoriesDataRaw, isLoading } = useCategories()
+  console.log('categories data', categoriesDataRaw)
+  const categoriesData = Array.isArray(categoriesDataRaw)
+    ? categoriesDataRaw
+    : []
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const itemsPerPage = 4
+  const totalPages = Math.ceil(categoriesData.length / itemsPerPage)
+
+  const visibleCategories = categoriesData.slice(
+    currentIndex * itemsPerPage,
+    (currentIndex + 1) * itemsPerPage,
+  )
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev === totalPages - 1 ? 0 : prev + 1))
+  }
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev === 0 ? totalPages - 1 : prev - 1))
+  }
+
   return (
-    <>
-      <section className="space-y-10 px-4 lg:px-12 py-6">
-        {/* Categories */}
-        <div>
-          <button>shop by</button>
-          <h2 className="text-2xl font-bold mb-4">Categories</h2>
-          <div className="flex items-center gap-4 overflow-x-auto scrollbar-hide">
-            <Button variant="outline" size="icon">
-              <ChevronLeft />
-            </Button>
-            {categories.map((cat, i) => (
-              <Link
-                to={cat.url}
-                key={i}
-                className="flex flex-col items-center justify-center px-4 py-3 bg-white rounded-lg shadow-sm min-w-[120px]"
+    <div>
+      <motion.section
+        className="space-y-10 px-4 lg:px-12 py-6"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        {/* Categories Section with Carousel */}
+        <motion.div
+          className="space-y-4 mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex justify-between items-center">
+            <div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={tapEffect}
+                className="text-sm font-medium text-gray-500"
               >
-                <img
-                  src={cat.icon}
-                  alt={cat.title}
-                  className="w-10 h-10 mx-auto"
-                />
-                <p className="text-sm mt-2 text-center">{cat.title}</p>
-              </Link>
-            ))}
-            <Button variant="outline" size="icon">
-              <ChevronRight />
-            </Button>
-          </div>
-        </div>
-      </section>
-      {/* offers */}
-      <section className="px-4 py-6 space-y-4">
-        <div>
-          <span className="bg-orange-500 text-white text-sm px-2 py-1 rounded">
-            Offers
-          </span>
-          <h2 className="text-xl font-bold mt-2">Best Values</h2>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          {offers.map((offer, index) => (
-            <div
-              key={index}
-              className={`rounded-lg p-4 text-white relative ${offer.bgColor} flex flex-col justify-between`}
-            >
-              <div>
-                <h3 className="text-xl font-bold">{offer.title}</h3>
-                {offer.subtitle && (
-                  <p className="text-sm mt-1">{offer.subtitle}</p>
-                )}
-              </div>
-              <div className="flex justify-between items-end mt-4 rounded-2xl  p-2">
-                <img
-                  src={offer.image}
-                  alt={offer.title}
-                  className="h-24 object-contain rounded-lg mx-auto shadow-md"
-                />
-                {offer.button && (
-                  <button className={offer.button.className}>
-                    {offer.button.text}
-                  </button>
-                )}
-              </div>
-              {offer.countdown && (
-                <p className="text-xs text-center mt-2 text-black font-semibold">
-                  {offer.countdown}
-                </p>
-              )}
+                shop by
+              </motion.button>
+              <h2 className="text-2xl font-bold">Categories</h2>
             </div>
-          ))}
-        </div>
 
-        {/* Bonus Cashback Banner */}
-        <div className="bg-green-100 rounded-lg p-6 text-center">
-          <h3 className="text-lg font-bold text-green-800">
-            Get KES 200 Cashback! Min Order of KES 500
-          </h3>
-          <p className="text-sm mt-2">
-            <span className="bg-white text-orange-500 px-4 py-1 rounded-full font-medium border border-orange-500 inline-block">
-              USE CODE : GAMBOSUPER2
+            {totalPages > 1 && (
+              <div className="flex gap-2">
+                <motion.button
+                  onClick={prevSlide}
+                  whileHover={hoverEffect}
+                  whileTap={tapEffect}
+                  className="p-2 rounded-full bg-gray-100"
+                >
+                  <ChevronLeft size={20} />
+                </motion.button>
+                <motion.button
+                  onClick={nextSlide}
+                  whileHover={hoverEffect}
+                  whileTap={tapEffect}
+                  className="p-2 rounded-full bg-gray-100"
+                >
+                  <ChevronRight size={20} />
+                </motion.button>
+              </div>
+            )}
+          </div>
+
+          <div className="relative overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={{
+                  hidden: { opacity: 0 },
+                  visible: {
+                    opacity: 1,
+                    transition: { staggerChildren: 0.1 },
+                  },
+                  exit: { opacity: 0 },
+                }}
+              >
+                {visibleCategories.map((cat, i) => (
+                  <motion.div
+                    key={`${currentIndex}-${i}`}
+                    variants={itemVariants}
+                    whileHover={hoverEffect}
+                    whileTap={tapEffect}
+                  >
+                    <Link
+                      to='/product'
+                      className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg shadow-sm h-full"
+                    >
+                      <motion.img
+                        src={cat.image}
+                        alt={cat.category_name}
+                        className="w-40 h-40 mx-auto object-contain mb-2"
+                        whileHover={{ scale: 1.1 }}
+                      />
+                      <p className="text-sm font-medium text-center">
+                        {cat.category_name}
+                      </p>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center gap-1 mt-4">
+              {Array.from({ length: totalPages }).map((_, index) => (
+                <motion.button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`w-2 h-2 rounded-full ${
+                    index === currentIndex ? 'bg-gray-800' : 'bg-gray-300'
+                  }`}
+                  whileHover={{ scale: 1.5 }}
+                  whileTap={{ scale: 0.8 }}
+                />
+              ))}
+            </div>
+          )}
+        </motion.div>
+
+        {/* Offers Section (unchanged) */}
+        <motion.section
+          className="px-4 py-6 space-y-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <motion.div whileHover={{ x: 5 }}>
+            <span className="bg-orange-500 text-white text-sm px-2 py-1 rounded">
+              Offers
             </span>
-          </p>
-        </div>
-      </section>
+            <h2 className="text-xl font-bold mt-2">Best Values</h2>
+          </motion.div>
 
-      {/* Featured Products */}
-      <section className="bg-gray-50 py-8 px-4 lg:px-12">
-        <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          {featuredProducts.map((product, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-lg shadow-sm p-4 text-center"
-            >
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-50 object-cover mb-3 rounded-lg "
-              />
-              <h4 className="font-semibold">{product.title}</h4>
-              <p className="text-sm text-gray-500">Available (In Stock)</p>
-              <div className="flex justify-center gap-2 text-sm mt-1">
-                <span className="text-orange-600 font-bold">
-                  {product.price}
-                </span>
-                <span className="line-through text-gray-400">
-                  {product.oldPrice}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section className="bg-white py-8 px-4 lg:px-12">
-        <h2 className="text-2xl font-bold mb-6">Special Offers</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {featuredProducts.map((product, i) => (
-            <div
-              key={i}
-              className="bg-gray-100 rounded-lg shadow-sm p-4 text-center"
-            >
-              <img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-50 object-cover mb-3"
-              />
-              <h4 className="font-semibold">{product.title}</h4>
-              <p className="text-sm text-gray-600">Available (In Stock)</p>
-              <div className="flex justify-center gap-2 text-sm mt-1">
-                <span className="text-orange-600 font-bold">
-                  {product.price}
-                </span>
-                <span className="line-through text-gray-400">
-                  {product.oldPrice}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-      {/* footer */}
-      <footer className="bg-gray-800 text-white py-6 px-4 lg:px-12 mt-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div>
-            <h3 className="text-lg font-bold mb-2">Customer Service</h3>
-            <ul className="space-y-1">
-              <li>
-                <a href="#" className="hover:underline">
-                  Contact Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Returns & Exchanges
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Shipping Information
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  FAQs
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-2">About Us</h3>
-            <ul className="space-y-1">
-              <li>
-                <a href="#" className="hover:underline">
-                  Our Story
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Terms of Service
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold mb-2">Follow Us</h3>
-            <p>
-              Stay connected with us on social media for the latest updates and
-              offers.
-            </p>
-            <p className="text-xs mt-2">
-              <a href="#" className="text-orange-400 hover:underline">
-                Facebook
-              </a>{' '}
-              |{' '}
-              <a href="#" className="text-orange-400 hover:underline">
-                Twitter
-              </a>{' '}
-              |{' '}
-              <a href="#" className="text-orange-400 hover:underline">
-                Instagram
-              </a>
-            </p>
-          </div>
-        </div>
-        <div className="text-center">
-          <p className="text-sm">© 2023 Grocer Jet. All rights reserved.</p>
-        </div>
-      </footer>
-    </>
+          <motion.div
+            className="grid md:grid-cols-3 gap-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {offers.map((offer, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                whileHover={hoverEffect}
+                whileTap={tapEffect}
+                className={`rounded-lg p-4 text-white relative ${offer.bgColor} flex flex-col justify-between`}
+              >
+                <div>
+                  <h3 className="text-xl font-bold">{offer.title}</h3>
+                  {offer.subtitle && (
+                    <p className="text-sm mt-1">{offer.subtitle}</p>
+                  )}
+                </div>
+                <div className="flex justify-between items-end mt-4 rounded-2xl p-2">
+                  <motion.img
+                    src={offer.image}
+                    alt={offer.title}
+                    className="h-24 object-contain rounded-lg mx-auto shadow-md"
+                    whileHover={{ scale: 1.05 }}
+                  />
+                  {offer.button && (
+                    <motion.button
+                      className={offer.button.className}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={tapEffect}
+                    >
+                      {offer.button.text}
+                    </motion.button>
+                  )}
+                </div>
+                {offer.countdown && (
+                  <p className="text-xs text-center mt-2 text-black font-semibold">
+                    {offer.countdown}
+                  </p>
+                )}
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Bonus Cashback Banner */}
+          <motion.div
+            className="bg-green-100 rounded-lg p-6 text-center"
+            whileHover={{ scale: 1.01 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h3 className="text-lg font-bold text-green-800">
+              Get KES 200 Cashback! Min Order of KES 500
+            </h3>
+            <motion.p className="text-sm mt-2" whileHover={{ scale: 1.05 }}>
+              <span className="bg-white text-orange-500 px-4 py-1 rounded-full font-medium border border-orange-500 inline-block">
+                USE CODE : GAMBOSUPER2
+              </span>
+            </motion.p>
+          </motion.div>
+        </motion.section>
+
+        {/* Featured Products Section (unchanged) */}
+        <motion.section
+          className="bg-gray-50 py-8 px-4 lg:px-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
+          <h2 className="text-2xl font-bold mb-6">Featured Products</h2>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {featuredProducts.map((product, i) => (
+              <motion.div
+                key={i}
+                variants={itemVariants}
+                whileHover={hoverEffect}
+                whileTap={tapEffect}
+                className="bg-white rounded-lg shadow-sm p-4 text-center"
+              >
+                <motion.img
+                  src={product.image}
+                  alt={product.title}
+                  className="w-full h-50 object-cover mb-3 rounded-lg"
+                  whileHover={{ scale: 1.05 }}
+                />
+                <h4 className="font-semibold">{product.title}</h4>
+                <p className="text-sm text-gray-500">Available (In Stock)</p>
+                <div className="flex justify-center gap-2 text-sm mt-1">
+                  <span className="text-orange-600 font-bold">
+                    {product.price}
+                  </span>
+                  <span className="line-through text-gray-400">
+                    {product.oldPrice}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+
+        {/* Special Offers Section (unchanged) */}
+        <motion.section
+          className="bg-white py-8 px-4 lg:px-12"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h2 className="text-2xl font-bold mb-6">Special Offers</h2>
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {featuredProducts.map((product, i) => (
+              <motion.div
+                key={i}
+                variants={itemVariants}
+                whileHover={hoverEffect}
+                whileTap={tapEffect}
+                className="bg-gray-100 rounded-lg shadow-sm p-4 text-center"
+              >
+                <motion.img
+                  src={product.image}
+                  alt={product.title}
+                  className="w-full h-50 object-cover mb-3"
+                  whileHover={{ scale: 1.05 }}
+                />
+                <h4 className="font-semibold">{product.title}</h4>
+                <p className="text-sm text-gray-600">Available (In Stock)</p>
+                <div className="flex justify-center gap-2 text-sm mt-1">
+                  <span className="text-orange-600 font-bold">
+                    {product.price}
+                  </span>
+                  <span className="line-through text-gray-400">
+                    {product.oldPrice}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+      </motion.section>
+    </div>
   )
 }

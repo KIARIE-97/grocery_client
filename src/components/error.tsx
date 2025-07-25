@@ -6,6 +6,7 @@ interface ErrorProps {
 
 function Error({ error }: ErrorProps) {
   return (
+    
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md">
         <div className="flex items-center">

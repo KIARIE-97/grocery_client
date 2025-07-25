@@ -7,11 +7,12 @@ import Error from '../error'
 import { TableModal } from '../ui/TableModal'
 import { useAuth } from '@/hooks/UseAuth'
 import { Link } from '@tanstack/react-router'
+import GroceryLoader from '../ui/GroceryLoader'
 
 
 function ProductsTable() {
   const [search, setSearch] = useState('')
-  const { data: products, error } = useProduct()
+  const { data: products, error, isLoading } = useProduct()
   const { isAuthenticated } = useAuth()
 
   const filteredData = useMemo(
@@ -86,10 +87,15 @@ function ProductsTable() {
   ]
 
   if (error) return <Error error={error} />
+  if (isLoading) return (
+    <div className="center m-50">
+      <GroceryLoader />
+    </div>
+  )
 
   return (
     <div className="p-4 space-y-6">
-      <Link to="/addproduct">
+      <Link to="/admin/addproduct">
         <button className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
           <h1 className=" font-bold">Add product</h1>
         </button>

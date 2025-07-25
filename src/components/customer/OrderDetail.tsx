@@ -4,6 +4,7 @@ import type { ICustomer } from "@/types/user.types"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import { OrderPDF } from "../ui/OrderPDF"
 import { useState } from "react"
+import GroceryLoader from "../ui/GroceryLoader"
 
 
 const OrderDetail = () => {
@@ -22,7 +23,11 @@ const OrderDetail = () => {
   }
  
 
-  if (isLoading) return <div className="p-4">Loading orders...</div>
+  if (isLoading) return (
+    <div className="center m-50">
+      <GroceryLoader />
+    </div>
+  )
   if (error || !customerData)
     return <div className="p-4">Could not load orders.</div>
          console.log('Customer Data:', customerData.orders) // Debugging line to check customerData

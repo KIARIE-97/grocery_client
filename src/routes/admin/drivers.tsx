@@ -1,12 +1,13 @@
 import Error from '@/components/error'
 import { Badge } from '@/components/ui/badge'
+import GroceryLoader from '@/components/ui/GroceryLoader'
 import { TableModal } from '@/components/ui/TableModal'
 import { useAuth } from '@/hooks/UseAuth'
 import { useDrivers } from '@/hooks/useUser'
-import type { TUserData } from '@/types/user.types'
+import type { TDriver, TUserData } from '@/types/user.types'
 import { createFileRoute } from '@tanstack/react-router'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export const Route = createFileRoute('/admin/drivers')({
   component: RouteComponent,
@@ -14,22 +15,25 @@ export const Route = createFileRoute('/admin/drivers')({
 
 function RouteComponent() {
   const [search, setSearch] = useState('')
-    const { data: drivers, error } = useDrivers()
+    const { data, error, isLoading } = useDrivers()
     const { isAuthenticated } = useAuth()
+ const drivers = data || [] 
 
-    const filteredData = useMemo(
-      () =>
-        Array.isArray(drivers)
-          ? drivers.filter(
-              (user: TUserData) =>
-                user.full_name.toLowerCase().includes(search.toLowerCase()) ||
-                user.email.toLowerCase().includes(search.toLowerCase()) ||
-                user.phone_number.toLowerCase().includes(search.toLowerCase()),
-            )
-          : [],
-      [drivers, search],
+const [filteredData, setFilteredData] = useState<TUserData[]>([])
+
+useEffect(() => {
+  if (Array.isArray(drivers)) {
+    const filtered = drivers.filter((driver: TDriver) =>
+      driver.user.full_name.toLowerCase().includes(search.toLowerCase()) ||
+      driver.user.email.toLowerCase().includes(search.toLowerCase()) ||
+      driver.user.phone_number.toLowerCase().includes(search.toLowerCase())
     )
-
+    setFilteredData(filtered.map(driver => driver.user))
+  } else {
+    setFilteredData([])
+  }
+},[data, search])
+console.log('Filtered drivers:', filteredData)
     const columns: ColumnDef<TUserData>[] = [
       {
         header: 'Full Name',
@@ -57,6 +61,11 @@ function RouteComponent() {
     ]
 
     if (error) return <Error error={error} />
+    if (isLoading) return (
+      <div className="center m-50">
+        <GroceryLoader />
+      </div>
+    )
   return (
     <div className="p-4 space-y-6">
           <div>

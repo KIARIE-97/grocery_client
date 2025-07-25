@@ -1,4 +1,5 @@
 import { createOrder, deleteOrder, getOrder, getOrders, updateOrder, updateOrderStatus } from "@/api/order"
+import { assignOrderToDriver } from "@/api/user"
 import type { CheckoutProps, TCartOrder, TOrder } from "@/types/order.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
 
@@ -27,9 +28,13 @@ export const useCreateOrder = ()=> {
 }
 export const useUpdateOrder = () => {
   const queryClient = useQueryClient()
-  return useMutation<TOrder, Error, CheckoutProps>({
+  return useMutation<
+    TOrder,
+    Error,
+    { order_id: string; delivery_schedule_at?: string; status?: OStatus; payment_status: string; delivery_address_id?: string }
+  >({
     mutationKey: ['updateorder'],
-    mutationFn: (orderData: CheckoutProps) => updateOrder(orderData),
+    mutationFn: (orderData) => updateOrder(orderData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
     },
@@ -64,6 +69,23 @@ export const useUpdateOrderStatus = () => {
       queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
       // Optionally: Show a toast or notification to the user
       console.log('Order status updated:', data)
+    },
+  })
+}
+//driver orders
+export const useAssignOrderToDriver = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ['assign-order-to-driver'],
+    mutationFn: ({
+      orderId,
+      driverId,
+    }: {
+      orderId: string
+      driverId: number
+    }) => assignOrderToDriver(orderId, driverId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
     },
   })
 }

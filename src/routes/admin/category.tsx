@@ -1,4 +1,5 @@
 import Error from '@/components/error'
+import GroceryLoader from '@/components/ui/GroceryLoader'
 import { TableModal } from '@/components/ui/TableModal'
 import { useAuth } from '@/hooks/UseAuth'
 import { useCategories } from '@/hooks/useCategory'
@@ -13,7 +14,7 @@ export const Route = createFileRoute('/admin/category')({
 
 function RouteComponent() {
     const [search, setSearch] = useState('')
-    const { data: categories, error } = useCategories()
+    const { data: categories, error, isLoading } = useCategories()
     const { isAuthenticated } = useAuth()
 
     const filteredData = useMemo(
@@ -42,9 +43,14 @@ function RouteComponent() {
     ]
 
     if (error) return <Error error={error} />
+    if (isLoading) return (
+      <div className="center m-50">
+        <GroceryLoader />
+      </div>
+    )
   return (
     <div className="p-4 space-y-6">
-       <Link to="/addcategory">
+       <Link to="/admin/category">
               <button className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
                 <h1 className=" font-bold">Add category</h1>
               </button>

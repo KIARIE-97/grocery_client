@@ -3,8 +3,8 @@ import { useStoreOrders, useStores } from '@/hooks/useStore'
 import { useAuth } from '@/hooks/UseAuth'
 import { useUpdateOrderStatus } from '@/hooks/useOrder'
 import type { TStore } from '@/types/store.types'
-import { toast } from 'sonner'
 import { View } from 'lucide-react'
+import GroceryLoader from '../ui/GroceryLoader'
 
 const ORDER_STATUSES = ['PREPARING', 'READY', 'DELIVERED', 'COMPLETED'] as const
 type OStatus = (typeof ORDER_STATUSES)[number]
@@ -31,7 +31,6 @@ const StoreOwnerOrders: React.FC = () => {
   const {
     data: orders,
     isLoading: ordersLoading,
-    error,
   } = useStoreOrders(selectedStoreId ?? 0)
 
   const updateStatus = useUpdateOrderStatus()
@@ -56,7 +55,11 @@ const StoreOwnerOrders: React.FC = () => {
   } else if (!myStores.length) {
     content = <div>You have no stores.</div>
   } else if (ordersLoading) {
-    content = <div>Loading orders...</div>
+    content = (
+      <div className="center m-50">
+        <GroceryLoader />
+      </div>
+    )
   } else if (!orders || !Array.isArray(orders) || orders.length === 0) {
     content = <div>No orders for this store.</div>
   } else {

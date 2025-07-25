@@ -40,10 +40,10 @@ const getToken = () => {
 }
 // Fetch all categories
 export const getCategories = async () => {
-    const token = getToken()
+    // const token = getToken()
     const res = await fetch(`${url}/category`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })
@@ -52,10 +52,10 @@ export const getCategories = async () => {
     }
 // Fetch a single category by ID
 export const getCategory = async (id: string) => {
-    const token = getToken()
+    // const token = getToken()
     const res = await fetch(`${url}/category/${id}`, {
         headers: {
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
     })

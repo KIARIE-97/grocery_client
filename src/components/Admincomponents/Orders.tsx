@@ -6,10 +6,11 @@ import { Badge } from "../ui/badge"
 import Error from "../error"
 import { TableModal } from "../ui/TableModal"
 import { useAuth } from "@/hooks/UseAuth"
+import GroceryLoader from "../ui/GroceryLoader"
 
 function OrdersTable() {
   const [search, setSearch] = useState('')
-  const { data: orders, error } = useOrders()
+  const { data: orders, error, isLoading } = useOrders()
   const { isAuthenticated } = useAuth()
   // const signedIn = useStore(authStore, (state) => state.isAuthenticated)
 
@@ -85,6 +86,11 @@ function OrdersTable() {
   ]
 
   if (error) return <Error error={error} />
+  if (isLoading) return (
+    <div className="center m-50">
+      <GroceryLoader />
+    </div>
+  )
 
   return (
     <div className="p-4 space-y-6">

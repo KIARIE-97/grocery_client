@@ -1,3 +1,4 @@
+import Footer from '@/components/bars/Footer'
 import Sidebar from '@/components/bars/SideBar'
 import Navbar from '@/components/navbar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
@@ -8,6 +9,7 @@ export const Route = createFileRoute('/admin')({
 
 function RouteComponent() {
   return (
+    <>
     <div className="flex h-screen bg-gray-100">
       <Sidebar />
       <div className="flex flex-col flex-1">
@@ -21,5 +23,7 @@ function RouteComponent() {
         </main>
       </div>
     </div>
+      <Footer />
+    </>
   )
 }

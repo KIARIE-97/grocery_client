@@ -1,5 +1,6 @@
 import Error from '@/components/error'
 import { Badge } from '@/components/ui/badge'
+import GroceryLoader from '@/components/ui/GroceryLoader'
 import { TableModal } from '@/components/ui/TableModal'
 import { useAuth } from '@/hooks/UseAuth'
 import { useStores } from '@/hooks/useStore'
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/admin/stores')({
 
 function RouteComponent() {
   const [search, setSearch] = useState('')
-  const { data: stores, error } = useStores()
+  const { data: stores, error, isLoading } = useStores()
   const { isAuthenticated } = useAuth()
 
   const filteredData = useMemo(
@@ -59,9 +60,14 @@ function RouteComponent() {
   ]
 
   if (error) return <Error error={error} />
+  if (isLoading) return (
+    <div className="center m-50">
+      <GroceryLoader />
+    </div>
+  )
   return (
     <div className="p-4 space-y-6 ">
-      <Link to="/addstore">
+      <Link to="/admin/addstore">
         <button className="bg-orange-400 text-white px-4 py-2 rounded hover:bg-orange-600 transition-colors">
           <h1 className=" font-bold">Add store</h1>
         </button>

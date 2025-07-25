@@ -8,7 +8,7 @@ export enum SStatus {
 }
 
 export type TStore = {
-  id: string
+  id: string | undefined
   store_name: string
   location: string
   is_verified: boolean

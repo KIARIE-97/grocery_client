@@ -1,6 +1,8 @@
 import SidebarFilter from '@/components/bars/filter'
+import Footer from '@/components/bars/Footer'
 import ProductGrid from '@/components/FilterGrid'
 import Navbar from '@/components/navbar'
+import GroceryLoader from '@/components/ui/GroceryLoader'
 import { useProduct } from '@/hooks/UseProduct'
 import type { TProduct } from '@/types/product.types'
 import { createFileRoute } from '@tanstack/react-router'
@@ -20,7 +22,9 @@ function RouteComponent() {
     tags?: string[]
   }>({})
 
-  if (isLoading) return <div className="text-center py-12">Loading...</div>
+  if (isLoading) return <div className="center py-12">
+    <GroceryLoader />
+  </div>
   if (isError)
     return (
       <div className="text-center py-12 text-red-500">
@@ -50,6 +54,7 @@ function RouteComponent() {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   )
 }

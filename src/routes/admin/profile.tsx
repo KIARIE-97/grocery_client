@@ -16,7 +16,7 @@ function RouteComponent() {
         <ProfileCardSection />
       </div>
       {/* Edit User Form (right) */}
-      <div className="flex-grow">
+      {/* <div className="flex-grow">
         <EditUserForm
           initialData={{
             full_name: '',
@@ -25,7 +25,7 @@ function RouteComponent() {
             profile_url: '',
           }}
         />
-      </div>
+      </div> */}
       {/* <FooterSection /> */}
     </div>
   </div>

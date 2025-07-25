@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/UseAuth'
 import type { TProduct } from '@/types/product.types'
 import { useState } from 'react'
 import { ProductModal } from '@/components/ui/ProductModal'
+import GroceryLoader from '@/components/ui/GroceryLoader'
 
 export const Route = createFileRoute('/store_owner/product')({
   component: RouteComponent,
@@ -26,7 +27,9 @@ const [selectedProduct, setSelectedProduct] = useState<TProduct | null>(null)
     isError: boolean
   }
   if (!user || user.role !== 'store_owner') return <div>Not authorized.</div>
-  if (storesLoading) return <div>Loading stores...</div>
+  if (storesLoading) return <div className='center m-50'>
+    <GroceryLoader />
+  </div>
   if (storesError || !stores) return <div>Failed to load stores.</div>
   if (!myStore) return <div>No store found for your account.</div>
   if (isLoading) return <div>Loading...</div>

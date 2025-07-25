@@ -1,3 +1,4 @@
+import type { OStatus } from "@/hooks/useOrder"
 import type { TCartOrder, TOrder, UpdateOrderStatusInput } from "@/types/order.types"
 
 const url = 'http://localhost:8000'
@@ -41,7 +42,6 @@ const parsedData = JSON.parse(Userdata)
 //fetch all orders
 export const getOrders = async () => {
   const token = getToken()
-  console.log(`Fetching orders with token: ${token}`)
   const res = await fetch(`${url}/orders`, {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -106,21 +106,34 @@ export async function updateOrderStatus(
 }
 
 //update order
-export const updateOrder = async ({id , orderData}: any): Promise<TOrder> => {
-    const numberId = parseInt(id)
-    if (isNaN(numberId)) {
-      throw new Error(`invalid orderid: ${id}`)
-    }
-    const res = await fetch(`${url}/orders/${numberId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderData),
-    })
-    await handleApiResponse(res)
+// Update the API function to expect proper parameters
+export const updateOrder = async (orderData: {
+  order_id: string
+  delivery_schedule_at?: string
+  status?: OStatus
+  payment_status: string
+  delivery_address_id?: string
+}): Promise<TOrder> => {
+  const numberId = parseInt(orderData.order_id)
+  if (isNaN(numberId)) {
+    throw new Error(`invalid orderid: ${orderData.order_id}`)
+  }
+  const token = getToken()
 
-    return res.json();
+  // Remove order_id from the data we send to the backend
+  const { order_id, ...updateData } = orderData
+
+  const res = await fetch(`${url}/orders/${numberId}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updateData),
+  })
+  await handleApiResponse(res)
+
+  return res.json()
 }
 //delete order
 export const deleteOrder = async (id: string) => {

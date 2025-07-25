@@ -4,7 +4,6 @@ import type { TStore } from './store.types'
 
 export type TProduct = {
   id: number
-  store: number
   product_name: string
   product_description: string
   product_price: number
@@ -16,6 +15,8 @@ export type TProduct = {
   created_at: string
   orders: TOrder []
   categories: TCategory[]
+  store: TStore
+  ratings?: []
 }
 export type TCartItem = {
     id: number;

@@ -1,3 +1,4 @@
+import type { TOrder } from "./order.types"
 import type { TProduct } from "./product.types"
 
 export type TUserData = {
@@ -9,6 +10,16 @@ export type TUserData = {
   profile_url: string
   is_active: boolean;
   role: 'customer' | 'store_owner' | 'driver' | 'admin'
+  driver: TDriver | null
+}
+export type TDriver = {
+  id: string
+  vehicle_info: string
+  is_available: boolean
+  current_location: string
+  total_earnings: number
+  user: TUserData
+  orders: TOrder[]
 }
 export type TupdateUserData = {
   full_name: string
@@ -18,6 +29,7 @@ export type TupdateUserData = {
  
 }
 export type TEditUser = {
+  [x: string]: string
   full_name: string
   email: string
   phone_number: string
@@ -29,6 +41,7 @@ export interface IAuth {
 }
 
 export interface IAuthState {
+  driver: TDriver | null
   user: TUserData | null
   token: string | null
   isAuthenticated: boolean

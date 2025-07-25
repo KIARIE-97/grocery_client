@@ -1,154 +1,152 @@
 import { useForm } from '@tanstack/react-form'
-import { Loader2, CheckCircle, AlertTriangle } from 'lucide-react'
+import {
+  Loader2,
+  CheckCircle,
+  AlertTriangle,
+  User,
+  Mail,
+  Phone,
+} from 'lucide-react'
 import { useUpdateUser } from '@/hooks/useUser'
 import type { TEditUser } from '@/types/user.types'
 import { toast } from 'sonner'
-import React, { useState } from 'react'
+import React from 'react'
+import { useAuth } from '@/hooks/UseAuth'
 
 export default function EditUserForm({
   initialData,
+  onSuccess,
 }: {
   initialData: TEditUser
+  onSuccess?: () => void
 }) {
+  const { user, setUser } = useAuth()
   const updateUserMutation = useUpdateUser()
-  const [error, setError] = React.useState<string | null>(null)
   const [isUploading, setIsUploading] = React.useState(false)
   const [uploadError, setUploadError] = React.useState('')
   const [uploadProgress, setUploadProgress] = React.useState(0)
-  const [myform, setmyForm] = useState({
-      full_name:  '',
-      email: '',
-      phone_number: '',
-      profile_url: '',
-      // address: initialData.address || '',
-    
-  })
-
+  // const {user} = useAuth()
   
-  // Cloudinary configuration - replace with your actual values
-  const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dfzzeclhz';
-  const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'grocerjet';
+
+  // Cloudinary configuration
+  const CLOUDINARY_CLOUD_NAME =
+    import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'dfzzeclhz'
+  const CLOUDINARY_UPLOAD_PRESET =
+    import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'grocerjet'
 
   const uploadToCloudinary = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-    // Add folder for organization
-    formData.append('folder', 'freshcart/products');
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+    formData.append('folder', 'freshcart/profiles')
 
     try {
-      setUploadProgress(10);
-
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+      setUploadProgress(10)
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
         {
           method: 'POST',
           body: formData,
-        }
-      );
-      console.log('response', response)
+        },
+      )
 
-      setUploadProgress(80);
+      setUploadProgress(80)
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        const errorMessage = errorData?.error?.message || `Upload failed: ${response.statusText}`;
-
-        // Special handling for upload preset errors
-        if (errorMessage.includes('upload preset') || errorMessage.includes('preset')) {
-          throw new Error('Upload preset not found. Please check your Cloudinary configuration or create an unsigned upload preset.');
-        }
-
-        throw new Error(errorMessage);
+        const errorData = await response.json().catch(() => null)
+        const errorMessage =
+          errorData?.error?.message || `Upload failed: ${response.statusText}`
+        throw new Error(errorMessage)
       }
 
-      const data = await response.json();
-      setUploadProgress(100);
-
-      return data.secure_url;
+      const data = await response.json()
+      setUploadProgress(100)
+      return data.secure_url
     } catch (error) {
-      console.error('Cloudinary upload error:', error);
-      throw new Error(error instanceof Error ? error.message : 'Failed to upload image');
+      console.error('Cloudinary upload error:', error)
+      throw new Error(
+        error instanceof Error ? error.message : 'Failed to upload image',
+      )
     }
-  };
+  }
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const file = e.target.files?.[0]
+    if (!file) return
 
     // Validate file type
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
     if (!validTypes.includes(file.type)) {
-      setUploadError('Please select a valid image file (JPEG, PNG, or WebP)');
-      return;
+      setUploadError('Please select a valid image file (JPEG, PNG, or WebP)')
+      return
     }
 
     // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024 // 5MB
     if (file.size > maxSize) {
-      setUploadError('File size must be less than 5MB');
-      return;
+      setUploadError('File size must be less than 5MB')
+      return
     }
 
-    setIsUploading(true);
-    setUploadError('');
-    setUploadProgress(0);
+    setIsUploading(true)
+    setUploadError('')
+    setUploadProgress(0)
 
     try {
-      // For immediate preview, read file as data URL
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   setmyForm((prev: TEditUser) => ({
-      //     ...prev,
-      //     profile_url: reader.result as string,
-      //   }))
-      // };
-      // reader.readAsDataURL(file);
-
-      // Upload to Cloudinary
-      const cloudinaryUrl = await uploadToCloudinary(file);
-
-      // Update form with Cloudinary URL
-      // setmyForm((prev: TEditUser) => ({ ...prev, profile_url: cloudinaryUrl }))
+      const cloudinaryUrl = await uploadToCloudinary(file)
       form.setFieldValue('profile_url', cloudinaryUrl)
-
-      setUploadProgress(100);
-
+      setUploadProgress(100)
     } catch (error) {
-      setUploadError(error instanceof Error ? error.message : 'Failed to upload image');
-      console.error('Upload error:', error);
+      setUploadError(
+        error instanceof Error ? error.message : 'Failed to upload image',
+      )
+      console.error('Upload error:', error)
     } finally {
-      setIsUploading(false);
+      setIsUploading(false)
     }
-  };
+  }
 
-  const form = useForm<TEditUser, any, any, any, any, any, any, any, any, any>({
+  const form = useForm({
     defaultValues: {
       full_name: initialData.full_name || '',
       email: initialData.email || '',
       phone_number: initialData.phone_number || '',
       profile_url: initialData.profile_url || '',
-      // address: initialData.address || '',
     },
     onSubmit: async ({ value }) => {
       try {
-        updateUserMutation.mutate({ id: '25', userData: value })
+const userId = initialData.userId ?? user?.id;
+if (!userId) {
+  throw new Error('User ID is required to update the user.');
+}
+const updatedUser = await updateUserMutation.mutateAsync({
+  id: userId,
+  userData: value,
+});
+setUser?.(updatedUser);
+
+toast.success('Profile updated successfully')
+onSuccess?.()
       } catch (error) {
         console.error('Error updating user:', error)
-        toast.error('Failed to update user')}
+        toast.error('Failed to update user')
+      }
     },
   })
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-gray-100 rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Edit User</h1>
+    <div className="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <User className="w-5 h-5" />
+        Edit Profile
+      </h1>
       <form
         onSubmit={(e) => {
           e.preventDefault()
           e.stopPropagation()
           void form.handleSubmit()
         }}
-        className="space-y-6"
+        className="space-y-4"
       >
         {/* Full Name */}
         <div className="space-y-2">
@@ -159,11 +157,12 @@ export default function EditUserForm({
                 !value ? 'Full name is required' : undefined,
             }}
             children={(field) => (
-              <>
+              <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700 flex items-center"
                 >
+                  <User className="w-4 h-4 mr-2" />
                   Full Name
                 </label>
                 <input
@@ -172,16 +171,16 @@ export default function EditUserForm({
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className={`mt-1 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
                     field.state.meta.errors ? 'border-red-500' : 'border'
-                  }`}
+                  } p-2`}
                 />
                 {field.state.meta.errors && (
                   <p className="text-sm text-red-500">
                     {field.state.meta.errors.join(', ')}
                   </p>
                 )}
-              </>
+              </div>
             )}
           />
         </div>
@@ -193,13 +192,21 @@ export default function EditUserForm({
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Email is required' : undefined,
+              onChangeAsyncDebounceMs: 500,
+              onChangeAsync: async ({ value }) => {
+                if (!value.includes('@')) {
+                  return 'Please enter a valid email'
+                }
+                return undefined
+              },
             }}
             children={(field) => (
-              <>
+              <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700  items-center"
                 >
+                  <Mail className="w-4 h-4 mr-2" />
                   Email
                 </label>
                 <input
@@ -209,16 +216,16 @@ export default function EditUserForm({
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  className={`mt-1 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
+                  className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
                     field.state.meta.errors ? 'border-red-500' : 'border'
-                  }`}
+                  } p-2`}
                 />
                 {field.state.meta.errors && (
                   <p className="text-sm text-red-500">
                     {field.state.meta.errors.join(', ')}
                   </p>
                 )}
-              </>
+              </div>
             )}
           />
         </div>
@@ -228,44 +235,13 @@ export default function EditUserForm({
           <form.Field
             name="phone_number"
             children={(field) => (
-              <>
+              <div className="space-y-1">
                 <label
                   htmlFor={field.name}
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-700  items-center"
                 >
+                  <Phone className="w-4 h-4 mr-2" />
                   Phone Number
-                </label>
-                <input
-                  id={field.name}
-                  name={field.name}
-                  value={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className={`mt-1 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                    field.state.meta.errors ? 'border-red-500' : 'border'
-                  }`}
-                />
-                {field.state.meta.errors && (
-                  <p className="text-sm text-red-500">
-                    {field.state.meta.errors.join(', ')}
-                  </p>
-                )}
-              </>
-            )}
-          />
-        </div>
-
-        {/* Address */}
-        {/* <div className="space-y-2">
-          <form.Field
-            name="address"
-            children={(field) => (
-              <>
-                <label
-                  htmlFor={field.name}
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Address
                 </label>
                 <input
                   id={field.name}
@@ -275,111 +251,96 @@ export default function EditUserForm({
                   onChange={(e) => field.handleChange(e.target.value)}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
                     field.state.meta.errors ? 'border-red-500' : 'border'
-                  }`}
+                  } p-2`}
                 />
                 {field.state.meta.errors && (
                   <p className="text-sm text-red-500">
                     {field.state.meta.errors.join(', ')}
                   </p>
                 )}
-              </>
+              </div>
             )}
           />
-        </div> */}
+        </div>
 
-        {/* Profile URL */}
+        {/* Profile Image */}
         <div className="space-y-2">
-        <form.Field
-          name="profile_url"
-        >
-          {(field) => (
-            <>
-              <label
-                htmlFor={field.name}
-                className="block text-sm font-medium text-gray-700"
-              >
-                Profile URL
-              </label>
-              <input
-                type="file"
-                accept="image/jpeg,image/jpg,image/png,image/webp"
-                onChange={handleFileUpload}
-                disabled={isUploading}
-                id={field.name}
-                name={field.name}
-                onBlur={field.handleBlur}
-                className={`mt-1 block h-10 w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm ${
-                  field.state.meta.errors ? 'border-red-500' : 'border'
-                }`}
-              />
-              {/* Upload Progress */}
-              {isUploading && (
-                <div className="mt-2">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs text-gray-600">Uploading...</span>
-                    <span className="text-xs text-gray-600">{uploadProgress}%</span>
+          <form.Field
+            name="profile_url"
+            children={(field) => (
+              <div className="space-y-1">
+                <label
+                  htmlFor={field.name}
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Profile Image
+                </label>
+                <div className="flex items-center gap-4">
+                  {field.state.value && (
+                    <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-200">
+                      <img
+                        src={field.state.value}
+                        alt="Profile preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handleFileUpload}
+                      disabled={isUploading}
+                      id={field.name}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      className={`block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 ${
+                        field.state.meta.errors ? 'border-red-500' : 'border'
+                      }`}
+                    />
+                    {isUploading && (
+                      <div className="mt-2">
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <span>Uploading...</span>
+                          <span>{uploadProgress}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                          <div
+                            className="bg-blue-600 h-1.5 rounded-full"
+                            style={{ width: `${uploadProgress}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    )}
+                    {uploadError && (
+                      <p className="mt-1 text-sm text-red-500 flex items-center">
+                        <AlertTriangle className="w-4 h-4 mr-1" />
+                        {uploadError}
+                      </p>
+                    )}
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-[#00A7B3] h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${uploadProgress}%` }}
-                    ></div>
-                  </div>
                 </div>
-              )}
-              {/* Upload Success */}
-              {!isUploading && field.state.value && typeof field.state.value === 'string' && field.state.value.includes('cloudinary') && (
-                <div className="mt-2 flex items-center text-green-600 text-xs">
-                  <CheckCircle className="h-3 w-3 mr-1" />
-                  Image uploaded successfully
-                </div>
-              )}
-              <p className="text-xs text-gray-500 mt-1">
-                Supported formats: JPEG, PNG, WebP (max 5MB)
-              </p>
-              {/* Upload Error */}
-              {uploadError && (
-                <div className="mt-2 flex items-center text-red-600 text-xs">
-                  <AlertTriangle className="h-3 w-3 mr-1" />
-                  {uploadError}
-                </div>
-              )}
-              {field.state.meta.errors && (
-                <p className="text-sm text-red-500">
-                  {field.state.meta.errors.join(', ')}
-                </p>
-              )}
-            </>
-          )}
-        </form.Field>
+              </div>
+            )}
+          />
         </div>
 
         {/* Submit Button */}
         <div className="pt-4">
           <button
             type="submit"
-            disabled={updateUserMutation.isPending}
-            className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={updateUserMutation.isPending || isUploading}
+            className="inline-flex items-center justify-center w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {updateUserMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Saving...
               </>
-            ) : updateUserMutation.isSuccess ? (
-              <>
-                <CheckCircle className="mr-2 h-4 w-4" />
-                User Updated!
-              </>
             ) : (
               'Save Changes'
             )}
           </button>
-          {updateUserMutation.isError && (
-            <p className="mt-2 text-sm text-red-500">
-              Error: {updateUserMutation.error.message}
-            </p>
-          )}
         </div>
       </form>
     </div>

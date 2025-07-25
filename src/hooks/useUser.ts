@@ -1,6 +1,15 @@
-import { createUser, getCustomer, getCustomers, getDrivers, getStoreOwner, updateUser } from "@/api/user";
-import type { TEditUser, TUserData } from "@/types/user.types";
+import { createUser, getCustomer, getCustomers, getDriver, getDrivers, getStoreOwner, getUsers, updateUser } from "@/api/user";
+import type { TDriver, TEditUser, TUserData } from "@/types/user.types";
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query";
+
+
+//all users
+export const useUsers = (): UseQueryResult => {
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: getUsers,
+  });
+}
 
 
 export const useCustomer = (): UseQueryResult => {
@@ -20,6 +29,12 @@ export const useDrivers = (): UseQueryResult => {
         queryKey: ['drivers'],
         queryFn: () => getDrivers(),
     });
+}
+export const useSingleDriver = (id: string) => {
+  return useQuery<TDriver>({
+    queryKey: ['driver', id],
+    queryFn: () => getDriver(id),
+  })
 }
 export const useStoreOwners = (): UseQueryResult => {
     return useQuery({
@@ -45,7 +60,7 @@ export const useUpdateUser = () => {
     mutationFn: ({ id, userData }: { id: string; userData: TEditUser }) => updateUser(id, userData),
     onSuccess: (data) => {
       console.log('User updated successfully', data)
-      queryClient.invalidateQueries({ queryKey: ['customers'], exact: true })
+      queryClient.invalidateQueries({ queryKey: ['users'], exact: true })
     },
   })
 }

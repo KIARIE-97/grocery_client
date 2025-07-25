@@ -1,3 +1,5 @@
+import Footer from '@/components/bars/Footer'
+import Navbar from '@/components/navbar'
 import SignUp from '@/components/register'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -6,7 +8,11 @@ export const Route = createFileRoute('/auth/register')({
 })
 
 function RouteComponent() {
-  return <div>
-    <SignUp/>
-  </div>
+  return (
+    <div>
+      <Navbar />
+      <SignUp />
+      <Footer />
+    </div>
+  )
 }

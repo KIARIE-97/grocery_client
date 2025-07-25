@@ -3,11 +3,18 @@ import { useForm } from '@tanstack/react-form'
 import { useOrder, useUpdateOrder, type OStatus } from '@/hooks/useOrder'
 import { useCreatePayment } from '@/hooks/usePayment'
 import { useUserLocations } from '@/hooks/useLocation'
-import { useSearch } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
+import { string } from 'zod'
+import { LocationForm } from './Addlocation'
+import { PlusCircle } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { EnhancedLocationForm } from './EnhancedLocation'
+import type { TLocation } from '@/types/location.types'
 
 type CheckoutProps = {
   orderId: string
   onPaymentSuccess?: (payment: any) => void
+  status?: OStatus
 }
 
 type DeliveryTimeSlot = {
@@ -17,7 +24,7 @@ type DeliveryTimeSlot = {
   endTime: string
 }
 
-const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
+export const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
   const [currentStep, setCurrentStep] = useState<number>(1)
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
     null,
@@ -26,79 +33,106 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
   const [selectedTimeSlot, setSelectedTimeSlot] =
     useState<DeliveryTimeSlot | null>(null)
   const [paymentMethod, setPaymentMethod] = useState<'mpesa' | 'cash'>('mpesa')
-  const [phoneNumber, setPhoneNumber] = useState('')
-
+const navigate = useNavigate()
   interface SearchParams {
-    orderId?: string;
+    orderId?: string
   }
   const search = useSearch({ from: '/customer/checkout' })
 
-    const orderId = (search as SearchParams).orderId?.replace(/"/g, '')
-      // console.log('orderId:', orderId)
+  const orderId = (search as SearchParams).orderId?.replace(/"/g, '')
+  console.log('orderId:', orderId)
   // Hooks
-  const { data: order, isLoading: orderLoading } = useOrder(orderId)
+  const { data: order, isLoading: orderLoading } = useOrder(orderId ?? '')
   const { data: userLocations = [], isLoading: locationsLoading } =
     useUserLocations()
   const updateOrder = useUpdateOrder()
   const createPayment = useCreatePayment()
+  const [isAddingAddress, setIsAddingAddress] = useState(false)
 
   // Form handling
   const form = useForm({
     defaultValues: {
       phoneNumber: '',
     },
-    onSubmit: async ({ value }) => {
-      if (currentStep === 3) {
-        // Changed from 4 to 3 since we removed a step
-        // Handle payment submission
-        if (paymentMethod === 'mpesa' && !value.phoneNumber) {
-          alert('Please enter your phone number for M-Pesa payment')
-          return
-        }
+    // In your Checkout component's onSubmit handler:
+ onSubmit : async ({ value }) => {
+  if (currentStep === 3) {
+    if (paymentMethod === 'mpesa' && !value.phoneNumber) {
+      alert('Please enter your phone number for M-Pesa payment')
+      return
+    }
 
-        try {
-          // First update the order with delivery details if needed
-          if (selectedDate && selectedTimeSlot) {
-            const deliveryDateTime = new Date(selectedDate)
-            const [startHour] = selectedTimeSlot.startTime.split(':')
-            deliveryDateTime.setHours(parseInt(startHour, 10))
+    try {
+ const storeId =
+   order?.products && order.products.length > 0
+     ? order.products[0]?.store?.id
+     : undefined
 
-            updateOrder.mutate({
-              order_id: orderId,
-              delivery_schedule_at: deliveryDateTime.toISOString(),
-            })
-          }
-
-          // Then process payment
-          if (paymentMethod === 'mpesa') {
-            await createPayment.mutateAsync(
-              {
-                orderId,
-                phone_number: value.phoneNumber,
-                amount: order?.total_amount || 0,
-                paymentMethod: 'mpesa',
-              },
-              {
-                onSuccess: (payment) => {
-                  onPaymentSuccess?.(payment)
-                },
-              },
-            )
-          } else {
-            // For cash on delivery, just update order status
-            await updateOrderStatus.mutateAsync({
-              orderId,
-              status: 'pending' as OStatus,
-            })
-            onPaymentSuccess?.({ method: 'cash' })
-          }
-        } catch (error) {
-          console.error('Checkout error:', error)
-        }
-      } else {
-        setCurrentStep(currentStep + 1)
+      const updateData: {
+        order_id: string
+        delivery_schedule_at?: string
+        delivery_address_id?: string
+        store_id?: string
+        delivery_fee?: number
+        payment_status: string
+        status?: OStatus
+      } = {
+        order_id: orderId ?? '',
+        payment_status: 'success',
+        status: 'accepted' as OStatus,
+        store_id: storeId,
       }
-    },
+      // First update the order with delivery details if needed
+      if (selectedDate && selectedTimeSlot && orderId) {
+        const deliveryDateTime = new Date(selectedDate)
+        const [startHour] = selectedTimeSlot.startTime.split(':')
+        deliveryDateTime.setHours(parseInt(startHour, 10))
+        updateData.delivery_schedule_at = deliveryDateTime.toISOString()
+      }
+      // Add delivery address if selected
+      if (selectedAddressId) {
+        updateData.delivery_address_id = selectedAddressId // This matches your DTO
+      }
+
+      // First update the order with delivery details
+ const updatedOrder = await updateOrder.mutateAsync(updateData)
+
+      // Use the delivery_fee from backend response
+      const deliveryFee = updatedOrder.delivery_fee || 0
+      const total = subtotal + taxAmount + deliveryFee - discountAmount
+
+      // Then process payment
+      if (paymentMethod === 'mpesa' && orderId) {
+        await createPayment.mutateAsync(
+          {
+            orderId,
+            phone_number: value.phoneNumber,
+            amount: total || 0,
+            paymentMethod: 'mpesa',
+          },
+          {
+            onSuccess: (payment) => {
+              onPaymentSuccess?.(payment)
+              navigate({ to: '/customer/orderplaced', search: { orderId } })
+            },
+          },
+        )
+      } else if (orderId) {
+        // For cash on delivery, just update order status
+        await updateOrder.mutateAsync({
+          order_id: orderId,
+          status: 'accepted' as OStatus,
+          payment_status: 'success',
+        })
+        onPaymentSuccess?.({ method: 'cash' })
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+    }
+  } else {
+    setCurrentStep(currentStep + 1)
+  }
+},
   })
 
   // Delivery time slots
@@ -144,13 +178,14 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
   // Calculate order totals
   const subtotal =
     order?.products?.reduce(
-      (sum, product) => sum + (product.product_price || 0),
+      (sum, product) => sum + (product.product_price || 10),
       0,
     ) || 0
-  const taxAmount = order?.tax_amount || 0
-  const deliveryFee = order?.delivery_fee || 0
-  const discountAmount = order?.discount_amount || 0
+  const taxAmount = order?.tax_amount || 20
+  const deliveryFee = Number(order?.delivery_fee) || 50
+  const discountAmount = Number(order?.discount_amount) || 5
   const total = subtotal + taxAmount + deliveryFee - discountAmount
+console.log('Order totals:', order)
 
   if (orderLoading || locationsLoading) {
     return <div className="p-4">Loading checkout details...</div>
@@ -203,35 +238,84 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
           className="space-y-6"
         >
           {/* Step 1: Delivery Address */}
+          {/* Step 1: Delivery Address */}
           {currentStep === 1 && (
             <div className="border rounded-lg p-6">
               <h2 className="text-lg font-semibold mb-4">
                 1. Delivery Address
               </h2>
-              <div className="space-y-3">
-                {userLocations.map((location) => (
-                  <div
-                    key={location.id}
-                    className={`p-4 border rounded-md cursor-pointer ${selectedAddressId === location.id ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`}
-                    onClick={() => setSelectedAddressId(location.id)}
-                  >
-                    <h3 className="font-medium">{location.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      {location.address_line1}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {location.address_line2}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {location.city}, {location.country}
-                    </p>
-                  </div>
-                ))}
+
+              {/* Add Address Button */}
+              <div className="mb-4">
+                <button
+                  type="button" // Added type="button" to prevent form submission
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setIsAddingAddress(true)
+                  }}
+                  className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
+                >
+                  <PlusCircle className="h-5 w-5" />
+                  Add New Address
+                </button>
               </div>
+
+              {/* Enhanced Address Form */}
+              <AnimatePresence>
+                {isAddingAddress && (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    {' '}
+                    {/* Prevent click propagation */}
+                    <LocationForm
+                      onSuccess={() => {
+                        setIsAddingAddress(false)
+                        // Refresh addresses or update state as needed
+                      }}
+                      onCancel={() => setIsAddingAddress(false)}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
+
+              {/* Existing addresses list */}
+              <div className="space-y-3 mt-4">
+                {userLocations.length > 0 ? (
+                  userLocations.map((location: TLocation) => (
+                    <motion.div
+                      key={location.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`p-4 border rounded-md cursor-pointer ${selectedAddressId === location.id ? 'border-orange-500 bg-orange-50' : 'border-gray-200'}`}
+                      onClick={() => setSelectedAddressId(location.id)}
+                    >
+                      <h3 className="font-medium">{location.label}</h3>
+                      <p className="text-sm text-gray-600">
+                        {location.addressLine1}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {location.city}, {location.country}
+                      </p>
+                    </motion.div>
+                  ))
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="p-4 border border-gray-200 rounded-md bg-gray-50 text-center"
+                  >
+                    <p className="text-gray-600">No addresses saved yet</p>
+                  </motion.div>
+                )}
+              </div>
+
               {selectedAddressId && (
-                <div className="mt-4 p-3 bg-green-50 text-green-800 text-sm rounded-md">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-4 p-3 bg-green-50 text-green-800 text-sm rounded-md"
+                >
                   Selected address will be used for delivery
-                </div>
+                </motion.div>
               )}
             </div>
           )}
@@ -382,16 +466,31 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
 
             <button
               type="submit"
-              className={`px-6 py-2 rounded-md text-white ${currentStep === 3 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-orange-600 hover:bg-orange-700'}`}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                console.log('Form values from submit order:', form.state.values)
+                form.handleSubmit()
+              }}
+              className={`px-6 py-2 rounded-md text-white ${
+                currentStep === 3
+                  ? 'bg-blue-600 hover:bg-blue-700'
+                  : 'bg-orange-600 hover:bg-orange-700'
+              } ${form.state.isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={
                 (currentStep === 1 && !selectedAddressId) ||
                 (currentStep === 2 && (!selectedDate || !selectedTimeSlot)) ||
                 (currentStep === 3 &&
                   paymentMethod === 'mpesa' &&
-                  !form.state.values.phoneNumber)
+                  !form.state.values.phoneNumber) ||
+                form.state.isSubmitting
               }
             >
-              {currentStep === 3 ? 'Place Order' : 'Proceed'}
+              {form.state.isSubmitting
+                ? 'Processing...'
+                : currentStep === 3
+                  ? 'Place Order'
+                  : 'Proceed'}
             </button>
           </div>
         </form>
@@ -400,10 +499,15 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
       <div className="md:w-1/3">
         <div className="border rounded-lg p-6 sticky top-4 bg-gray-50">
           <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-
+          <div className="space-y-2 mb-4"></div>
           <div className="space-y-2 mb-4">
             {order?.products?.map((product) => (
               <div key={product.id} className="flex justify-between">
+                <img
+                  src={product.product_image}
+                  alt={product.product_name}
+                  className="w-12 h-12 object-cover rounded"
+                />
                 <span className="text-gray-700">{product.product_name}</span>
                 <span className="font-medium">
                   ${product.product_price?.toFixed(2)}
@@ -415,15 +519,15 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>Ksh{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Tax</span>
-              <span>${taxAmount.toFixed(2)}</span>
+              <span>Ksh{taxAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Delivery Fee</span>
-              <span>${deliveryFee.toFixed(2)}</span>
+              <span>Ksh{deliveryFee.toFixed(2)}</span>
             </div>
             {discountAmount > 0 && (
               <div className="flex justify-between text-green-600">
@@ -433,7 +537,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onPaymentSuccess }) => {
             )}
             <div className="flex justify-between font-bold text-lg pt-2 border-t mt-2">
               <span className="text-gray-800">Total</span>
-              <span className="text-orange-600">${total.toFixed(2)}</span>
+              <span className="text-orange-600">Ksh{total.toFixed(2)}</span>
             </div>
           </div>
 

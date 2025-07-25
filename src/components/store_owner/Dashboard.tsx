@@ -23,6 +23,7 @@ import { useOrders } from '@/hooks/useOrder'
 import type { TProduct } from '@/types/product.types'
 import { useAuth } from '@/hooks/UseAuth'
 import { useCategories } from '@/hooks/useCategory'
+import GroceryLoader from '../ui/GroceryLoader'
 
 const Dashboard: React.FC = () => {
   const { data: ordersRaw, isLoading } = useOrders()
@@ -94,6 +95,14 @@ const Dashboard: React.FC = () => {
   const lightGreen = 'bg-green-50'
   const lightOrange = 'bg-orange-50'
   const borderGreen = 'border-green-200'
+
+  if (isLoading) {
+    return (
+      <div className="center m-50">
+        <GroceryLoader />
+      </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">

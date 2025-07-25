@@ -1,3 +1,4 @@
+import Footer from '@/components/bars/Footer'
 import { CarouselPlugin } from '@/components/carousel'
 import { GrocerChat } from '@/components/Gemini'
 import HomeHighlights from '@/components/homeItem'
@@ -10,12 +11,15 @@ export const Route = createFileRoute('/')({
 
 function App() {
   return (
-    <div className="relative">
-      {/* Homepage Sections */}
+    <>
       <Navbar />
-      <CarouselPlugin />
-      <HomeHighlights />
-      <GrocerChat />
-    </div>
+      <div className="relative m-5 ">
+        {/* Homepage Sections */}
+        <CarouselPlugin />
+        <HomeHighlights />
+        <GrocerChat />
+      </div>
+      <Footer />
+    </>
   )
 }

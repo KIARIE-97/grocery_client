@@ -19,6 +19,7 @@ import { Route as HomepageRouteImport } from './routes/homepage'
 import { Route as FeaturedproductsRouteImport } from './routes/featuredproducts'
 import { Route as DriverRouteImport } from './routes/driver'
 import { Route as CustomerRouteImport } from './routes/customer'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AllstoresRouteImport } from './routes/allstores'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
@@ -29,6 +30,7 @@ import { Route as CustomerIndexRouteImport } from './routes/customer/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as Store_ownerProductRouteImport } from './routes/store_owner/product'
 import { Route as Store_ownerOrderRouteImport } from './routes/store_owner/order'
+import { Route as DriverOrdersRouteImport } from './routes/driver/orders'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
 import { Route as CustomerOrderplacedRouteImport } from './routes/customer/orderplaced'
 import { Route as CustomerOrderdetailRouteImport } from './routes/customer/orderdetail'
@@ -100,6 +102,11 @@ const CustomerRoute = CustomerRouteImport.update({
   path: '/customer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AllstoresRoute = AllstoresRouteImport.update({
   id: '/allstores',
   path: '/allstores',
@@ -149,6 +156,11 @@ const Store_ownerOrderRoute = Store_ownerOrderRouteImport.update({
   id: '/order',
   path: '/order',
   getParentRoute: () => Store_ownerRoute,
+} as any)
+const DriverOrdersRoute = DriverOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DriverRoute,
 } as any)
 const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
@@ -256,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/allstores': typeof AllstoresRoute
+  '/contact': typeof ContactRoute
   '/customer': typeof CustomerRouteWithChildren
   '/driver': typeof DriverRouteWithChildren
   '/featuredproducts': typeof FeaturedproductsRoute
@@ -286,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/customer/orderplaced': typeof CustomerOrderplacedRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/driver/orders': typeof DriverOrdersRoute
   '/store_owner/order': typeof Store_ownerOrderRoute
   '/store_owner/product': typeof Store_ownerProductRoute
   '/admin/': typeof AdminIndexRoute
@@ -297,6 +311,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/allstores': typeof AllstoresRoute
+  '/contact': typeof ContactRoute
   '/featuredproducts': typeof FeaturedproductsRoute
   '/homepage': typeof HomepageRoute
   '/orders': typeof OrdersRoute
@@ -324,6 +339,7 @@ export interface FileRoutesByTo {
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/customer/orderplaced': typeof CustomerOrderplacedRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/driver/orders': typeof DriverOrdersRoute
   '/store_owner/order': typeof Store_ownerOrderRoute
   '/store_owner/product': typeof Store_ownerProductRoute
   '/admin': typeof AdminIndexRoute
@@ -337,6 +353,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/allstores': typeof AllstoresRoute
+  '/contact': typeof ContactRoute
   '/customer': typeof CustomerRouteWithChildren
   '/driver': typeof DriverRouteWithChildren
   '/featuredproducts': typeof FeaturedproductsRoute
@@ -367,6 +384,7 @@ export interface FileRoutesById {
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/customer/orderplaced': typeof CustomerOrderplacedRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/driver/orders': typeof DriverOrdersRoute
   '/store_owner/order': typeof Store_ownerOrderRoute
   '/store_owner/product': typeof Store_ownerProductRoute
   '/admin/': typeof AdminIndexRoute
@@ -381,6 +399,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/allstores'
+    | '/contact'
     | '/customer'
     | '/driver'
     | '/featuredproducts'
@@ -411,6 +430,7 @@ export interface FileRouteTypes {
     | '/customer/orderdetail'
     | '/customer/orderplaced'
     | '/demo/tanstack-query'
+    | '/driver/orders'
     | '/store_owner/order'
     | '/store_owner/product'
     | '/admin/'
@@ -422,6 +442,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/allstores'
+    | '/contact'
     | '/featuredproducts'
     | '/homepage'
     | '/orders'
@@ -449,6 +470,7 @@ export interface FileRouteTypes {
     | '/customer/orderdetail'
     | '/customer/orderplaced'
     | '/demo/tanstack-query'
+    | '/driver/orders'
     | '/store_owner/order'
     | '/store_owner/product'
     | '/admin'
@@ -461,6 +483,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/allstores'
+    | '/contact'
     | '/customer'
     | '/driver'
     | '/featuredproducts'
@@ -491,6 +514,7 @@ export interface FileRouteTypes {
     | '/customer/orderdetail'
     | '/customer/orderplaced'
     | '/demo/tanstack-query'
+    | '/driver/orders'
     | '/store_owner/order'
     | '/store_owner/product'
     | '/admin/'
@@ -504,6 +528,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AllstoresRoute: typeof AllstoresRoute
+  ContactRoute: typeof ContactRoute
   CustomerRoute: typeof CustomerRouteWithChildren
   DriverRoute: typeof DriverRouteWithChildren
   FeaturedproductsRoute: typeof FeaturedproductsRoute
@@ -591,6 +616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/allstores': {
       id: '/allstores'
       path: '/allstores'
@@ -660,6 +692,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/store_owner/order'
       preLoaderRoute: typeof Store_ownerOrderRouteImport
       parentRoute: typeof Store_ownerRoute
+    }
+    '/driver/orders': {
+      id: '/driver/orders'
+      path: '/orders'
+      fullPath: '/driver/orders'
+      preLoaderRoute: typeof DriverOrdersRouteImport
+      parentRoute: typeof DriverRoute
     }
     '/demo/tanstack-query': {
       id: '/demo/tanstack-query'
@@ -861,10 +900,12 @@ const CustomerRouteWithChildren = CustomerRoute._addFileChildren(
 )
 
 interface DriverRouteChildren {
+  DriverOrdersRoute: typeof DriverOrdersRoute
   DriverIndexRoute: typeof DriverIndexRoute
 }
 
 const DriverRouteChildren: DriverRouteChildren = {
+  DriverOrdersRoute: DriverOrdersRoute,
   DriverIndexRoute: DriverIndexRoute,
 }
 
@@ -892,6 +933,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AllstoresRoute: AllstoresRoute,
+  ContactRoute: ContactRoute,
   CustomerRoute: CustomerRouteWithChildren,
   DriverRoute: DriverRouteWithChildren,
   FeaturedproductsRoute: FeaturedproductsRoute,
