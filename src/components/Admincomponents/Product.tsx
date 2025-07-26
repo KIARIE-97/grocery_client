@@ -45,18 +45,20 @@ function ProductsTable() {
       header: 'category',
       accessorKey: 'categorys',
       cell: ({ getValue }) => {
-        const categories = getValue() as TProduct['categorys'] | TProduct['categorys'][];
+        const categorys = getValue() as
+          | TProduct['categories']
+          | TProduct['categories'][]
         return (
           <div>
            
-            {Array.isArray(categories)
-              ? categories.map((category) => (
+            {Array.isArray(categorys)
+              ? categorys.map((category) => (
                   <div key={category.id} className="mb-1">
-                    {category.category_name}
+                    {category?.category_name}
                   </div>
                 ))
-              : categories && (
-                  <div className="mb-1">{categories.category_name}</div>
+              : categorys && (
+                  <div className="mb-1">{categorys.category_name}</div>
                 )}
           </div>
         )

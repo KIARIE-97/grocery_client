@@ -48,8 +48,9 @@ function AboutComponent() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              Grover is better here. GrocerJet is revolutionizing on-demand
-              delivery with our cutting-edge technology platform.
+              GrocerJet is a cutting-edge grocery delivery platform that
+              connects customers with local stores and suppliers, ensuring fast
+              and reliable delivery of fresh groceries and essentials.
             </motion.p>
             <motion.div
               className="text-gray-700 space-y-4"
@@ -58,19 +59,28 @@ function AboutComponent() {
               transition={{ delay: 0.6 }}
             >
               <p>
-                You have also been a member of the world's leading
-                international, digital division and human industry. We are proud
-                of all our new technology and innovation in this country.
+                Our on-demand grocery delivery platform is designed to simplify
+                how people access fresh groceries, household essentials, and
+                local produce—delivered straight to their doorstep. Whether
+                you're shopping for your family or managing multiple orders, our
+                seamless system ensures convenience, speed, and quality every
+                step of the way.
               </p>
               <p>
-                We are committed to creating a new technology and innovation
-                that will help us improve our environmental capabilities and
-                make it easier for people to thrive.
+                We partner with trusted stores and local vendors to offer a wide
+                selection of products at competitive prices, while enabling
+                store owners and suppliers to manage inventory, track orders,
+                and serve customers efficiently. Drivers also benefit from smart
+                delivery assignment and real-time route updates to ensure timely
+                drop-offs.
               </p>
               <p>
-                Our company has a successful growth in its operations and we are
-                committed to developing a new technology and innovation that
-                will help us improve our environment.
+                Built with modern technology and a user-first design, our
+                platform supports multiple user roles—customers, store owners,
+                drivers, and suppliers—making it a complete solution for the
+                grocery delivery ecosystem. We're committed to delivering a
+                reliable experience that connects communities to the essentials
+                they need, faster and smarter.
               </p>
             </motion.div>
           </div>
@@ -90,6 +100,7 @@ function AboutComponent() {
         </motion.section>
 
         {/* Stats Section */}
+        {/* Stats Section */}
         <motion.section
           className="max-w-7xl mx-auto mb-16"
           initial={{ opacity: 0 }}
@@ -97,55 +108,23 @@ function AboutComponent() {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <div className="bg-white rounded-lg shadow-md p-6 overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Time
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                <tr>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    400+
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    5th
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    1/4 days
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    90%
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    People focused on young people as a trusted scientist
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    Most of our high quality talent team
-                  </td>
-                  <td colSpan={2} className="px-6 py-4 text-sm text-gray-500">
-                    Projected through 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-                    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-                    31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
-                    46, 47, 48, 49, 50
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 bg-white rounded-lg shadow-md p-8">
+            <div className="flex flex-col items-center">
+              <span className="text-3xl font-bold text-green-600">10,000+</span>
+              <span className="text-gray-600 mt-2">Customers Served</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-3xl font-bold text-green-600">150+</span>
+              <span className="text-gray-600 mt-2">Partner Stores</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-3xl font-bold text-green-600">98%</span>
+              <span className="text-gray-600 mt-2">On-Time Delivery</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-3xl font-bold text-green-600">24/7</span>
+              <span className="text-gray-600 mt-2">Support</span>
+            </div>
           </div>
         </motion.section>
 

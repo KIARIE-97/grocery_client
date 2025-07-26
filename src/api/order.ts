@@ -1,5 +1,9 @@
-import type { OStatus } from "@/hooks/useOrder"
-import type { TCartOrder, TOrder, UpdateOrderStatusInput } from "@/types/order.types"
+import type { OStatus } from '@/hooks/useOrder'
+import type {
+  TCartOrder,
+  TOrder,
+  UpdateOrderStatusInput,
+} from '@/types/order.types'
 
 const url = 'http://localhost:8000'
 
@@ -26,14 +30,14 @@ const handleApiResponse = async (res: Response) => {
     }
     throw new Error(errorMessage)
   }
-  return res;
+  return res
 }
 const getToken = () => {
-  const Userdata = localStorage.getItem('auth') 
+  const Userdata = localStorage.getItem('auth')
   if (!Userdata) {
     throw new Error('No authentication data found')
   }
-const parsedData = JSON.parse(Userdata)
+  const parsedData = JSON.parse(Userdata)
   if (!parsedData.token) {
     throw new Error('No token found in authentication data')
   }
@@ -44,7 +48,7 @@ export const getOrders = async () => {
   const token = getToken()
   const res = await fetch(`${url}/orders`, {
     headers: {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   })
@@ -52,34 +56,34 @@ export const getOrders = async () => {
   return res.json()
 }
 
-
 //fetch order by id
 export const getOrder = async (id: string) => {
-    const token = getToken()
+  const token = getToken()
 
-    const res = await fetch(`${url}/orders/${parseInt(id)}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-    await handleApiResponse(res)
-    const savedOrder = await res.json()
-    console.log('Fetched order:', savedOrder)
-return savedOrder;
- 
+  const res = await fetch(`${url}/orders/${parseInt(id)}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+  await handleApiResponse(res)
+  const savedOrder = await res.json()
+  console.log('Fetched order:', savedOrder)
+  return savedOrder
 }
 //create order
-export const createOrder = async (orderData: TCartOrder): Promise<TCartOrder> => {
-    const res = await fetch(`${url}/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderData),
-    })
-    await handleApiResponse(res)
-    return res.json();
+export const createOrder = async (
+  orderData: TCartOrder,
+): Promise<TCartOrder> => {
+  const res = await fetch(`${url}/orders`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(orderData),
+  })
+  await handleApiResponse(res)
+  return res.json()
 }
 
 export async function updateOrderStatus(
@@ -137,16 +141,49 @@ export const updateOrder = async (orderData: {
 }
 //delete order
 export const deleteOrder = async (id: string) => {
-    const numberId = parseInt(id)
-    if (isNaN(numberId)) {
-        throw new Error(`invalid orderid: ${id}`)
-      }
-    const res = await fetch(`${url}/orders/${numberId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    await handleApiResponse(res)
-    return res.json();
+  const numberId = parseInt(id)
+  if (isNaN(numberId)) {
+    throw new Error(`invalid orderid: ${id}`)
+  }
+  const res = await fetch(`${url}/orders/${numberId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  await handleApiResponse(res)
+  return res.json()
+}
+
+export const generateDeliveryOtp = async (orderId: string) => {
+  const token = getToken()
+  const res = await fetch(`${url}/orders/delivery-otp/generate`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ orderId }), // Add orderId to request body
+  })
+  await handleApiResponse(res)
+  return res.json()
+}
+export const verifyDeliveryOtp = async ({
+  orderId,
+  otp,
+}: {
+  orderId: string
+  otp: string
+}) => {
+  const token = getToken()
+  const res = await fetch(`${url}/orders/delivery-otp/verify`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ orderId, otp }), // Include both orderId and otp
+  })
+  await handleApiResponse(res)
+  return res.json()
 }

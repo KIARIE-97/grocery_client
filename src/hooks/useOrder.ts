@@ -1,4 +1,4 @@
-import { createOrder, deleteOrder, getOrder, getOrders, updateOrder, updateOrderStatus } from "@/api/order"
+import { createOrder, deleteOrder, generateDeliveryOtp, getOrder, getOrders, updateOrder, updateOrderStatus, verifyDeliveryOtp } from "@/api/order"
 import { assignOrderToDriver } from "@/api/user"
 import type { CheckoutProps, TCartOrder, TOrder } from "@/types/order.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
@@ -84,6 +84,28 @@ export const useAssignOrderToDriver = () => {
       orderId: string
       driverId: number
     }) => assignOrderToDriver(orderId, driverId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
+    },
+  })
+}
+
+export const useGenerateDeliveryOtp = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ['generate-delivery-otp'],
+    mutationFn: (orderId: string) => generateDeliveryOtp(orderId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
+    },
+  })
+}
+export const useVerifyDeliveryOtp = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationKey: ['verify-delivery-otp'],
+    mutationFn: ({ orderId, otp }: { orderId: string; otp: string }) =>
+      verifyDeliveryOtp({ orderId, otp }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'], exact: true })
     },
