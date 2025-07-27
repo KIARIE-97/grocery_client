@@ -1,4 +1,5 @@
 import GroceryLoader from '@/components/ui/GroceryLoader'
+import { OrderMapModal } from '@/components/ui/OrderMapModal'
 import { useAssignOrderToDriver, useGenerateDeliveryOtp, useOrders, useUpdateOrderStatus, useVerifyDeliveryOtp } from '@/hooks/useOrder'
 import { useStore } from '@/hooks/useStore'
 import { authStore } from '@/store/authStore'
@@ -231,11 +232,18 @@ function OrderCard({
   isAssigned,
   isTakingOrder = false,
 }: OrderCardProps) {
-  const { data: store, isLoading: storeLoading } = useStore(order.store) as { data: TStore | undefined, isLoading: boolean }
+  const storeId = order.store?.id
+  const { data: store, isLoading: storeLoading } = useStore(storeId || '') as {
+    data: TStore | undefined
+    isLoading: boolean
+  }
+  // const { data: store, isLoading: storeLoading } = useStore(order.store.id ?? '') as { data: TStore | undefined, isLoading: boolean }
 const [otp, setOtp] = useState('')
 const [showOtpInput, setShowOtpInput] = useState(false)
 const generateOtp = useGenerateDeliveryOtp()
 const verifyOtp = useVerifyDeliveryOtp()
+
+const [isMapOpen, setIsMapOpen] = useState(false)
 
   const statusColors: Record<TOrder['status'], string> = {
     pending: 'bg-gray-100 text-gray-800',
@@ -268,6 +276,8 @@ const handleMarkAsDelivered = async () => {
     }
   }
 }
+console.log('order address', order.delivery_address)
+console.log('order object', order)
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-orange-100 hover:shadow-lg transition-shadow">
@@ -313,7 +323,7 @@ const handleMarkAsDelivered = async () => {
                       <li key={index} className="flex justify-between text-sm">
                         <span>{product.product_name}</span>
                         <span className="text-gray-500">
-                          x{product.quantity} ($
+                          x{product.quantity} (KES
                           {product.product_price.toFixed(2)})
                         </span>
                       </li>
@@ -325,15 +335,21 @@ const handleMarkAsDelivered = async () => {
                   </div>
                 </div>
 
-                {/* <div className="border-t border-gray-100 pt-3">
-                <h4 className="font-medium text-gray-700">Delivery Address:</h4>
-                <p className="text-sm text-gray-600 mt-1">
-                  {order.delivery_address.street}, {order.delivery_address.city}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {order.delivery_address.state}, {order.delivery_address.postal_code}
-                </p>
-              </div> */}
+                <div className="border-t border-gray-100 pt-3">
+                  <h4 className="font-medium text-gray-700">
+                    Delivery Address:
+                  </h4>
+                  <p className="text-sm text-gray-600 mt-1">
+                    {order.delivery_address?.addressLine1
+                      ? `${order.delivery_address.addressLine1}, `
+                      : ''}
+                    {order.delivery_address?.city || 'N/A'}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {order.delivery_address?.state || 'N/A'},{' '}
+                    {order.delivery_address?.country || 'N/A'}
+                  </p>
+                </div>
 
                 {storeLoading ? (
                   <div className="flex items-center justify-center py-4">
@@ -348,14 +364,36 @@ const handleMarkAsDelivered = async () => {
                     <div className="mt-2 text-sm">
                       <p className="font-medium">{store.store_name}</p>
                       <p className="text-gray-600">{store.location}</p>
-                      <a
+                      {/* <a
                         href={`https://maps.google.com/?q=${store.location}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-orange-600 hover:underline inline-flex items-center mt-1"
                       >
                         View on map
+                        
+                      </a> */}
+                      <a
+                        onClick={() => setIsMapOpen(true)}
+                        className="text-orange-600 hover:underline inline-flex items-center mt-1 cursor-pointer"
+                      >
+                        View on map
                       </a>
+
+                      {isMapOpen && (
+                        <OrderMapModal
+                          isOpen={isMapOpen}
+                          onClose={() => setIsMapOpen(false)}
+                          pickupLocation={store?.location || ''}
+                          deliveryLocation={
+                            order.delivery_address?.addressLine1
+                              ? `${order.delivery_address.addressLine1}, ${order.delivery_address.city}, ${order.delivery_address.country}`
+                              : ''
+                          }
+                          storeName={store?.store_name || 'Store'}
+                          customerName={order.customer?.full_name || 'Customer'}
+                        />
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -370,6 +408,25 @@ const handleMarkAsDelivered = async () => {
                   {new Date(order.delivery_schedule_at).toLocaleString()}
                 </div>
               </div>
+            )}
+            {!isAssigned && onTakeOrder && (
+              <button
+                onClick={() => onTakeOrder(order.order_id)}
+                disabled={isTakingOrder}
+                className="mt-6 w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition-colors disabled:opacity-70"
+              >
+                {isTakingOrder ? (
+                  <>
+                    <Loader2 className="animate-spin w-4 h-4" />
+                    Assigning...
+                  </>
+                ) : (
+                  <>
+                    <Truck className="w-4 h-4" />
+                    Take Order
+                  </>
+                )}
+              </button>
             )}
             {isAssigned && order.status === 'out_for_delivery' && (
               <div className="p-4 border-t border-gray-100">

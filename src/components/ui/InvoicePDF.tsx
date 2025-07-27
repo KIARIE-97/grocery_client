@@ -101,8 +101,11 @@ const InvoicePDF = ({ order, companyName }: InvoicePDFProps) => {
       })
     : 'N/A'
 
-    const TotalAmount = order?.tax_amount + order?.total_amount + order?.delivery_fee || 20
-
+const TotalAmount =
+  (Number(order?.tax_amount) || 0) +
+  (Number(order?.total_amount) || 0) +
+  (Number(order?.delivery_fee) || 0)
+  
   return (
     <Document>
       <Page size="A4" style={styles.page}>

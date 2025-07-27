@@ -1,5 +1,6 @@
 import type { TLocation } from "./location.types"
 import type { TCartItem, TProduct } from "./product.types"
+import type { TStore } from "./store.types"
 import type { TDriver, TUserData } from "./user.types"
 
 export type TOrder = {
@@ -22,7 +23,7 @@ export type TOrder = {
   driver: TDriver
   delivery_fee: number
   discount_amount: number
-  store: string
+  store: TStore
   customer: TUserData
   products: TProduct[]
   delivery_address: TLocation
@@ -46,21 +47,24 @@ export  type CheckoutProps = {
   order_id: string
   delivery_schedule_at: string | null
 }
-export type TCartOrder = {
-  id: number
-  product_ids: number[] 
+export type TCreateOrder = {
+  // id: number
+  product_ids: number[]
   customer_id: number
   total_amount: number
   tax_amount: number
   payment_method: 'mpesa' | 'paypal' | 'cash' | 'wallet'
   payment_status: 'pending' | 'completed' | 'failed' | 'refunded'
   delivery_schedule_at: string
-  status:
-    | 'pending'
-    | 'accepted'
-    | 'out_for_delivery'
-    | 'ready_for_pickup'
-    | 'delivered'
-    | 'cancelled'
-    | 'failed'
+  // status:
+  //   | 'pending'
+  //   | 'accepted'
+  //   | 'out_for_delivery'
+  //   | 'ready_for_pickup'
+  //   | 'delivered'
+  //   | 'cancelled'
+  //   | 'failed'
+}
+export type TCartOrder = TCreateOrder & {
+  id: number
 }

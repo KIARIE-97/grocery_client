@@ -1,6 +1,6 @@
 import { createOrder, deleteOrder, generateDeliveryOtp, getOrder, getOrders, updateOrder, updateOrderStatus, verifyDeliveryOtp } from "@/api/order"
 import { assignOrderToDriver } from "@/api/user"
-import type { CheckoutProps, TCartOrder, TOrder } from "@/types/order.types"
+import type { CheckoutProps, TCartOrder, TCreateOrder, TOrder } from "@/types/order.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
 
 export const useOrders = (): UseQueryResult => {
@@ -18,7 +18,7 @@ export const useOrder = (id: string): UseQueryResult<TOrder, Error> => {
 }
 export const useCreateOrder = ()=> {
   const queryClient = useQueryClient()
-  return useMutation<TCartOrder, Error, TCartOrder>({
+  return useMutation<TCartOrder, Error, TCreateOrder>({
     mutationKey: ['createorder'],
     mutationFn: (orderData) => createOrder(orderData),
     onSuccess: () => {

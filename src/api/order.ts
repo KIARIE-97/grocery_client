@@ -1,6 +1,7 @@
 import type { OStatus } from '@/hooks/useOrder'
 import type {
   TCartOrder,
+  TCreateOrder,
   TOrder,
   UpdateOrderStatusInput,
 } from '@/types/order.types'
@@ -72,9 +73,7 @@ export const getOrder = async (id: string) => {
   return savedOrder
 }
 //create order
-export const createOrder = async (
-  orderData: TCartOrder,
-): Promise<TCartOrder> => {
+export const createOrder = async (orderData: TCreateOrder): Promise<TCartOrder> => {
   const res = await fetch(`${url}/orders`, {
     method: 'POST',
     headers: {

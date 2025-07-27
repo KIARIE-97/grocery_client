@@ -19,16 +19,17 @@ export const OrderSummary = ({
 
   const handleProceedToCheckout = async () => {
     const orderData = {
-      id: 0,
+      // id: 0,
       customer_id: user?.id ? Number(user.id) : 0,
       product_ids: cartItems.map((item) => item.id),
       total_amount: totalAmount,
       tax_amount: 0,
       payment_method: 'mpesa' as 'mpesa',
       payment_status: 'pending' as 'pending',
-      status: 'pending' as 'pending',
+      // status: 'pending' as 'pending',
       delivery_schedule_at: new Date().toISOString(),
     }
+      console.log('Order payload:', orderData)
 
     try {
       createOrder.mutate(orderData, {
