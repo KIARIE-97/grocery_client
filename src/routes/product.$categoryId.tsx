@@ -3,7 +3,7 @@ import Navbar from '@/components/navbar'
 import Products from '@/components/Products'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/product')({
+export const Route = createFileRoute('/product/$categoryId')({
   component: RouteComponent,
 })
 function RouteComponent() {

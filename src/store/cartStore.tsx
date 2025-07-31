@@ -28,7 +28,7 @@ const cartReducer = (state: CartState, action: Action): CartState => {
             : item,
         )
         localStorage.setItem('cartItems', JSON.stringify(updatedItems))
-        toast.success('Item quantity increased')
+        // toast.success('Item quantity increased')
         return { ...state, items: updatedItems }
       }
       const newItems = [...state.items, { ...action.payload, quantity: 1 }]

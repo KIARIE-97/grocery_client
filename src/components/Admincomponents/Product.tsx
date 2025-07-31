@@ -41,33 +41,33 @@ function ProductsTable() {
       header: 'Name',
       accessorKey: 'product_name',
     },
-    {
-      header: 'category',
-      accessorKey: 'categorys',
-      cell: ({ getValue }) => {
-        const categorys = getValue() as
-          | TProduct['categories']
-          | TProduct['categories'][]
-        return (
-          <div>
+    // {
+    //   header: 'category',
+    //   accessorKey: 'categorys',
+    //   cell: ({ getValue }) => {
+    //     const categorys = getValue() as
+    //       | TProduct['categories']
+    //       | TProduct['categories'][]
+    //     return (
+    //       <div>
            
-            {Array.isArray(categorys)
-              ? categorys.map((category) => (
-                  <div key={category.id} className="mb-1">
-                    {category?.category_name}
-                  </div>
-                ))
-              : categorys && (
-                  <div className="mb-1">{categorys.category_name}</div>
-                )}
-          </div>
-        )
-      },
-    },
+    //         {Array.isArray(categorys)
+    //           ? categorys.map((category) => (
+    //               <div key={category.id} className="mb-1">
+    //                 {category?.category_name}
+    //               </div>
+    //             ))
+    //           : categorys && (
+    //               <div className="mb-1">{categorys.category_name}</div>
+    //             )}
+    //       </div>
+    //     )
+    //   },
+    // },
     {
       header: 'Price',
       accessorKey: 'product_price',
-      cell: ({ getValue }) => `$${(getValue() as number).toFixed(2)}`,
+      cell: ({ getValue }) => `KES${(getValue() as number).toFixed(2)}`,
     },
     {
       header: 'Stock',
@@ -125,7 +125,7 @@ function ProductsTable() {
                 <div>ID: {item.id}</div>
                 <div>Name: {item.product_name}</div>
                 <div>Description: {item.product_description}</div>
-                <div>Price: ${item.product_price.toFixed(2)}</div>
+                <div>Price: KES{item.product_price.toFixed(2)}</div>
                 <div>Stock: {item.stock}</div>
                 <div>Size: {item.size}</div>
                 <div>Available: {item.is_available ? 'Yes' : 'No'}</div>

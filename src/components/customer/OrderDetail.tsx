@@ -6,12 +6,18 @@ import { OrderPDF } from '../ui/OrderPDF'
 import { useState } from 'react'
 import GroceryLoader from '../ui/GroceryLoader'
 import { motion, AnimatePresence } from 'framer-motion'
+import { toast } from 'sonner'
+import { useGenerateDeliveryOtp } from '@/hooks/useOrder'
 
 const OrderDetail = () => {
   const { user } = useAuth()
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null)
   const [activeTab, setActiveTab] = useState<string>('all')
+  const [showOtpModal, setShowOtpModal] = useState(false)
+  const [generatedOtp, setGeneratedOtp] = useState('')
+
+  const generateOtp = useGenerateDeliveryOtp()
 
   const {
     data: customerData,
@@ -23,6 +29,21 @@ const OrderDetail = () => {
     error: unknown
   }
 
+  const handleGenerateOtp = async (orderId: string) => {
+    try {
+      const response = await generateOtp.mutateAsync(orderId)
+      setGeneratedOtp(response.otp)
+      setShowOtpModal(true)
+      toast.success('OTP generated successfully')
+    } catch (error) {
+      toast.error(
+        error && typeof error === 'object' && 'message' in error
+          ? (error as { message: string }).message
+          : 'Failed to generate OTP'
+      )
+    }
+  }
+
   if (isLoading)
     return (
       <div className="center m-50">
@@ -31,10 +52,6 @@ const OrderDetail = () => {
     )
   if (error || !customerData)
     return <div className="p-4">Could not load orders.</div>
-  console.log('Customer Data:', customerData.orders)
-  if (modalOpen && selectedOrder) {
-    console.log('Selected Order:', selectedOrder)
-  }
 
   const orderStates = [
     { id: 'all', label: 'All Orders' },
@@ -163,7 +180,7 @@ const OrderDetail = () => {
                     Cashback of ksh.50 will be credited to GrocerJet wallet in
                     12 hours of delivery.
                   </p>
-                  <div className="flex justify-end mt-2">
+                  <div className="flex justify-end mt-2 space-x-2">
                     <button
                       className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                       onClick={() => {
@@ -173,6 +190,18 @@ const OrderDetail = () => {
                     >
                       View
                     </button>
+                    {order.status === 'out_for_delivery' && (
+                      <button
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                        onClick={() => {
+                          setSelectedOrder(order)
+                          handleGenerateOtp(order.order_id)
+                        }}
+                        disabled={generateOtp.isPending}
+                      >
+                        {generateOtp.isPending ? 'Generating...' : 'View Code'}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -243,6 +272,53 @@ const OrderDetail = () => {
               <button
                 className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
                 onClick={() => setModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showOtpModal && selectedOrder && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full relative">
+            <button
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              onClick={() => {
+                setShowOtpModal(false)
+              }}
+            >
+              &times;
+            </button>
+            <h2 className="text-xl font-bold mb-4">
+              Delivery Verification Code
+            </h2>
+
+            <div className="mb-4 p-4 bg-gray-100 rounded-lg text-center">
+              <p className="text-sm text-gray-600 mb-2">
+                Share this code with your delivery driver:
+              </p>
+              <p className="text-3xl font-bold text-orange-600 tracking-widest">
+                {generatedOtp}
+              </p>
+              <p className="text-xs text-gray-500 mt-3">
+                The driver will enter this code to complete the delivery
+                verification
+              </p>
+            </div>
+
+            <div className="mt-4">
+              <p className="text-sm text-gray-600">
+                Once the driver enters this code, your order status will be
+                updated to "Delivered".
+              </p>
+            </div>
+
+            <div className="mt-6 text-right">
+              <button
+                className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
+                onClick={() => setShowOtpModal(false)}
               >
                 Close
               </button>

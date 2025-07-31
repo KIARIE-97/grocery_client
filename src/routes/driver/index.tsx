@@ -1,5 +1,3 @@
-// /driver/index.tsx
-
 import GroceryLoader from '@/components/ui/GroceryLoader'
 import { useAuth } from '@/hooks/UseAuth'
 import { useSingleDriver } from '@/hooks/useUser'
@@ -49,44 +47,42 @@ function RouteComponent() {
           </div>
         </div>
         <ul className="space-y-4 text-xs">
-          <li className="flex items-center">
-            <span className="w-2 h-2 mr-2 rounded-full bg-white"></span>
-            <span className="text-white">
-              Package has left Courier Facility
-            </span>
-          </li>
-          <li className="flex items-center">
-            <span className="w-2 h-2 mr-2 rounded-full bg-white"></span>
-            <span className="text-white">
-              Package arrived at Local Facility
-            </span>
-          </li>
-          <li className="flex items-center">
-            <span className="w-2 h-2 mr-2 rounded-full bg-[#FF7929] ring-2 ring-white"></span>
-            <span className="text-white font-semibold">Out for Delivery</span>
-          </li>
-          <li className="flex items-center">
-            <span className="w-2 h-2 mr-2 rounded-full bg-white border"></span>
-            <span className="text-white/70">Delivered</span>
-          </li>
+          {driver.orders.length > 0 ? (
+            driver.orders.map((order, idx) => (
+              <li
+                key={order.order_id || idx}
+                className="flex flex-col bg-white/10 rounded-lg p-2"
+              >
+                <div className="flex items-center mb-1">
+                  <span
+                    className={`w-2 h-2 mr-2 rounded-full ${
+                      order.status === 'delivered'
+                        ? 'bg-green-400'
+                        : order.status === 'out_for_delivery'
+                          ? 'bg-[#FF7929] ring-2 ring-white'
+                          : 'bg-white'
+                    }`}
+                  ></span>
+                  <span
+                    className={`font-semibold ${order.status === 'delivered' ? 'text-green-200' : 'text-white'}`}
+                  >
+                    {order.status}
+                  </span>
+                </div>
+                <div className="text-white/80 text-xs">
+                  {order.delivery_schedule_at
+                    ? `Delivery: ${order.delivery_schedule_at}`
+                    : 'No delivery time'}
+                </div>
+                <div className="text-white/80 text-xs">
+                  {order.delivery_address?.addressLine1 || 'No address'}
+                </div>
+              </li>
+            ))
+          ) : (
+            <li className="text-white/70">No orders assigned</li>
+          )}
         </ul>
-        <div className="mt-8">
-          <div className="font-bold text-[#251D1A] mb-2">{driver.id}</div>
-          <div className="flex flex-row space-x-2 mb-1">
-            <span className="bg-[#CFF6DC] text-[#496763] py-1 px-2 text-[11px] rounded">
-              in Transit
-            </span>
-            <span className="bg-white text-[#B7B7B7] py-1 px-2 text-[11px] rounded">
-              Documents
-            </span>
-          </div>
-          <span className="text-white/80 text-xs">
-            Package has left Courier Facility
-          </span>
-        </div>
-        <div className="mt-8 flex flex-row items-center space-x-2">
-          <span className="text-[#FF7929]">Customs</span>
-        </div>
       </aside>
 
       {/* Main Content */}
@@ -152,13 +148,68 @@ function RouteComponent() {
             </div>
           </div>
           {/* Address Card */}
-          <div className="bg-[#2B2B2B] p-4 rounded-xl text-white w-full max-w-xs">
-            <div className="text-sm">Address</div>
-            <div className="font-bold mb-2">{driver.current_location}</div>
-            <div className="text-xs mb-1">Delivery</div>
-            <div className="flex items-center text-lg font-semibold">
-              {/* Example: You can replace with actual delivery time if available */}
-              1:30 PM <span className="mx-1">|</span> 31 Jan
+          {/* Order Status Overview Card */}
+          <div className="bg-[#104210] p-4 rounded-xl text-white w-full max-w-xs">
+            <div className="text-sm mb-2">Order Status</div>
+            <div className="flex flex-col gap-2">
+              {driver.orders.length > 0 ? (
+                <>
+                  <div className="flex justify-between text-xs">
+                    <span className="flex items-center">
+                      <span className="w-2 h-2 bg-white rounded-full mr-2"></span>
+                      Pending:
+                    </span>
+                    <span>
+                      {
+                        driver.orders.filter((o) => o.status === 'preparing')
+                          .length
+                      }
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="flex items-center">
+                      <span className="w-2 h-2 bg-[#FF7929] rounded-full mr-2 ring-1 ring-white"></span>
+                      In Progress:
+                    </span>
+                    <span>
+                      {driver.orders.filter((o) => o.status === 'ready').length}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="flex items-center">
+                      <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                      Delivered:
+                    </span>
+                    <span>
+                      {
+                        driver.orders.filter((o) => o.status === 'delivered')
+                          .length
+                      }
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div className="text-xs">No active orders</div>
+              )}
+            </div>
+          </div>
+
+          {/* Performance Metrics Card */}
+          <div className="bg-[#104210] p-4 rounded-xl text-white w-full max-w-xs">
+            <div className="text-sm mb-2">Performance</div>
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between text-xs">
+                <span>Rating:</span>
+                <span>4.8 ★</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span>On Time:</span>
+                <span>92%</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span>This Week:</span>
+                <span>{driver.orders.length} orders</span>
+              </div>
             </div>
           </div>
         </div>

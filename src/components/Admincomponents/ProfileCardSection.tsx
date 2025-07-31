@@ -30,7 +30,7 @@ export default function ProfileCardSection() {
       { label: 'Username', value: user.full_name },
       { label: 'Phone', value: user.phone_number || 'Not provided' },
       { label: 'Email', value: user.email },
-      { label: 'Address', value: 'nairobi, kenya' }, // You can add address to your user type if needed
+      { label: 'Address', value: 'nairobi, kenya' }, 
     ],
   }
 
@@ -82,7 +82,10 @@ export default function ProfileCardSection() {
             >
               <Avatar className="w-[88px] h-[88px] mb-4">
                 <AvatarImage
-                  src={user.profile_url || '/image.png'}
+                  src={
+                    user.profile_url ||
+                    'https://static.vecteezy.com/system/resources/previews/014/277/912/original/trendy-stylish-girl-vector.jpg'
+                  }
                   alt="Profile"
                 />
                 <AvatarFallback className="bg-[#f9f9f9] border-[0.8px] border-[#efefef]">

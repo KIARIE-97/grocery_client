@@ -43,7 +43,7 @@ const offers = [
     subtitle: 'Save up to 30% on select items',
     image:
       'https://img.freepik.com/premium-photo/fresh-fruits-vegetables-dairy-products-spilling-out-shopping-basket-symbolizing-healthy-living-against-sunny-yellow-backdrop_1162141-27755.jpg',
-    bgColor: 'bg-orange-500',
+    bgColor: 'bg-[#E15B18]',
     button: {
       text: 'Shop Now',
       className: 'bg-white text-orange-500 px-4 py-2 rounded font-bold mt-2',
@@ -55,7 +55,7 @@ const offers = [
     subtitle: 'Limited time deals',
     image:
       'https://www.mlocal.be/oktThemes/ra161-s/images/accueil/image-bloc3.jpg',
-    bgColor: 'bg-blue-500',
+    bgColor: 'bg-[#C9AB3D]',
     button: {
       text: 'Grab Deal',
       className: 'bg-white text-blue-500 px-4 py-2 rounded font-bold mt-2',
@@ -121,7 +121,7 @@ const featuredProducts = [
 
 
 export default function HomeHighlights() {
-  const { data: categoriesDataRaw, isLoading } = useCategories()
+  const { data: categoriesDataRaw } = useCategories()
   console.log('categories data', categoriesDataRaw)
   const categoriesData = Array.isArray(categoriesDataRaw)
     ? categoriesDataRaw
@@ -217,7 +217,8 @@ export default function HomeHighlights() {
                     whileTap={tapEffect}
                   >
                     <Link
-                      to='/product'
+                      to={`/product/${cat.id}`}
+                      params={{ categoryId: cat.category_id }}
                       className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg shadow-sm h-full"
                     >
                       <motion.img
@@ -261,7 +262,7 @@ export default function HomeHighlights() {
           transition={{ delay: 0.3 }}
         >
           <motion.div whileHover={{ x: 5 }}>
-            <span className="bg-orange-500 text-white text-sm px-2 py-1 rounded">
+            <span className="#FF5C4D text-white text-sm px-2 py-1 rounded">
               Offers
             </span>
             <h2 className="text-xl font-bold mt-2">Best Values</h2>
@@ -363,9 +364,7 @@ export default function HomeHighlights() {
                 <h4 className="font-semibold">{product.title}</h4>
                 <p className="text-sm text-gray-500">Available (In Stock)</p>
                 <div className="flex justify-center gap-2 text-sm mt-1">
-                  <span className="text-orange-600 font-bold">
-                    {product.price}
-                  </span>
+                  <span className="text-[#FF5C4D] font-bold">{product.price}</span>
                   <span className="line-through text-gray-400">
                     {product.oldPrice}
                   </span>

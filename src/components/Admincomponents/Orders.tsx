@@ -81,7 +81,7 @@ function OrdersTable() {
     {
       header: 'Total',
       accessorKey: 'total_amount',
-      cell: ({ getValue }) => `$${(getValue() as number).toFixed(2)}`,
+      cell: ({ getValue }) => `KES${(getValue() as number).toFixed(2)}`,
     },
   ]
 
@@ -122,7 +122,7 @@ function OrdersTable() {
                 </div>
                 <div>Tax: {item.tax_amount}</div>
                 <div>Status: {item.status}</div>
-                <div>Total: ${item.total_amount.toFixed(2)}</div>
+                <div>Total: KES{item.total_amount.toFixed(2)}</div>
               </div>
             ) : null
           }

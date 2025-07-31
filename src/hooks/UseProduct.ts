@@ -8,11 +8,13 @@ export const useProduct = (): UseQueryResult => {
         queryFn: getProducts,
     })
 }
-export const useSingleProduct = (id: string): UseQueryResult<SProduct, Error> => {
+export const useSingleProduct = (
+  productId: string,
+): UseQueryResult<SProduct, Error> => {
   return useQuery({
-    queryKey: ['products', id],
-    queryFn: () => getProduct(id),
-    enabled: !!id,
+    queryKey: ['products', productId],
+    queryFn: () => getProduct(productId),
+    enabled: !!productId,
   })
 }
 export const useProductsByStore = (storeId: number): UseQueryResult<TProduct[], Error> => {

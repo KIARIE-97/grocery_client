@@ -16,8 +16,6 @@ import {
   Package,
   ShoppingCart,
   MapPin,
-  Star,
-  FileText,
   BadgePercent,
   LogOut,
   ChevronDown,
@@ -203,9 +201,9 @@ const Sidebar: React.FC = () => {
       }
   
   return (
-    <div className="relative min-h-screen w-full md:w-64 bg-blue-950">
+    <div className="relative min-h-screen w-full md:w-64 bg-[#FF7929]">
       {/* Desktop Sidebar */}
-      <div className="hidden border-r bg-blue-950/40 md:block dark:bg-gray-800/40">
+      <div className="hidden border-r  md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-[60px] items-center border-b px-6">
             <Link to="/" className="flex items-center gap-2 font-semibold">
@@ -235,7 +233,7 @@ const Sidebar: React.FC = () => {
                         <Link
                           key={subIndex}
                           to={subItem.url}
-                          className="ml-7 flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                          className="ml-7 flex items-center gap-3 rounded-lg px-3 py-2 text-[#FFCD58] transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                         >
                           {subItem.label}
                         </Link>
@@ -248,7 +246,7 @@ const Sidebar: React.FC = () => {
                     to={item.url}
                     className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-100 transition-all hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-50 ${
                       item.label === 'Dashboard' &&
-                      'bg-gray-500 text-gray-900 dark:bg-gray-800 dark:text-gray-50'
+                      'bg-[#C9AB3D] text-gray-900 dark:bg-gray-800 dark:text-gray-50'
                     }`}
                   >
                     <item.icon className="h-4 w-4" />
@@ -264,7 +262,11 @@ const Sidebar: React.FC = () => {
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Button onClick={handleLogout} size="sm" className="w-full">
+            <Button
+              onClick={handleLogout}
+              size="sm"
+              className="w-full bg-[#2B2B2B]"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>

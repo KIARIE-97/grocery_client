@@ -91,7 +91,7 @@ const navigate = useNavigate()
       }
       // Add delivery address if selected
       if (selectedAddressId) {
-        updateData.delivery_address_id = selectedAddressId // This matches your DTO
+        updateData.delivery_address_id = selectedAddressId 
       }
 
       // First update the order with delivery details
@@ -100,6 +100,8 @@ const navigate = useNavigate()
       // Use the delivery_fee from backend response
       const deliveryFee = updatedOrder.delivery_fee || 0
       const total = subtotal + taxAmount + deliveryFee - discountAmount
+      console.log('Updated order:', updatedOrder)
+      console.log('delivery fee', deliveryFee)
 
       // Then process payment
       if (paymentMethod === 'mpesa' && orderId) {

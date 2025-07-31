@@ -47,8 +47,8 @@ function main () {
         location === '/' &&(<Navbar onCartClick={() => setShowCart((v) => !v)} />)} */}
       {showCart && <CartSidebar onClose={() => setShowCart(false)} />}
       <Outlet />
-      <TanStackRouterDevtools />
-      <TanStackQueryLayout />
+      {/* <TanStackRouterDevtools /> */}
+      {/* <TanStackQueryLayout /> */}
     </>
   )
 }

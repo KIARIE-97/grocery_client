@@ -1,6 +1,13 @@
 import GroceryLoader from '@/components/ui/GroceryLoader'
 import { OrderMapModal } from '@/components/ui/OrderMapModal'
-import { useAssignOrderToDriver, useGenerateDeliveryOtp, useOrders, useUpdateOrderStatus, useVerifyDeliveryOtp } from '@/hooks/useOrder'
+import {
+  useAssignOrderToDriver,
+  useGenerateDeliveryOtp,
+  useOrders,
+  useUpdateOrderStatus,
+  useVerifyDeliveryOtp,
+  type OStatus,
+} from '@/hooks/useOrder'
 import { useStore } from '@/hooks/useStore'
 import { authStore } from '@/store/authStore'
 import type { TOrder } from '@/types/order.types'
@@ -30,81 +37,82 @@ function DriverOrders() {
     : []
 
   const myOrders = Array.isArray(orders)
-    ? orders.filter((order: TOrder) => 
-        order.driver?.id === driverId && 
-        ['out_for_delivery', 'accepted'].includes(order.status)
-    )
+    ? orders.filter(
+        (order: TOrder) =>
+          order.driver?.id === driverId &&
+          ['out_for_delivery', 'accepted'].includes(order.status),
+      )
     : []
 
-//  const handleTakeOrder = (orderId: number) => {
-//    if (!driverId) {
-//      console.error('Driver ID is missing')
-//      return
-//    }
+  //  const handleTakeOrder = (orderId: number) => {
+  //    if (!driverId) {
+  //      console.error('Driver ID is missing')
+  //      return
+  //    }
 
-//    // Convert to proper types
-//    const stringOrderId = String(orderId)
-//    const numericDriverId = Number(driverId)
+  //    // Convert to proper types
+  //    const stringOrderId = String(orderId)
+  //    const numericDriverId = Number(driverId)
 
-//    assignOrder.mutate(
-//      {
-//        orderId: stringOrderId,
-//        driverId: numericDriverId,
-//      },
-//      {
-//        onSuccess: () => {
-//          updateOrderStatus.mutate(
-//            {
-//              orderId: stringOrderId,
-//              status: 'out_for_delivery',
-//            },
-//            {
-//              onSuccess: () => {
-//                refetch()
-//                toast.success('Order assigned successfully!')
-//              },
-//              onError: (error) => {
-//                toast.error(`Status update failed: ${error.message}`)
-//              },
-//            },
-//          )
-//        },
-//        onError: (error) => {
-//          toast.error(`Assignment failed: ${error.message}`)
-//        },
-//      },
-//    )
-//  }
-const handleTakeOrder = async (orderId: number) => {
-  try {
-    if (!driverId) {
-      toast.error('Driver authentication failed')
-      return
+  //    assignOrder.mutate(
+  //      {
+  //        orderId: stringOrderId,
+  //        driverId: numericDriverId,
+  //      },
+  //      {
+  //        onSuccess: () => {
+  //          updateOrderStatus.mutate(
+  //            {
+  //              orderId: stringOrderId,
+  //              status: 'out_for_delivery',
+  //            },
+  //            {
+  //              onSuccess: () => {
+  //                refetch()
+  //                toast.success('Order assigned successfully!')
+  //              },
+  //              onError: (error) => {
+  //                toast.error(`Status update failed: ${error.message}`)
+  //              },
+  //            },
+  //          )
+  //        },
+  //        onError: (error) => {
+  //          toast.error(`Assignment failed: ${error.message}`)
+  //        },
+  //      },
+  //    )
+  //  }
+  const handleTakeOrder = async (orderId: number) => {
+    try {
+      if (!driverId) {
+        toast.error('Driver authentication failed')
+        return
+      }
+
+      // First update the status
+      await updateOrderStatus.mutateAsync({
+        orderId: String(orderId),
+        status: 'out_for_delivery' as OStatus,
+      })
+
+      // Then assign the driver
+      await assignOrder.mutateAsync({
+        orderId: String(orderId),
+        driverId: Number(driverId),
+      })
+
+      refetch()
+      toast.success('Order assigned successfully!')
+    } catch (error) {
+      const errorMessage =
+        typeof error === 'object' && error !== null && 'message' in error
+          ? (error as { message?: string }).message
+          : String(error)
+      toast.error(`Failed to assign order: ${errorMessage}`)
+      console.error('Assignment error:', error)
     }
-
-    // First update the status
-    await updateOrderStatus.mutateAsync({
-      orderId: String(orderId),
-      status: 'out_for_delivery',
-    })
-
-    // Then assign the driver
-    await assignOrder.mutateAsync({
-      orderId: String(orderId),
-      driverId: Number(driverId),
-    })
-
-    refetch()
-    toast.success('Order assigned successfully!')
-  } catch (error) {
-    const errorMessage =
-      typeof error === 'object' && error !== null && 'message' in error
-        ? (error as { message?: string }).message
-        : String(error)
-    toast.error(`Failed to assign order: ${errorMessage}`)
-    console.error('Assignment error:', error)
   }
-}
   const toggleOrderDetails = (orderId: number) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId)
   }
@@ -119,7 +127,10 @@ const handleTakeOrder = async (orderId: number) => {
 
   if (error) {
     return (
-      <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4" role="alert">
+      <div
+        className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+        role="alert"
+      >
         <p>Error loading orders: {error.message}</p>
       </div>
     )
@@ -128,23 +139,23 @@ const handleTakeOrder = async (orderId: number) => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
-            {activeTab === 'available' ? (
-              <>
-                <Truck className="text-green-600" />
-                <span className="text-green-800 font-medium">
-                  {availableOrders.length} orders available
-                </span>
-              </>
-            ) : (
-              <>
-                <PackageCheck className="text-orange-600" />
-                <span className="text-orange-800 font-medium">
-                  {myOrders.length} assigned orders
-                </span>
-              </>
-            )}
-          </div>
+        <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
+          {activeTab === 'available' ? (
+            <>
+              <Truck className="text-green-600" />
+              <span className="text-green-800 font-medium">
+                {availableOrders.length} orders available
+              </span>
+            </>
+          ) : (
+            <>
+              <PackageCheck className="text-orange-600" />
+              <span className="text-orange-800 font-medium">
+                {myOrders.length} assigned orders
+              </span>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Tab Navigation */}
@@ -238,12 +249,12 @@ function OrderCard({
     isLoading: boolean
   }
   // const { data: store, isLoading: storeLoading } = useStore(order.store.id ?? '') as { data: TStore | undefined, isLoading: boolean }
-const [otp, setOtp] = useState('')
-const [showOtpInput, setShowOtpInput] = useState(false)
-const generateOtp = useGenerateDeliveryOtp()
-const verifyOtp = useVerifyDeliveryOtp()
+  const [otp, setOtp] = useState('')
+  const [showOtpInput, setShowOtpInput] = useState(false)
+  const generateOtp = useGenerateDeliveryOtp()
+  const verifyOtp = useVerifyDeliveryOtp()
 
-const [isMapOpen, setIsMapOpen] = useState(false)
+  const [isMapOpen, setIsMapOpen] = useState(false)
 
   const statusColors: Record<TOrder['status'], string> = {
     pending: 'bg-gray-100 text-gray-800',
@@ -256,28 +267,26 @@ const [isMapOpen, setIsMapOpen] = useState(false)
     cancelled: 'bg-red-100 text-red-800',
     failed: 'bg-red-100 text-red-800',
   }
-const handleMarkAsDelivered = async () => {
-  if (showOtpInput) {
-    try {
-      await verifyOtp.mutateAsync({ orderId: String(order.order_id), otp })
-      toast.success('Delivery verified successfully!')
-      setShowOtpInput(false)
-      // You might want to refresh orders here
-    } catch (error) {
-      toast.error('Invalid OTP. Please try again.')
-    }
-  } else {
-    try {
-      await generateOtp.mutateAsync(String(order.order_id))
-      toast.success('OTP sent to customer. Please ask for the code.')
-      setShowOtpInput(true)
-    } catch (error) {
-      toast.error('Failed to generate OTP. Please try again.')
+  const handleMarkAsDelivered = async () => {
+    if (showOtpInput) {
+      try {
+        await verifyOtp.mutateAsync({ orderId: String(order.order_id), otp })
+        toast.success('Delivery verified successfully!')
+        setShowOtpInput(false)
+setOtp('')
+      } catch (error) {
+        toast.error('Invalid OTP. Please try again.')
+      }
+    } else {
+      try {
+        await generateOtp.mutateAsync(String(order.order_id))
+        toast.success('Please ask the customer for the verification code')
+        setShowOtpInput(true)
+      } catch (error) {
+        toast.error('Failed to generate OTP. Please try again.')
+      }
     }
   }
-}
-console.log('order address', order.delivery_address)
-console.log('order object', order)
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden border border-orange-100 hover:shadow-lg transition-shadow">
@@ -323,7 +332,7 @@ console.log('order object', order)
                       <li key={index} className="flex justify-between text-sm">
                         <span>{product.product_name}</span>
                         <span className="text-gray-500">
-                          x{product.quantity} (KES
+                          (KES
                           {product.product_price.toFixed(2)})
                         </span>
                       </li>
@@ -331,7 +340,7 @@ console.log('order object', order)
                   </ul>
                   <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between font-medium">
                     <span>Total:</span>
-                    <span>${order.total_amount.toFixed(2)}</span>
+                    <span>KES{order.total_amount.toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -432,14 +441,22 @@ console.log('order object', order)
               <div className="p-4 border-t border-gray-100">
                 {showOtpInput ? (
                   <div className="space-y-3">
-                    <input
-                      type="text"
-                      value={otp}
-                      onChange={(e) => setOtp(e.target.value)}
-                      placeholder="Enter OTP from customer"
-                      className="w-full p-2 border rounded-md"
-                      maxLength={6}
-                    />
+                    <div className="mb-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Enter Verification Code from Customer
+                      </label>
+                      <input
+                        type="text"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        placeholder="6-digit code"
+                        className="w-full p-2 border rounded-md"
+                        maxLength={6}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Ask the customer for the code they received
+                      </p>
+                    </div>
                     <button
                       onClick={handleMarkAsDelivered}
                       disabled={verifyOtp.isPending}
@@ -464,10 +481,10 @@ console.log('order object', order)
                     {generateOtp.isPending ? (
                       <span className="flex items-center justify-center gap-2">
                         <Loader2 className="animate-spin w-4 h-4" />
-                        Generating OTP...
+                        Preparing...
                       </span>
                     ) : (
-                      'Mark as Delivered'
+                      'Start Delivery Verification'
                     )}
                   </button>
                 )}

@@ -47,7 +47,7 @@ export function ProductModal({
         <div className="border rounded p-4">
           <div className="flex justify-between py-1">
             <span>Price</span>
-            <span className="font-semibold">${product.product_price}</span>
+            <span className="font-semibold">KES{product.product_price}</span>
           </div>
           <div className="flex justify-between py-1">
             <span>Status</span>

@@ -13,7 +13,6 @@ import { Route as StoredetailsRouteImport } from './routes/storedetails'
 import { Route as Store_ownerRouteImport } from './routes/store_owner'
 import { Route as SinglestoreRouteImport } from './routes/singlestore'
 import { Route as ProductdetailsRouteImport } from './routes/productdetails'
-import { Route as ProductRouteImport } from './routes/product'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as HomepageRouteImport } from './routes/homepage'
 import { Route as FeaturedproductsRouteImport } from './routes/featuredproducts'
@@ -30,8 +29,11 @@ import { Route as CustomerIndexRouteImport } from './routes/customer/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as Store_ownerProductRouteImport } from './routes/store_owner/product'
 import { Route as Store_ownerOrderRouteImport } from './routes/store_owner/order'
+import { Route as ProductCategoryIdRouteImport } from './routes/product.$categoryId'
+import { Route as DriverProfileRouteImport } from './routes/driver/profile'
 import { Route as DriverOrdersRouteImport } from './routes/driver/orders'
 import { Route as DemoTanstackQueryRouteImport } from './routes/demo.tanstack-query'
+import { Route as CustomerProfileRouteImport } from './routes/customer/profile'
 import { Route as CustomerOrderplacedRouteImport } from './routes/customer/orderplaced'
 import { Route as CustomerOrderdetailRouteImport } from './routes/customer/orderdetail'
 import { Route as CustomerMywalletRouteImport } from './routes/customer/mywallet'
@@ -70,11 +72,6 @@ const SinglestoreRoute = SinglestoreRouteImport.update({
 const ProductdetailsRoute = ProductdetailsRouteImport.update({
   id: '/productdetails',
   path: '/productdetails',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProductRoute = ProductRouteImport.update({
-  id: '/product',
-  path: '/product',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersRoute = OrdersRouteImport.update({
@@ -157,6 +154,16 @@ const Store_ownerOrderRoute = Store_ownerOrderRouteImport.update({
   path: '/order',
   getParentRoute: () => Store_ownerRoute,
 } as any)
+const ProductCategoryIdRoute = ProductCategoryIdRouteImport.update({
+  id: '/product/$categoryId',
+  path: '/product/$categoryId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriverProfileRoute = DriverProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DriverRoute,
+} as any)
 const DriverOrdersRoute = DriverOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -166,6 +173,11 @@ const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
   id: '/demo/tanstack-query',
   path: '/demo/tanstack-query',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CustomerProfileRoute = CustomerProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => CustomerRoute,
 } as any)
 const CustomerOrderplacedRoute = CustomerOrderplacedRouteImport.update({
   id: '/orderplaced',
@@ -274,7 +286,6 @@ export interface FileRoutesByFullPath {
   '/featuredproducts': typeof FeaturedproductsRoute
   '/homepage': typeof HomepageRoute
   '/orders': typeof OrdersRoute
-  '/product': typeof ProductRoute
   '/productdetails': typeof ProductdetailsRoute
   '/singlestore': typeof SinglestoreRoute
   '/store_owner': typeof Store_ownerRouteWithChildren
@@ -298,8 +309,11 @@ export interface FileRoutesByFullPath {
   '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/customer/orderplaced': typeof CustomerOrderplacedRoute
+  '/customer/profile': typeof CustomerProfileRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/driver/orders': typeof DriverOrdersRoute
+  '/driver/profile': typeof DriverProfileRoute
+  '/product/$categoryId': typeof ProductCategoryIdRoute
   '/store_owner/order': typeof Store_ownerOrderRoute
   '/store_owner/product': typeof Store_ownerProductRoute
   '/admin/': typeof AdminIndexRoute
@@ -315,7 +329,6 @@ export interface FileRoutesByTo {
   '/featuredproducts': typeof FeaturedproductsRoute
   '/homepage': typeof HomepageRoute
   '/orders': typeof OrdersRoute
-  '/product': typeof ProductRoute
   '/productdetails': typeof ProductdetailsRoute
   '/singlestore': typeof SinglestoreRoute
   '/storedetails': typeof StoredetailsRoute
@@ -338,8 +351,11 @@ export interface FileRoutesByTo {
   '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/customer/orderplaced': typeof CustomerOrderplacedRoute
+  '/customer/profile': typeof CustomerProfileRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/driver/orders': typeof DriverOrdersRoute
+  '/driver/profile': typeof DriverProfileRoute
+  '/product/$categoryId': typeof ProductCategoryIdRoute
   '/store_owner/order': typeof Store_ownerOrderRoute
   '/store_owner/product': typeof Store_ownerProductRoute
   '/admin': typeof AdminIndexRoute
@@ -359,7 +375,6 @@ export interface FileRoutesById {
   '/featuredproducts': typeof FeaturedproductsRoute
   '/homepage': typeof HomepageRoute
   '/orders': typeof OrdersRoute
-  '/product': typeof ProductRoute
   '/productdetails': typeof ProductdetailsRoute
   '/singlestore': typeof SinglestoreRoute
   '/store_owner': typeof Store_ownerRouteWithChildren
@@ -383,8 +398,11 @@ export interface FileRoutesById {
   '/customer/mywallet': typeof CustomerMywalletRoute
   '/customer/orderdetail': typeof CustomerOrderdetailRoute
   '/customer/orderplaced': typeof CustomerOrderplacedRoute
+  '/customer/profile': typeof CustomerProfileRoute
   '/demo/tanstack-query': typeof DemoTanstackQueryRoute
   '/driver/orders': typeof DriverOrdersRoute
+  '/driver/profile': typeof DriverProfileRoute
+  '/product/$categoryId': typeof ProductCategoryIdRoute
   '/store_owner/order': typeof Store_ownerOrderRoute
   '/store_owner/product': typeof Store_ownerProductRoute
   '/admin/': typeof AdminIndexRoute
@@ -405,7 +423,6 @@ export interface FileRouteTypes {
     | '/featuredproducts'
     | '/homepage'
     | '/orders'
-    | '/product'
     | '/productdetails'
     | '/singlestore'
     | '/store_owner'
@@ -429,8 +446,11 @@ export interface FileRouteTypes {
     | '/customer/mywallet'
     | '/customer/orderdetail'
     | '/customer/orderplaced'
+    | '/customer/profile'
     | '/demo/tanstack-query'
     | '/driver/orders'
+    | '/driver/profile'
+    | '/product/$categoryId'
     | '/store_owner/order'
     | '/store_owner/product'
     | '/admin/'
@@ -446,7 +466,6 @@ export interface FileRouteTypes {
     | '/featuredproducts'
     | '/homepage'
     | '/orders'
-    | '/product'
     | '/productdetails'
     | '/singlestore'
     | '/storedetails'
@@ -469,8 +488,11 @@ export interface FileRouteTypes {
     | '/customer/mywallet'
     | '/customer/orderdetail'
     | '/customer/orderplaced'
+    | '/customer/profile'
     | '/demo/tanstack-query'
     | '/driver/orders'
+    | '/driver/profile'
+    | '/product/$categoryId'
     | '/store_owner/order'
     | '/store_owner/product'
     | '/admin'
@@ -489,7 +511,6 @@ export interface FileRouteTypes {
     | '/featuredproducts'
     | '/homepage'
     | '/orders'
-    | '/product'
     | '/productdetails'
     | '/singlestore'
     | '/store_owner'
@@ -513,8 +534,11 @@ export interface FileRouteTypes {
     | '/customer/mywallet'
     | '/customer/orderdetail'
     | '/customer/orderplaced'
+    | '/customer/profile'
     | '/demo/tanstack-query'
     | '/driver/orders'
+    | '/driver/profile'
+    | '/product/$categoryId'
     | '/store_owner/order'
     | '/store_owner/product'
     | '/admin/'
@@ -534,7 +558,6 @@ export interface RootRouteChildren {
   FeaturedproductsRoute: typeof FeaturedproductsRoute
   HomepageRoute: typeof HomepageRoute
   OrdersRoute: typeof OrdersRoute
-  ProductRoute: typeof ProductRoute
   ProductdetailsRoute: typeof ProductdetailsRoute
   SinglestoreRoute: typeof SinglestoreRoute
   Store_ownerRoute: typeof Store_ownerRouteWithChildren
@@ -542,6 +565,7 @@ export interface RootRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  ProductCategoryIdRoute: typeof ProductCategoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -572,13 +596,6 @@ declare module '@tanstack/react-router' {
       path: '/productdetails'
       fullPath: '/productdetails'
       preLoaderRoute: typeof ProductdetailsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/product': {
-      id: '/product'
-      path: '/product'
-      fullPath: '/product'
-      preLoaderRoute: typeof ProductRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders': {
@@ -693,6 +710,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Store_ownerOrderRouteImport
       parentRoute: typeof Store_ownerRoute
     }
+    '/product/$categoryId': {
+      id: '/product/$categoryId'
+      path: '/product/$categoryId'
+      fullPath: '/product/$categoryId'
+      preLoaderRoute: typeof ProductCategoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/driver/profile': {
+      id: '/driver/profile'
+      path: '/profile'
+      fullPath: '/driver/profile'
+      preLoaderRoute: typeof DriverProfileRouteImport
+      parentRoute: typeof DriverRoute
+    }
     '/driver/orders': {
       id: '/driver/orders'
       path: '/orders'
@@ -706,6 +737,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/demo/tanstack-query'
       preLoaderRoute: typeof DemoTanstackQueryRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/customer/profile': {
+      id: '/customer/profile'
+      path: '/profile'
+      fullPath: '/customer/profile'
+      preLoaderRoute: typeof CustomerProfileRouteImport
+      parentRoute: typeof CustomerRoute
     }
     '/customer/orderplaced': {
       id: '/customer/orderplaced'
@@ -882,6 +920,7 @@ interface CustomerRouteChildren {
   CustomerMywalletRoute: typeof CustomerMywalletRoute
   CustomerOrderdetailRoute: typeof CustomerOrderdetailRoute
   CustomerOrderplacedRoute: typeof CustomerOrderplacedRoute
+  CustomerProfileRoute: typeof CustomerProfileRoute
   CustomerIndexRoute: typeof CustomerIndexRoute
 }
 
@@ -892,6 +931,7 @@ const CustomerRouteChildren: CustomerRouteChildren = {
   CustomerMywalletRoute: CustomerMywalletRoute,
   CustomerOrderdetailRoute: CustomerOrderdetailRoute,
   CustomerOrderplacedRoute: CustomerOrderplacedRoute,
+  CustomerProfileRoute: CustomerProfileRoute,
   CustomerIndexRoute: CustomerIndexRoute,
 }
 
@@ -901,11 +941,13 @@ const CustomerRouteWithChildren = CustomerRoute._addFileChildren(
 
 interface DriverRouteChildren {
   DriverOrdersRoute: typeof DriverOrdersRoute
+  DriverProfileRoute: typeof DriverProfileRoute
   DriverIndexRoute: typeof DriverIndexRoute
 }
 
 const DriverRouteChildren: DriverRouteChildren = {
   DriverOrdersRoute: DriverOrdersRoute,
+  DriverProfileRoute: DriverProfileRoute,
   DriverIndexRoute: DriverIndexRoute,
 }
 
@@ -939,7 +981,6 @@ const rootRouteChildren: RootRouteChildren = {
   FeaturedproductsRoute: FeaturedproductsRoute,
   HomepageRoute: HomepageRoute,
   OrdersRoute: OrdersRoute,
-  ProductRoute: ProductRoute,
   ProductdetailsRoute: ProductdetailsRoute,
   SinglestoreRoute: SinglestoreRoute,
   Store_ownerRoute: Store_ownerRouteWithChildren,
@@ -947,6 +988,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  ProductCategoryIdRoute: ProductCategoryIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

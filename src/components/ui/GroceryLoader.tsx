@@ -65,7 +65,7 @@ const GroceryLoader = () => {
             ease: 'easeInOut',
           }}
         >
-          Loading your groceries
+          Loading 
         </motion.span>
         <motion.span
           animate={{ opacity: [0.5, 1, 0.5] }}

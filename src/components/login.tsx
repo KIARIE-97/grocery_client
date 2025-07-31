@@ -116,15 +116,15 @@ function Login() {
         className="flex items-center justify-center min-h-screen"
         style={{
           backgroundImage:
-            'https://img.freepik.com/free-vector/hand-drawn-pattern-background_23-2150822444.jpg',
+            'url("https://img.freepik.com/free-vector/hand-drawn-pattern-background_23-2150822444.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <Card className="w-96 shadow-lg ">
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
+<Card className="w-96 shadow-lg bg-white/80 backdrop-blur-md">
+         <CardHeader>
+            <CardTitle className="text-[#FF7929]">Sign In</CardTitle>
             <CardDescription>Enter your credentials to sign in</CardDescription>
             <CardAction />
           </CardHeader>
@@ -139,7 +139,6 @@ function Login() {
           >
             <CardContent>
               <div className="flex flex-col gap-6">
-                <label className="block mb-1 font-medium">Email</label>
                 <form.Field
                   name="email"
                   validators={{
@@ -170,7 +169,6 @@ function Login() {
                   )}
                 />
 
-                <label className="block mb-1 font-medium"></label>
                 <form.Field
                   name="password"
                   validators={{
@@ -219,12 +217,12 @@ function Login() {
                           onBlur={field.handleBlur}
                           className="w-24"
                         />
-                        <button
+                        {/* <button
                           type="button"
                           className="bg-orange-500 text-white px-4 py-1 rounded hover:bg-orange-600"
                         >
                           Send
-                        </button>
+                        </button> */}
                       </div>
                       <p className="text-xs text-gray-500 mt-1">Resend otp</p>
                       {field.state.meta.errors[0] && (
@@ -243,7 +241,7 @@ function Login() {
                   <button
                     type="submit"
                     disabled={!canSubmit || loginUser.isPending}
-                    className="w-full bg-orange-300 rounded-lg mt-10 text-white hover:bg-orage-500 disabled:opacity-50"
+                    className="w-full bg-[#104210] rounded-lg mt-10 text-white hover:bg-orage-500 disabled:opacity-50"
                   >
                     {isSubmitting || loginUser.isPending
                       ? 'Logging in...'
@@ -263,14 +261,13 @@ function Login() {
             </CardContent>
             <CardFooter className="flex flex-col items-center">
               <p>Don't have an account?</p>
-              <div className="text-blue-600 hover:underline">
+              <div className="text-[#FF7929] hover:underline">
                 <Link to="/auth/register"> Sign up now</Link>
               </div>
             </CardFooter>
           </form>
         </Card>
       </div>
-      <Footer />
     </>
   )
 }

@@ -65,12 +65,12 @@ const Dashboard: React.FC = () => {
   )
 
   // Fake summary values; replace these with real queries/hooks:
-  const inventorySummary = { quantityInHand: 868, toBeReceived: 200 }
+  const inventorySummary = { quantityInHand: 60, toBeReceived: 20 }
   const purchaseOverview = {
     count: 82,
-    cost: 13573,
-    cancelled: 5,
-    returned: 17432,
+    cost: 500,
+    cancelled: 0,
+    returned: 0,
   }
   const productSummary = { suppliers: 31, categories: Array.isArray(categories) ? categories.length : 0 }
 
@@ -123,15 +123,15 @@ const Dashboard: React.FC = () => {
             </div>
             <div>
               <div className="text-sm text-gray-500">Revenue</div>
-              <div className="font-bold text-lg">$ {totalRevenue}</div>
+              <div className="font-bold text-lg">KES {totalRevenue}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Profit</div>
-              <div className="font-bold text-lg">$ {profit}</div>
+              <div className="font-bold text-lg">KES {profit}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Cost</div>
-              <div className="font-bold text-lg">$ {totalCost}</div>
+              <div className="font-bold text-lg">KES {totalCost}</div>
             </div>
           </div>
         </div>
@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div>
               <div className="text-xs text-gray-500">Cost</div>
-              <div className="font-bold">$ {purchaseOverview.cost}</div>
+              <div className="font-bold">KES {purchaseOverview.cost}</div>
             </div>
             <div>
               <div className="text-xs text-gray-500">Cancel</div>
@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
             </div>
             <div>
               <div className="text-xs text-gray-500">Return</div>
-              <div className="font-bold">$ {purchaseOverview.returned}</div>
+              <div className="font-bold">KES {purchaseOverview.returned}</div>
             </div>
           </div>
         </div>
@@ -190,7 +190,7 @@ const Dashboard: React.FC = () => {
                   <td className="py-1 px-2">{product.product_name}</td>
                   <td className="py-1 px-2">{sold}</td>
                   <td className="py-1 px-2">{product.stock}</td>
-                  <td className="py-1 px-2">${product.product_price}</td>
+                  <td className="py-1 px-2">KES{product.product_price}</td>
                 </tr>
               ))}
             </tbody>

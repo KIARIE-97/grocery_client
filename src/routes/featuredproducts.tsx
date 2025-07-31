@@ -1,20 +1,20 @@
+// Enhanced FeaturedProducts component (parent)
+import { motion } from 'framer-motion'
 import SidebarFilter from '@/components/bars/filter'
 import Footer from '@/components/bars/Footer'
 import ProductGrid from '@/components/FilterGrid'
 import Navbar from '@/components/navbar'
 import GroceryLoader from '@/components/ui/GroceryLoader'
 import { useProduct } from '@/hooks/UseProduct'
-import type { TProduct } from '@/types/product.types'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
-// Route definition
 export const Route = createFileRoute('/featuredproducts')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { data, isLoading, isError } = useProduct()
+  const {  isLoading, isError } = useProduct()
   const [filters, setFilters] = useState<{
     category?: string
     priceRange?: [number, number]
@@ -22,39 +22,83 @@ function RouteComponent() {
     tags?: string[]
   }>({})
 
-  if (isLoading) return <div className="center py-12">
-    <GroceryLoader />
-  </div>
+  if (isLoading)
+    return (
+      <motion.div
+        className="center py-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <GroceryLoader />
+      </motion.div>
+    )
+
   if (isError)
     return (
-      <div className="text-center py-12 text-red-500">
+      <motion.div
+        className="text-center py-12 text-red-500"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+      >
         Failed to load products.
-      </div>
+      </motion.div>
     )
 
   return (
-    <>
-        <Navbar />
-      <div className="bg-white min-h-screen p-10">
-        <h1 className="text-3xl font-bold text-green-700 mb-8">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Navbar />
+
+      <motion.main
+        className="flex-1 p-6 md:p-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.h1
+          className="text-3xl font-bold text-green-700 mb-8 text-center md:text-left"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
           Featured Products
-        </h1>
+          <motion.span
+            className="inline-block ml-2 text-orange-500"
+            animate={{
+              y: [0, -5, 0],
+              rotate: [0, 10, -10, 0],
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: 'reverse',
+              duration: 2,
+            }}
+          >
+            🎯
+          </motion.span>
+        </motion.h1>
 
-        {/* Main layout: sidebar + products side by side */}
-        <div className="flex gap-10">
-          {/* Sidebar fixed width */}
-          <div className="w-64">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <motion.aside
+            className="w-full lg:w-64"
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
             <SidebarFilter onFilterChange={setFilters} />
-          </div>
+          </motion.aside>
 
-          {/* Product grid grows to fill remaining space */}
-          <div className="flex-1">
-            {/* Pass filters to ProductGrid */}
+          <motion.div
+            className="flex-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
             <ProductGrid filters={filters} />
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.main>
+
       <Footer />
-    </>
+    </div>
   )
 }

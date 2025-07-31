@@ -3,7 +3,7 @@ function Footer() {
   return (
     <>
       {/* footer */}
-      <footer className="bg-gray-800 text-white py-6 px-4 lg:px-12 mt-10">
+      <footer className="bg-[#678272] text-white py-6 px-4 lg:px-12 mt-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div>
             <h3 className="text-lg font-bold mb-2">Customer Service</h3>

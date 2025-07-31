@@ -45,13 +45,13 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="  flex flex-row gap-2">
-            <Link to="/" className='flex items-center gap-2'>
+            <Link to="/" className="flex items-center gap-2">
               <img
                 src="https://tse2.mm.bing.net/th/id/OIP.HUhGmeR3uzqXwLg1d3nqnAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3"
                 alt="Logo"
                 className="h-10"
               />
-              <span className="text-green-600 font-bold text-lg">
+              <span className="text-[#7A871E] font-bold text-lg">
                 Grocer Jet
               </span>
             </Link>
@@ -67,7 +67,7 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
           </div>
 
           {/* Top Info */}
-          <div className="hidden md:flex items-center gap-6 text-sm text-gray-600">
+          <div className="hidden md:flex items-center gap-6 text-sm text-[#104210]">
             <span>Offers</span>
             <span>Help</span>
 
@@ -146,7 +146,9 @@ function Navbar({ onCartClick }: { onCartClick?: () => void }) {
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
-                      <NavigationMenuLink href="/about">About Us</NavigationMenuLink>
+                      <NavigationMenuLink href="/about">
+                        About Us
+                      </NavigationMenuLink>
                     </NavigationMenuItem>
 
                     <NavigationMenuItem>

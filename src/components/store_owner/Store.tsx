@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import type { TStore } from '@/types/store.types'
-import { Link } from '@tanstack/react-router'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Clock, Star, MapPin, ShoppingBag, ChevronDown } from 'lucide-react'
 import StoreDetails from '../StoreDetails'
 
 type StoreCardProps = {
@@ -10,92 +11,168 @@ type StoreCardProps = {
 
 export const StoreCard: React.FC<StoreCardProps> = ({ store }) => {
   const [showProducts, setShowProducts] = useState(false)
+  const [isHovered, setIsHovered] = useState(false)
+
   const storeImage =
-    // @ts-ignore
     store.shop_image ||
-    'https://via.placeholder.com/120x120.png?text=Store+Image'
+    'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?q=80&w=1470&auto=format&fit=crop'
 
-const borderColor =
-  store.status === 'active'
-    ? 'border-t-3 border-green-500'
-    : 'border-t-8 border-red-500'
+  const borderColor =
+    store.status === 'active'
+      ? 'border-t-4 border-green-500'
+      : 'border-t-4 border-red-500'
 
+  // Animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+    hover: {
+      y: -5,
+      boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)',
+      transition: { duration: 0.3 },
+    },
+  }
+
+  const buttonVariants = {
+    rest: { scale: 1 },
+    hover: { scale: 1.05 },
+    tap: { scale: 0.95 },
+  }
 
   return (
     <>
-      <div
-        className={`bg-white ${borderColor} shadow rounded-lg p-4 flex flex-col w-50% max-w-lg mx-auto`}
+      <motion.div
+        className={`bg-white ${borderColor} shadow-md rounded-xl overflow-hidden flex flex-col w-full h-full`}
+        variants={cardVariants}
+        initial="hidden"
+        animate="visible"
+        whileHover="hover"
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
       >
-        {/* Store name */}
-        <h3 className="text-xl font-semibold text-orange-600 text-center mb-1">
-          {store.store_name}
-        </h3>
-        {/* Store header with image and owner */}
-        <div className="flex flex-row items-center mb-4">
-          <img
+        {/* Store image with overlay effect */}
+        <div className="relative h-48 overflow-hidden">
+          <motion.img
             src={storeImage}
             alt={store.store_name}
-            className="w-full h-50 object-cover rounded-lg border border-gray-200 mb-2"
+            className="w-full h-full object-cover"
+            initial={{ scale: 1 }}
+            animate={{ scale: isHovered ? 1.05 : 1 }}
+            transition={{ duration: 0.5 }}
           />
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
 
-        {/* Opening and closing time */}
-        <div className="flex flex-col justify-center gap-4 text-sm text-green-700 mb-2">
-          <span>
-            <span className="font-semibold">Opens:</span> {store.opening_time}
-          </span>
-          <span>
-            <span className="font-semibold">Closes:</span> {store.closing_time}
-          </span>
-        </div>
-        {/* Store description */}
-        <div className="mb-1 text-gray-600 text-m text-center">
-          <div>
-            <span className="font-semibold">About Us:</span>
-          </div>
-
-          {store.description || (
-            <span className="italic text-gray-400">
-              No description provided.
-            </span>
-          )}
-        </div>
-        {/* Products */}
-        {/* <div className="flex flex-wrap gap-2 mb-4 justify-center">
-        {store.products?.map((product) => (
-          <span
-            key={product.id}
-            className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs"
+          {/* Status badge */}
+          <div
+            className={`absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold ${
+              store.status === 'active'
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
+            }`}
           >
-            {product.product_name}
-          </span>
-        ))}
-      </div> */}
-        {/* Shop Here button at the bottom */}
-        <button
-          className="bg-orange-500 text-white px-3 py-2 rounded hover:bg-orange-600 w-full mt-auto"
-          onClick={() => setShowProducts(true)}
-        >
-          Shop Here
-        </button>
-      </div>
-      {/* Modal for store products */}
-      {showProducts && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 w-full h-full">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-[98vw] h-[96vh] relative overflow-auto">
-            <button
-              className="absolute top-2 right-2 text-orange-600 hover:text-orange-800 text-2xl"
-              onClick={() => setShowProducts(false)}
-            >
-              &times;
-            </button>
-            <StoreDetails
-              storeId={store.id ?? ''}
-              onClose={() => setShowProducts(false)}
-            />
+            {store.status === 'active' ? 'Open' : 'Closed'}
           </div>
         </div>
-      )}
+
+        {/* Store content */}
+        <div className="p-4 flex-1 flex flex-col">
+          {/* Store name and rating */}
+          <div className="flex justify-between items-start mb-3">
+            <h3 className="text-xl font-bold text-gray-800">
+              {store.store_name}
+            </h3>
+            <div className="flex items-center bg-orange-50 px-2 py-1 rounded">
+              <Star className="w-4 h-4 text-orange-400 fill-current" />
+              <span className="ml-1 text-sm font-medium">4.8</span>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="flex items-center text-gray-600 mb-3">
+            <MapPin className="w-4 h-4 mr-1" />
+            <span className="text-sm">{store.location || 'N/A'}</span>
+          </div>
+
+          {/* Hours */}
+          <div className="flex items-center text-gray-600 mb-4">
+            <Clock className="w-4 h-4 mr-1" />
+            <span className="text-sm">
+              {store.opening_time} - {store.closing_time}
+            </span>
+          </div>
+
+          {/* Description with read more */}
+          <div className="mb-4 text-gray-600 text-sm flex-1">
+            <p className="line-clamp-3">
+              {store.description || 'No description provided.'}
+            </p>
+          </div>
+
+          {/* Shop button */}
+          <motion.button
+            className="mt-auto bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2"
+            variants={buttonVariants}
+            initial="rest"
+            whileHover="hover"
+            whileTap="tap"
+            onClick={() => setShowProducts(true)}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            <span>Shop Now</span>
+          </motion.button>
+        </div>
+      </motion.div>
+
+      {/* Modal for store products */}
+      <AnimatePresence>
+        {showProducts && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-xl shadow-2xl w-[95vw] h-[90vh] max-w-6xl relative overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25 }}
+            >
+              <button
+                className="absolute top-4 right-4 z-10 bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors"
+                onClick={() => setShowProducts(false)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              <div className="h-full overflow-y-auto">
+                <StoreDetails
+                  storeId={store.id ?? ''}
+                  onClose={() => setShowProducts(false)}
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   )
 }
