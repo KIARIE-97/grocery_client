@@ -1,6 +1,6 @@
-import type { TStore, TStoreForm } from "@/types/store.types"
+import type { TStoreForm } from "@/types/store.types"
+import { url } from "./utils"
 
-const url = 'http://localhost:8000'
 
 const handleApiResponse = async (res: Response) => {
   let errorMessage = `Request failed with status ${res.status}: ${res.statusText}`

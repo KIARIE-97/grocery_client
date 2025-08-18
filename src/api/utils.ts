@@ -1,0 +1,1 @@
+export const url = 'https://grocerydelivery-api.onrender.com'

@@ -1,4 +1,5 @@
-const url = 'http://localhost:8000'
+// const url = 'http://localhost:8000'
+const url = 'https://grocerydelivery-api.onrender.com'
 
 //helper function to handle api responses and errors
 const handleApiResponse = async (res: Response) => {

@@ -1,5 +1,6 @@
 import type { TLocation } from "@/types/location.types"
-import { getToken, handleApiResponse, url } from "./user"
+import { getToken, handleApiResponse } from "./user"
+import { url } from "./utils"
 
 export const createLocation = async (locationData: TLocation) => {
   const token = getToken()

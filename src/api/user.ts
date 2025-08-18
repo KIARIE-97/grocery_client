@@ -1,6 +1,7 @@
 import type { TEditUser, TUserData } from '@/types/user.types'
+import { url } from './utils'
 
-export const url = 'http://localhost:8000'
+// export const url = 'http://localhost:8000'
 
 export const getToken = () => {
   const Userdata = localStorage.getItem('auth')

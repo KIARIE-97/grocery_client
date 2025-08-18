@@ -1,4 +1,4 @@
-const url = 'http://localhost:8000'
+import { url } from "./utils"
 
 // Helper function to handle API responses and errors
 const handleApiResponse = async (res: Response) => {

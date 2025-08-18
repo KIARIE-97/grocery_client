@@ -1,5 +1,7 @@
 
-const url = 'http://localhost:8000'
+// const url = 'http://localhost:8000'
+
+import { url } from "./utils"
 
 const getToken = () => {
   const Userdata = localStorage.getItem('auth')

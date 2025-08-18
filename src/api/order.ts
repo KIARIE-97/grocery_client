@@ -5,8 +5,9 @@ import type {
   TOrder,
   UpdateOrderStatusInput,
 } from '@/types/order.types'
+import { url } from './utils'
 
-const url = 'http://localhost:8000'
+// const url = 'http://localhost:8000'
 
 // Helper function to handle API responses and errors
 const handleApiResponse = async (res: Response) => {
