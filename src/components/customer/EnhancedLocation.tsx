@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, MapPin, ChevronDown, X, Check, PlusCircle } from 'lucide-react';
+import { Loader2, MapPin, ChevronDown, Check } from 'lucide-react';
 import { useForm } from '@tanstack/react-form';
 
 interface Suggestion {

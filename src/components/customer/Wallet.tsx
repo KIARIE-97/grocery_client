@@ -1,22 +1,8 @@
-import React from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { useForm } from '@tanstack/react-form'
 import { Wallet, BadgePercent } from 'lucide-react'
 
 export default function WalletPage() {
-  const form = useForm({
-    defaultValues: {
-      holder: '',
-      card: '',
-      expMonth: '',
-      expYear: '',
-      cvv: '',
-      amount: '',
-    },
-    onSubmit: async ({ value }) => {
-      console.log(value)
-    },
-  })
+
 
   const offers = [
     { offer: '15%', code: 'GJCOUP15', expires: '31 May 2020' },

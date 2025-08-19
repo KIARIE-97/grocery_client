@@ -25,7 +25,7 @@ type StoreProductsProps = {
   onClose?: () => void
 }
 
-function StoreDetails({ storeId, onClose }: StoreProductsProps) {
+function StoreDetails({ storeId }: StoreProductsProps) {
   const {
     data: store,
     isLoading,

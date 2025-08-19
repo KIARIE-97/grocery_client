@@ -13,10 +13,10 @@ export const Route = createFileRoute('/singlestore')({
   component: RouteComponent,
 })
 
-type StoreProductsProps = {
-  id: string
-  onClose?: () => void
-}
+// type StoreProductsProps = {
+//   id: string
+//   onClose?: () => void
+// }
 
 function RouteComponent({ search }: { search: { Id: string } }) {
   const { state } = useRouter()
@@ -39,7 +39,7 @@ function RouteComponent({ search }: { search: { Id: string } }) {
   const { dispatch } = useCart()
 
   
-  const getAverageRating = (product: TProduct) => 4
+  const getAverageRating = () => 4
 
   const handleAddToCart = (product: TProduct) => {
     dispatch({
@@ -98,7 +98,7 @@ function RouteComponent({ search }: { search: { Id: string } }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {store.products && store.products.length > 0 ? (
           store.products.map((product: TProduct) => {
-            const avgRating = getAverageRating(product)
+            const avgRating = getAverageRating()
             return (
               <div
                 key={product.id}

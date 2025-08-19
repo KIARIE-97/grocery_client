@@ -4,11 +4,9 @@ import { useOrder, useUpdateOrder, type OStatus } from '@/hooks/useOrder'
 import { useCreatePayment } from '@/hooks/usePayment'
 import { useUserLocations } from '@/hooks/useLocation'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { string } from 'zod'
 import { LocationForm } from './Addlocation'
 import { PlusCircle } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { EnhancedLocationForm } from './EnhancedLocation'
 import type { TLocation } from '@/types/location.types'
 
 type CheckoutProps = {

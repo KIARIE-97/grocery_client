@@ -1,9 +1,8 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Link } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCategories } from '@/hooks/useCategory'
-import { useRef, useState } from 'react'
+import {  useState } from 'react'
 
 // Animation variants
 const containerVariants = {
@@ -217,8 +216,8 @@ export default function HomeHighlights() {
                     whileTap={tapEffect}
                   >
                     <Link
-                      to={`/product/${cat.id}`}
-                      params={{ categoryId: cat.category_id }}
+                      to="/productdetails"
+                      params={{ productId: cat.id }}
                       className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg shadow-sm h-full"
                     >
                       <motion.img

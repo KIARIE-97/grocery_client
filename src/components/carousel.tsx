@@ -2,7 +2,6 @@
 
 import * as React from 'react'
 import Autoplay from 'embla-carousel-autoplay'
-import shopping from '../../public/shop.jpg'
 import { Card, CardContent } from '@/components/ui/card'
 import {
   Carousel,
@@ -11,7 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import { Link } from '@tanstack/react-router'
 
 const banners = [
   {

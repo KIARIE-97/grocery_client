@@ -7,7 +7,7 @@ import { useDrivers } from '@/hooks/useUser'
 import type { TDriver, TUserData } from '@/types/user.types'
 import { createFileRoute } from '@tanstack/react-router'
 import type { ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/admin/drivers')({
   component: RouteComponent,

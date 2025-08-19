@@ -14,7 +14,6 @@ import { Label } from '@/components/ui/label'
 import { useLoginUser } from '@/hooks/useLogin'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import Footer from './bars/Footer'
 
 // Zod schema for form validation
 const formSchema = z.object({

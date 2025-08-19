@@ -1,7 +1,7 @@
 import { useSingleProduct } from '@/hooks/UseProduct'
 import { useCart } from '@/store/cartStore'
 import type { TProduct } from '@/types/product.types'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useProduct } from '@/hooks/UseProduct'
 import { useParams } from '@tanstack/react-router'
 import GroceryLoader from './ui/GroceryLoader'

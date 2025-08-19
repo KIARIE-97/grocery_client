@@ -1,4 +1,3 @@
-import { RegisterUser } from '@/api/auth'
 import {
   Card,
   CardAction,

@@ -11,16 +11,16 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useForm } from '@tanstack/react-form'
-import { z } from 'zod'
+// import { z } from 'zod'
 import { useCreateStore } from '@/hooks/useStore'
 import { useNavigate } from '@tanstack/react-router'
 import { useAuth } from '@/hooks/UseAuth'
 import { toast } from 'sonner'
 
-const schema = z.object({
-  name: z.string().min(2),
-  location: z.string().min(2),
-})
+// const schema = z.object({
+//   name: z.string().min(2),
+//   location: z.string().min(2),
+// })
 
 export function AddShopForm() {
   const { mutate: createStore, isPending } = useCreateStore()

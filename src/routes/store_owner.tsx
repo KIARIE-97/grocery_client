@@ -1,7 +1,6 @@
 import Footer from '@/components/bars/Footer'
 import Sidebar from '@/components/bars/SideBar'
 import Navbar from '@/components/navbar'
-import Products from '@/components/store_owner/Products'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/store_owner')({

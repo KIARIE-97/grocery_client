@@ -1,5 +1,3 @@
-import EditUserForm from '@/components/Admincomponents/EditUser'
-import MainContentSection from '@/components/Admincomponents/MainContentSection'
 import ProfileCardSection from '@/components/Admincomponents/ProfileCardSection'
 import { createFileRoute } from '@tanstack/react-router'
 

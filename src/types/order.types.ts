@@ -1,5 +1,5 @@
 import type { TLocation } from "./location.types"
-import type { TCartItem, TProduct } from "./product.types"
+import type { TProduct } from "./product.types"
 import type { TStore } from "./store.types"
 import type { TDriver, TUserData } from "./user.types"
 

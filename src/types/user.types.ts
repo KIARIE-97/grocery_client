@@ -28,12 +28,18 @@ export type TupdateUserData = {
   phone_number: string
  
 }
-export type TEditUser = {
-  [x: string]: string
+export type TCUserData = {
   full_name: string
   email: string
   phone_number: string
-  profile_url: string
+  address: string
+}
+export type TEditUser = {
+  full_name: string
+  email: string
+  phone_number: string
+  profile_url?: string
+  address?: string
 }
 export interface IAuth {
   email: string

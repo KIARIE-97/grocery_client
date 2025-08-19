@@ -1,6 +1,6 @@
 // Enhanced SidebarFilter component
 import React, { useState, useEffect } from 'react'
-import { Star, FilterX } from 'lucide-react'
+import { FilterX } from 'lucide-react'
 import type { UseQueryResult } from '@tanstack/react-query'
 import { useCategories } from '@/hooks/useCategory'
 import { motion } from 'framer-motion'

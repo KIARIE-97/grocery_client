@@ -12,11 +12,10 @@ import CartSidebar from './CartSidebar';
 
 
 
-function Navbar({ onCartClick }: { onCartClick?: () => void }) {
+function Navbar({ }: { onCartClick?: () => void }) {
   const isSignedIn = useStore(authStore, (state) => state.isAuthenticated)
   const foundUser = useStore(authStore, (state) => state.user)
   const [showCartSidebar, setShowCartSidebar] = useState(false)
-  const [showUserDropdown, setShowUserDropdown] = useState(false)
 
   const dashboardRoutes: Record<string, string> = {
     customer: '/customer',

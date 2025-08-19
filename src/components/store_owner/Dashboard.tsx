@@ -14,21 +14,17 @@ import {
 import {
   Package,
   TrendingUp,
-  DollarSign,
   ShoppingCart,
   Layers,
-  Users,
 } from 'lucide-react'
 import { useOrders } from '@/hooks/useOrder'
 import type { TProduct } from '@/types/product.types'
-import { useAuth } from '@/hooks/UseAuth'
 import { useCategories } from '@/hooks/useCategory'
 import GroceryLoader from '../ui/GroceryLoader'
 
 const Dashboard: React.FC = () => {
   const { data: ordersRaw, isLoading } = useOrders()
   const orders = Array.isArray(ordersRaw) ? ordersRaw : []
-  const { user } = useAuth()
   const {data: categories} = useCategories()
 
   // Aggregate/calculated values

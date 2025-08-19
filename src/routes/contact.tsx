@@ -1,5 +1,5 @@
 import  Footer from '@/components/bars/Footer'
-import ContactUs from '@/components/contactus'
+import ContactUs from '@/components/ContactUs'
 import Navbar from '@/components/navbar'
 import { createFileRoute } from '@tanstack/react-router'
 

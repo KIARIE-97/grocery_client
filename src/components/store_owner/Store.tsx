@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import type { TStore } from '@/types/store.types'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Clock, Star, MapPin, ShoppingBag, ChevronDown } from 'lucide-react'
+import { Clock, Star, MapPin, ShoppingBag } from 'lucide-react'
 import StoreDetails from '../StoreDetails'
 
 type StoreCardProps = {

@@ -1,6 +1,6 @@
 import { createOrder, deleteOrder, generateDeliveryOtp, getOrder, getOrders, updateOrder, updateOrderStatus, verifyDeliveryOtp } from "@/api/order"
 import { assignOrderToDriver } from "@/api/user"
-import type { CheckoutProps, TCartOrder, TCreateOrder, TOrder } from "@/types/order.types"
+import type { TCartOrder, TCreateOrder, TOrder } from "@/types/order.types"
 import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query"
 
 export const useOrders = (): UseQueryResult => {

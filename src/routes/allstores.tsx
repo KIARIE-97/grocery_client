@@ -59,7 +59,7 @@ function RouteComponent() {
             initial="hidden"
             animate="show"
           >
-            {storeArray.map((store, index) => (
+            {storeArray.map((store) => (
               <motion.div
                 key={store.id}
                 variants={{

@@ -6,7 +6,6 @@ import {
   View,
   Document,
   StyleSheet,
-  Image,
 } from '@react-pdf/renderer'
 
 // Create styles with watermark support

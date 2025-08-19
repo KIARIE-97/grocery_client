@@ -1,5 +1,4 @@
 import GroceryLoader from '@/components/ui/GroceryLoader'
-import { useAuth } from '@/hooks/UseAuth'
 import { useSingleDriver } from '@/hooks/useUser'
 import { authStore } from '@/store/authStore'
 import { createFileRoute } from '@tanstack/react-router'
@@ -10,7 +9,7 @@ export const Route = createFileRoute('/driver/')({
 })
 
 function RouteComponent() {
-  const isAuthenticated = useStore(authStore, (state) => state.isAuthenticated)
+  // const isAuthenticated = useStore(authStore, (state) => state.isAuthenticated)
   const driverId = useStore(authStore, (state) => state.driver?.id)
   const { data: driver, isLoading } = useSingleDriver(driverId ?? '')
 

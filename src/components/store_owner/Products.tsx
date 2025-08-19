@@ -7,7 +7,7 @@ interface Product {
 }
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([
+  const [products] = useState<Product[]>([
     { id: 1, name: 'Sample Product', price: 29.99 },
   ])
 

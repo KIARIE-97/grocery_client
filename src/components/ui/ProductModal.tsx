@@ -1,5 +1,4 @@
 import type { TProduct } from '@/types/product.types'
-import React, { useState } from 'react'
 
 export function ProductModal({
   product,

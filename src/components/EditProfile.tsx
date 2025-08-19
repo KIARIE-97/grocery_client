@@ -1,11 +1,13 @@
-import { UseCreateUser } from '@/hooks/useUser'
-import type { TCUserData, TUserData } from '@/types/user.types'
+import { useAuth } from '@/hooks/UseAuth'
+import { useUpdateUser } from '@/hooks/useUser'
+import type {TEditUser } from '@/types/user.types'
 import { useForm } from '@tanstack/react-form'
 
 
 export const EditProfileForm = () => {
-  const updateUser = UseCreateUser()
-  const form = useForm<TCUserData>({
+  const {user} = useAuth()
+  const updateUser = useUpdateUser()
+  const form = useForm({
     defaultValues: {
       full_name: '',
       email: '',
@@ -13,7 +15,15 @@ export const EditProfileForm = () => {
       address: '',
     },
     onSubmit: async ({ value }) => {
-      updateUser.mutate(value)
+      const userData: TEditUser = {
+        full_name: value.full_name,
+        email: value.email,
+        phone_number: value.phone,
+        address: value.address,
+      }
+      // TODO: Replace 'userId' with the actual user id from context, props, or state
+      const userId = user?.id || ''
+      updateUser.mutate({ id: userId, userData })
     },
   })
 
@@ -23,17 +33,19 @@ export const EditProfileForm = () => {
       onSubmit={form.handleSubmit}
     >
       <h2 className="text-lg font-semibold">Edit Profile</h2>
-      {['full_name', 'email', 'phone', 'address'].map((field) => (
+      {(['full_name', 'email', 'phone', 'address'] as const).map((field) => (
         <form.Field
           key={field}
-          name={field as keyof TUserData}
-          children={(field) => (
+          name={field}
+          children={(fieldProps) => (
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                {field.name}
+                {fieldProps.name}
               </label>
               <input
-                {...field.getInputProps()}
+                name={fieldProps.name}
+                value={fieldProps.state.value}
+                onChange={e => fieldProps.handleChange(e.target.value)}
                 className="mt-1 p-2 w-full border rounded"
               />
             </div>

@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Star, StarOff, ShoppingCart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import { useStore, useStores } from '@/hooks/useStore'
 import { useAuth } from '@/hooks/UseAuth'
 import type { TProduct } from '@/types/product.types'

@@ -1,7 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import {
   Loader2,
-  CheckCircle,
   AlertTriangle,
   User,
   Mail,
@@ -17,7 +16,7 @@ export default function EditUserForm({
   initialData,
   onSuccess,
 }: {
-  initialData: TEditUser
+  initialData: TEditUser & { userId?: string }
   onSuccess?: () => void
 }) {
   const { user, setUser } = useAuth()

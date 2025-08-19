@@ -1,6 +1,6 @@
 import { createUser, getCustomer, getCustomers, getDriver, getDrivers, getStoreOwner, getUsers, updateUser } from "@/api/user";
 import type { TDriver, TEditUser, TUserData } from "@/types/user.types";
-import { useMutation, useQuery, useQueryClient, type UseMutationResult, type UseQueryResult } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient,  type UseQueryResult } from "@tanstack/react-query";
 
 
 //all users
